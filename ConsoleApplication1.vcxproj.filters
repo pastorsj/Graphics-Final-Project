@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\glew\glew.c">
+      <Filter>helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gl3w\gl3w.c">
+      <Filter>helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\objload\list.cpp">
+      <Filter>loader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\objload\obj_parser.cpp">
+      <Filter>loader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\objload\objLoader.cpp">
+      <Filter>loader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\objload\string_extra.cpp">
+      <Filter>loader</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\glew\glew.h">
+      <Filter>helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GLHelper.h">
+      <Filter>helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\glew\glxew.h">
+      <Filter>helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\simplePNG.h">
+      <Filter>helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\glew\wglew.h">
+      <Filter>helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ShaderManager.h" />
+    <ClInclude Include="src\WorldState.h" />
+    <ClInclude Include="src\gl3w\gl3w.h">
+      <Filter>helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gl3w\glcorearb.h">
+      <Filter>helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Model.h" />
+    <ClInclude Include="src\RenderEngine.h" />
+    <ClInclude Include="src\objload\list.h">
+      <Filter>loader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\objload\obj_parser.h">
+      <Filter>loader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\objload\objLoader.h">
+      <Filter>loader</Filter>
+    </ClInclude>
+    <ClInclude Include="src\objload\string_extra.h">
+      <Filter>loader</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="helpers">
+      <UniqueIdentifier>{4b6c7e0e-94a5-4357-89f8-d25e5d2684a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="loader">
+      <UniqueIdentifier>{700ccc1e-5830-481f-9d92-84dbf294ca96}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

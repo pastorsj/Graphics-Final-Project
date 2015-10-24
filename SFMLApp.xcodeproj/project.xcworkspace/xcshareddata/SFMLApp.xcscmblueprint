@@ -1,0 +1,25 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "837937af-0480-4eeb-b863-dea6bba5378f",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+    "837937af-0480-4eeb-b863-dea6bba5378f" : {
+
+    }
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "837937af-0480-4eeb-b863-dea6bba5378f" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "8624A7A2-1809-4208-8D9E-9CB992F57CA2",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "837937af-0480-4eeb-b863-dea6bba5378f" : "1516a-csse351-pastorsj\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "SFMLApp",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Program5\/SFMLApp.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "http:\/\/svn.csse.rose-hulman.edu\/repos\/1516a-csse351-pastorsj",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Subversion",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "837937af-0480-4eeb-b863-dea6bba5378f"
+    }
+  ]
+}
