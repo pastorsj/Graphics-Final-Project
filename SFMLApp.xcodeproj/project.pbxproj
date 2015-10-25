@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		41CD41941BDC7BC500E2EF7A /* MazeGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 41CD41921BDC7BC500E2EF7A /* MazeGenerator.cpp */; };
 		AF0E3A971BC17B4D00D0BE0D /* list.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AF0E3A8E1BC17B4D00D0BE0D /* list.cpp */; };
 		AF0E3A981BC17B4D00D0BE0D /* obj_parser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AF0E3A901BC17B4D00D0BE0D /* obj_parser.cpp */; };
 		AF0E3A991BC17B4D00D0BE0D /* objLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AF0E3A921BC17B4D00D0BE0D /* objLoader.cpp */; };
@@ -18,6 +19,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		41CD41921BDC7BC500E2EF7A /* MazeGenerator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MazeGenerator.cpp; sourceTree = "<group>"; };
 		AF0E3A7F1BC05DD900D0BE0D /* lightPos.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = lightPos.vert; sourceTree = "<group>"; };
 		AF0E3A821BC05DD900D0BE0D /* simple.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = simple.frag; sourceTree = "<group>"; };
 		AF0E3A831BC05DD900D0BE0D /* simple.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = simple.vert; sourceTree = "<group>"; };
@@ -347,6 +349,7 @@
 				AFE01D391BAA52FE00AE18A3 /* Model.h */,
 				AFE01D3A1BAA530B00AE18A3 /* RenderEngine.h */,
 				AF8B437F1B97FA77005AB0AE /* main.cpp */,
+				41CD41921BDC7BC500E2EF7A /* MazeGenerator.cpp */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -752,6 +755,7 @@
 			files = (
 				AF0E3A991BC17B4D00D0BE0D /* objLoader.cpp in Sources */,
 				AF0E3A971BC17B4D00D0BE0D /* list.cpp in Sources */,
+				41CD41941BDC7BC500E2EF7A /* MazeGenerator.cpp in Sources */,
 				AFE01D361BAA52DC00AE18A3 /* gl3w.c in Sources */,
 				AF8B43811B97FA77005AB0AE /* main.cpp in Sources */,
 				AF0E3A981BC17B4D00D0BE0D /* obj_parser.cpp in Sources */,
