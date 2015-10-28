@@ -22,6 +22,7 @@
     <ClCompile Include="src\gl3w\gl3w.c" />
     <ClCompile Include="src\glew\glew.c" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\MazeGenerator.cpp" />
     <ClCompile Include="src\objload\list.cpp" />
     <ClCompile Include="src\objload\objLoader.cpp" />
     <ClCompile Include="src\objload\obj_parser.cpp" />
@@ -44,6 +45,17 @@
     <ClInclude Include="src\simplePNG.h" />
     <ClInclude Include="src\WorldState.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="resources\cube.obj" />
+    <None Include="resources\sphere.obj" />
+    <None Include="resources\teapot.obj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="resources\lightPos.frag" />
+    <None Include="resources\lightPos.vert" />
+    <None Include="resources\simple.frag" />
+    <None Include="resources\simple.vert" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{456EBE0A-BEC3-40EB-8631-3C63995AADE5}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
@@ -59,7 +71,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">

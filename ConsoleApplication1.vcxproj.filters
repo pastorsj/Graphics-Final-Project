@@ -20,6 +20,7 @@
     <ClCompile Include="src\objload\string_extra.cpp">
       <Filter>loader</Filter>
     </ClCompile>
+    <ClCompile Include="src\MazeGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\glew\glew.h">
@@ -67,5 +68,33 @@
     <Filter Include="loader">
       <UniqueIdentifier>{700ccc1e-5830-481f-9d92-84dbf294ca96}</UniqueIdentifier>
     </Filter>
+    <Filter Include="resources">
+      <UniqueIdentifier>{94c4c239-e47a-426e-8b7b-ab88e10d2aa5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="resources\teapot.obj">
+      <Filter>resources</Filter>
+    </Object>
+    <Object Include="resources\sphere.obj">
+      <Filter>resources</Filter>
+    </Object>
+    <Object Include="resources\cube.obj">
+      <Filter>resources</Filter>
+    </Object>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="resources\simple.frag">
+      <Filter>resources</Filter>
+    </None>
+    <None Include="resources\simple.vert">
+      <Filter>resources</Filter>
+    </None>
+    <None Include="resources\lightPos.frag">
+      <Filter>resources</Filter>
+    </None>
+    <None Include="resources\lightPos.vert">
+      <Filter>resources</Filter>
+    </None>
   </ItemGroup>
 </Project>

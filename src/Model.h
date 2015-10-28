@@ -2,6 +2,7 @@
 #define __MODEL
 
 #include <vector>
+#include <iostream>
 #include "glm/glm.hpp"
 #include "objload/objLoader.h"
 using namespace std; //makes using vectors easy
@@ -18,7 +19,6 @@ public:
 		loader.load("resources/sphere.obj");
 		//loader.load("resources/teapot.obj");
         //loader.load("resources/test.obj");
-		
 		for(size_t i=0; i<loader.vertexCount; i++) {
 			positions.push_back(loader.vertexList[i]->e[0]);
 			positions.push_back(loader.vertexList[i]->e[1]);
@@ -37,15 +37,15 @@ public:
 			elements.push_back(loader.faceList[i]->vertex_index[2]);
 			//printf("f%zu: %i %i %i\n", i, elements[i*3+0], elements[i*3+1], elements[i*3+2]);
 		}
-        
-        for(size_t i=0; i<positions.size(); i++) {
-            colors.push_back(0);
-            colors.push_back(0);
-            colors.push_back(0);
-        }
 
+        for(size_t i=0; i<positions.size(); i++) {
+            colors.push_back(1);
+            colors.push_back(1);
+            colors.push_back(1);
+        }
         //TODO compute the vertex normals by averaging the face normals
         
+		/*
         //Compute all face normals
         vector<glm::vec3> vertexNormals;
         //fill this with position.size 0 vec3s
@@ -80,14 +80,16 @@ public:
             vertexNormals[i] = glm::normalize(vertexNormals[i]);
             vertexNormals[i] = (vertexNormals[i] + 1.0f) * 0.5f;
         }
+		
         
         for(size_t i = 0; i < elements.size(); i++) {
             for (size_t v = 0; v<3; v++) {
-                colors[elements[i+v]*3 + v] = vertexNormals[elements[i+v]*3][v];
+                colors[elements[i+v]*3 + v] = 1;
             }
         }
-        
-        
+		*/
+
+		cout << "test5" << endl;
         min = computeMinBound();
         max = computeMaxBound();
         center = computeCentroid();

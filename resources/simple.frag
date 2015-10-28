@@ -21,7 +21,7 @@ void main()
     fragColor = smoothColor;
     
     //TODO add gouraud and phong shading support
-    if(shadingMode == 2) {
+    if(false) {
 
         vec4 normal = (surfaceNormal + 1.0f) * 0.5f;
         vec4 ambientIntensity = 0.1 * vec4(1,1,1,1);

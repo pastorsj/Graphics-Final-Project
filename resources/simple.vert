@@ -50,16 +50,18 @@ void main()
     //TODO add gouraud and phong shading support
     
 	vec4 pos = vec4(pos, 1);
+	smoothColor = justColor();
     
-    surfaceNormal = C*mR*vec4(colorIn * 2 - vec3(1,1,1), 0);
-    lightVector = normalize(L*lightPos - mR*pos);
-    viewVector = normalize(camPos- mR*pos);
+    //surfaceNormal = C*mR*vec4(colorIn * 2 - vec3(1,1,1), 0);
+    //lightVector = normalize(L*lightPos - mR*pos);
+    //viewVector = normalize(camPos- mR*pos);
 	gl_Position = P*M*pos;
-    
+    /*
     if(shadingMode == 0)
         smoothColor = justColor();
     else if (shadingMode == 1)
         smoothColor = gouraud();
     else
         smoothColor = phong();
+	*/
 }

@@ -27,13 +27,14 @@ struct cell{
 };
 
 cell MAZE[xsize][ysize];
-
+/*
 int main(){
     srand((unsigned int)time(NULL)); //seed random number generator with system time
     initialize();      //initialize the maze
     generate();        //generate the maze
     return 0;
 }
+*/
 
 void initialize(){
     //Initialize the maze!
