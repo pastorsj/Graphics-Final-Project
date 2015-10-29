@@ -1,5 +1,6 @@
 //Purpy Pupple's amazing maze generator.
 //Released under the CC-BY-SA 3.0 License and the GFDL
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -13,8 +14,6 @@
 #define prim    //enable this to generate mazes using prim's algorithm.
 
 long numin=1;     //Number of cells in the maze.
-const int xsize=152;
-const int ysize=122;
 
 void initialize();
 void generate();
@@ -27,14 +26,14 @@ struct cell{
 };
 
 cell MAZE[xsize][ysize];
-/*
-int main(){
+
+int makeMaze(){
     srand((unsigned int)time(NULL)); //seed random number generator with system time
     initialize();      //initialize the maze
     generate();        //generate the maze
     return 0;
 }
-*/
+
 
 void initialize(){
     //Initialize the maze!
@@ -56,7 +55,7 @@ void generate(){
     int whichway;
     bool success;
     do{
-#ifdef nodeadend
+/*
         if( MAZE[xcur][ycur-1].in&&MAZE[xcur][ycur+1].in&&
            MAZE[xcur-1][ycur].in&&MAZE[xcur+1][ycur].in ){
             //If at a dead end, randomly destroy a wall to make it not a dead end!
@@ -91,15 +90,15 @@ void generate(){
                 }
             }while(!success);
         }
-#endif
-#ifdef prim
+*/
+//
         do{
             //randomly find a cell that's in the maze
             xcur=rand()%(xsize-2)+1;
             ycur=rand()%(ysize-2)+1;
         }while(!MAZE[xcur][ycur].in ||
                (MAZE[xcur][ycur-1].in && MAZE[xcur][ycur+1].in && MAZE[xcur-1][ycur].in && MAZE[xcur+1][ycur].in));
-#endif
+//
         do{
             //Randomly grow the maze if possible.
             success=0;

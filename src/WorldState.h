@@ -49,10 +49,10 @@ public:
 		printf("[%.2f %.2f %.2f]..", min[0], min[1], min[2]);
 		printf("[%.2f %.2f %.2f] ", max[0], max[1], max[2]);
 		printf("= dim [%.2f %.2f %.2f]\n", dim[0], dim[1], dim[2]);
-		float camDistance = std::max(dim[0], dim[1]);
-		cameraPos = glm::vec3(0,max[1],camDistance*2);
-        cameraLook = glm::vec3(0,0,0);
-        cameraUp = glm::vec3(0,1,0);
+		float camDistance = std::max(dim[0], dim[2]);
+		cameraPos = glm::vec3(center[0],camDistance*std::max(xsize,ysize),center[2]);
+        cameraLook = glm::vec3(0,-1,0);
+        cameraUp = glm::vec3(0,0,1);
         
 		lightPos = glm::vec4((max-center)*1.3f, 1);
         lightIntensity = glm::vec3(1,1,1);

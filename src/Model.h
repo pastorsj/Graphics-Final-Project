@@ -5,6 +5,7 @@
 #include <iostream>
 #include "glm/glm.hpp"
 #include "objload/objLoader.h"
+#include "MazeGenerator.h"
 using namespace std; //makes using vectors easy
 
 class Model
@@ -14,11 +15,13 @@ public:
 
     void init()
     {
-		objLoader loader;
+		makeMaze();
+		//objLoader loader;
 		//loader.load("resources/cube.obj");
-		loader.load("resources/sphere.obj");
+		//loader.load("resources/sphere.obj");
 		//loader.load("resources/teapot.obj");
         //loader.load("resources/test.obj");
+		/*
 		for(size_t i=0; i<loader.vertexCount; i++) {
 			positions.push_back(loader.vertexList[i]->e[0]);
 			positions.push_back(loader.vertexList[i]->e[1]);
@@ -37,14 +40,81 @@ public:
 			elements.push_back(loader.faceList[i]->vertex_index[2]);
 			//printf("f%zu: %i %i %i\n", i, elements[i*3+0], elements[i*3+1], elements[i*3+2]);
 		}
+		*/
 
-        for(size_t i=0; i<positions.size(); i++) {
-            colors.push_back(1);
-            colors.push_back(1);
-            colors.push_back(1);
+		GLfloat centerX = ((GLfloat)xsize-1) / 2.0f;
+		GLfloat centerY = ((GLfloat)ysize-1) / 2.0f;
+
+		positions.push_back(-0.5);
+		positions.push_back(-0.5);
+		positions.push_back(0);
+
+		positions.push_back(0.5);
+		positions.push_back(-0.5);
+		positions.push_back(0);
+
+		positions.push_back(0.5);
+		positions.push_back(0.5);
+		positions.push_back(0);
+
+		positions.push_back(-0.5);
+		positions.push_back(0.5);
+		positions.push_back(0);
+
+		positions.push_back(0);
+		positions.push_back(0);
+		positions.push_back(0);
+
+		elements.push_back(0);
+		elements.push_back(1);
+		elements.push_back(4);
+
+		elements.push_back(1);
+		elements.push_back(2);
+		elements.push_back(4);
+
+		elements.push_back(2);
+		elements.push_back(3);
+		elements.push_back(4);
+
+		elements.push_back(3);
+		elements.push_back(0);
+		elements.push_back(4);
+
+		makeDoubleSided();
+
+        for(size_t i=0; i<positions.size()/3; i++) {
+			if(i % 5 == 4)
+			{
+				colors.push_back(0);
+				colors.push_back(0);
+				colors.push_back(0);
+			}
+			else
+			{
+				colors.push_back(1);
+				colors.push_back(1);
+				colors.push_back(1);
+			}
         }
-        //TODO compute the vertex normals by averaging the face normals
-        
+		glm::mat4 finalTrans = glm::translate(glm::mat4(1.0f), glm::vec3(-centerX, 0, -centerY));
+		glm::mat4 leftWall = glm::translate(glm::rotate(glm::mat4(1.0f),PI/2,glm::vec3(0,1,0)), glm::vec3(-0.5,0,-0.5));
+        for(int i = 1 ; i < xsize ; ++i)
+		{
+			for(int j = 1 ; j < ysize ; ++j)
+			{
+				glm::mat4 buildTrans = glm::translate(glm::mat4(1.0f), glm::vec3(i, 0, j));
+				if(MAZE[i][j].up)
+				{
+					wallTransforms.push_back(finalTrans * buildTrans);
+				}
+				if(MAZE[i][j].left)
+				{
+					wallTransforms.push_back(finalTrans * buildTrans * leftWall);
+				}
+			}
+		}
+
 		/*
         //Compute all face normals
         vector<glm::vec3> vertexNormals;
@@ -89,7 +159,8 @@ public:
         }
 		*/
 
-		cout << "test5" << endl;
+		
+
         min = computeMinBound();
         max = computeMaxBound();
         center = computeCentroid();
@@ -127,9 +198,23 @@ public:
     { return center; }
     
     glm::vec3 getDimension()
-    { return dim; }
+    { return dim; }	
+
+	vector<glm::mat4> getWallTransforms() const
+	{ return this->wallTransforms; }
     
 private:
+
+	void makeDoubleSided()
+	{
+		int upperBound = elements.size() / 3;
+		for(int i = 0 ; i < upperBound ; ++i)
+		{
+			elements.push_back(elements[i*3+2]);
+			elements.push_back(elements[i*3+1]);
+			elements.push_back(elements[i*3+0]);
+		}
+	}
 	
 	glm::vec3 computeMinBound()
 	{
@@ -195,6 +280,7 @@ private:
 	vector<GLfloat> positions;
 	vector<GLfloat> colors;
 	vector<GLuint> elements;
+	vector<glm::mat4> wallTransforms;
 	size_t objectCount;
     
     glm::vec3 min;

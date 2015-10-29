@@ -20,7 +20,6 @@
     <ClCompile Include="src\objload\string_extra.cpp">
       <Filter>loader</Filter>
     </ClCompile>
-    <ClCompile Include="src\MazeGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\glew\glew.h">
@@ -60,6 +59,7 @@
     <ClInclude Include="src\objload\string_extra.h">
       <Filter>loader</Filter>
     </ClInclude>
+    <ClInclude Include="src\MazeGenerator.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="helpers">
@@ -73,17 +73,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Object Include="resources\teapot.obj">
-      <Filter>resources</Filter>
-    </Object>
-    <Object Include="resources\sphere.obj">
-      <Filter>resources</Filter>
-    </Object>
-    <Object Include="resources\cube.obj">
-      <Filter>resources</Filter>
-    </Object>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="resources\simple.frag">
       <Filter>resources</Filter>
     </None>
@@ -94,6 +83,15 @@
       <Filter>resources</Filter>
     </None>
     <None Include="resources\lightPos.vert">
+      <Filter>resources</Filter>
+    </None>
+    <None Include="resources\cube.obj">
+      <Filter>resources</Filter>
+    </None>
+    <None Include="resources\sphere.obj">
+      <Filter>resources</Filter>
+    </None>
+    <None Include="resources\teapot.obj">
       <Filter>resources</Filter>
     </None>
   </ItemGroup>

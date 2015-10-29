@@ -47,7 +47,7 @@ public:
         
 		glm::vec3 dim = state.getModel().getDimension();
 		float maxDim = std::max(dim[0], std::max(dim[1], dim[2]));
-		this->P = glm::perspective(1.0f, 1.0f, maxDim*0.01f, maxDim*10.0f);
+		this->P = glm::perspective(1.0f, 1.0f, maxDim*0.01f, maxDim*std::max(xsize,ysize));
         C = state.getCameraMatrix();
 		
 		setupShader();
@@ -67,6 +67,8 @@ public:
         glm::vec4 lightPos = state.getLightPos();
         glm::vec4 camPos = state.getCameraPos();
         glm::mat4 L = state.getLightRotate();
+		vector<glm::mat4> transList = state.getModel().getWallTransforms();
+		glm::mat4 trans = glm::mat4(1.0f);
         
         //hacky light source size change
         GLfloat maxDis = state.getModel().getDimension()[2] * 3;
@@ -90,9 +92,14 @@ public:
         glUniform4fv(glGetUniformLocation(shaderProg, "camPos"), 1, &camPos[0]);
         glUniform1i(glGetUniformLocation(shaderProg, "shadingMode"), state.getShadingMode());
 		
-		//draw
 		glBindVertexArray(vertexArray);
-		glDrawElements(GL_TRIANGLES, state.getModel().getElements().size(), GL_UNSIGNED_INT, 0);
+		//draw
+		for(int i = 0 ; i < transList.size() ; ++i)
+		{
+			trans = transList[i];
+			glUniformMatrix4fv(glGetUniformLocation(shaderProg, "trans"), 1, GL_FALSE, &trans[0][0]);
+			glDrawElements(GL_TRIANGLES, state.getModel().getElements().size(), GL_UNSIGNED_INT, 0);
+		}
 		glBindVertexArray(0);
 		glUseProgram(0);
         checkGLError("model");

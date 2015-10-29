@@ -1,5 +1,8 @@
-//TODO Replace with your usernames!
-#define printusers() printf("Program by pastorsj+USER2\n");
+//Changes the number of cells in the maze!
+const int xsize=50;
+const int ysize=50;
+
+#define printusers() printf("Program by pastorsj+persinme+porterjc+robinsat\n");
 
 #define _CRT_SECURE_NO_WARNINGS
 #define RESOLUTION 512

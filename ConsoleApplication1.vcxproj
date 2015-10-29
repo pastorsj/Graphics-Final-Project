@@ -22,7 +22,9 @@
     <ClCompile Include="src\gl3w\gl3w.c" />
     <ClCompile Include="src\glew\glew.c" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\MazeGenerator.cpp" />
+    <ClInclude Include="src\MazeGenerator.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
     <ClCompile Include="src\objload\list.cpp" />
     <ClCompile Include="src\objload\objLoader.cpp" />
     <ClCompile Include="src\objload\obj_parser.cpp" />
