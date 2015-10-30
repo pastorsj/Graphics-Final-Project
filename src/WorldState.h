@@ -3,6 +3,7 @@
 #include "Model.h"
 
 #define NUM_TRACKED_FRAMES 10
+#define ROTATION_SENSITIVITY 0.01f;
 
 class WorldState
 {
@@ -29,6 +30,11 @@ private:
 	
 	bool lightRotating;
 	bool modelRotating;
+
+	bool movingForward;
+	bool movingBackward;
+	bool rotatingLeft;
+	bool rotatingRight;
 
 public:
 	WorldState()
@@ -88,6 +94,14 @@ public:
 		fps = 1.0f / avg;
 		printf("fps %f\n", fps);
 	}
+
+	void printMotionState() const
+	{
+		printf(movingForward ? "W" : "w");
+		printf(movingBackward ? "S" : "s");
+		printf(rotatingLeft ? "A" : "a");
+		printf(rotatingRight ? "D" : "d");
+	}
 	
 	Model const & getModel() const
 	{ return model; }
@@ -113,6 +127,10 @@ public:
         //spin model
 		if(modelRotating)
 			modelRotate = modelIncrement * modelRotate;
+
+		//move camera
+		if (movingForward)
+			stepForward();
 		
 		this->currentTime = t;
 	}
@@ -146,12 +164,57 @@ public:
     
     glm::vec4 getCameraPos() const
     { return glm::vec4(this->cameraPos, 1); }
+
+	void stepForward()
+	{
+		cameraPos += glm::vec3(0.01, 0, 0);
+	}
 	
 	void toggleModelRotate()
 	{ modelRotating = !modelRotating; }
 	
 	void toggleLightRotate()
 	{ lightRotating = !lightRotating; }
+
+	void setMovingForward(bool f)
+	{
+		movingForward = f;
+	}
+
+	bool isMovingForward() const
+	{
+		return movingForward;
+	}
+
+	void setMovingBackward(bool b)
+	{
+		movingBackward = b;
+	}
+
+	bool isMovingBackward() const
+	{
+		return movingBackward;
+	}
+
+	void setRotatingLeft(bool l)
+	{
+		rotatingLeft = l;
+	}
+
+	bool isRotatingLeft() const
+	{
+		return rotatingLeft;
+	}
+
+	void setRotatingRight(bool r)
+	{
+		rotatingRight = r;
+	}
+
+	bool isRotatingRight() const
+	{
+		return rotatingRight;
+	}
 };
 
 #endif

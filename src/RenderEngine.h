@@ -62,7 +62,8 @@ public:
         
         glm::mat4 mT = state.getModelTranslate();
         glm::mat4 mR = state.getModelRotate();
-		glm::mat4 M = C*mR*mT;
+		glm::mat4 mC = state.getCameraMatrix();
+		glm::mat4 M = mC*mR*mT;
 		glm::mat4 N = glm::inverseTranspose(M);
         glm::vec4 lightPos = state.getLightPos();
         glm::vec4 camPos = state.getCameraPos();
@@ -75,14 +76,14 @@ public:
         GLfloat distScale = 1.0f / (glm::length(L*lightPos - camPos) / maxDis);
         glPointSize(glm::mix(1.0f, 10.0f, distScale));
         
-        //printf("cam %f %f %f\n", camPos[0], camPos[1], camPos[2]);
+        printf("cam %f %f %f\n", camPos[0], camPos[1], camPos[2]);
         //printf("light %f %f %f\n", lightPos[0], lightPos[1], lightPos[2]);
 		
 		//use shader
 		glUseProgram(shaderProg);
         
         glUniformMatrix4fv(glGetUniformLocation(shaderProg, "P"), 1, GL_FALSE, &P[0][0]);
-        glUniformMatrix4fv(glGetUniformLocation(shaderProg, "C"), 1, GL_FALSE, &C[0][0]);
+        glUniformMatrix4fv(glGetUniformLocation(shaderProg, "C"), 1, GL_FALSE, &mC[0][0]);
         glUniformMatrix4fv(glGetUniformLocation(shaderProg, "mR"), 1, GL_FALSE, &mR[0][0]);
         glUniformMatrix4fv(glGetUniformLocation(shaderProg, "mT"), 1, GL_FALSE, &mT[0][0]);
         glUniformMatrix4fv(glGetUniformLocation(shaderProg, "M"), 1, GL_FALSE, &M[0][0]);
@@ -108,7 +109,7 @@ public:
         glUseProgram(lightProg);
         
         glUniformMatrix4fv(glGetUniformLocation(lightProg, "P"), 1, GL_FALSE, &P[0][0]);
-        glUniformMatrix4fv(glGetUniformLocation(lightProg, "C"), 1, GL_FALSE, &C[0][0]);
+        glUniformMatrix4fv(glGetUniformLocation(lightProg, "C"), 1, GL_FALSE, &mC[0][0]);
         glUniformMatrix4fv(glGetUniformLocation(lightProg, "mR"), 1, GL_FALSE, &mR[0][0]);
         glUniformMatrix4fv(glGetUniformLocation(lightProg, "mT"), 1, GL_FALSE, &mT[0][0]);
 		glUniformMatrix4fv(glGetUniformLocation(lightProg, "M"), 1, GL_FALSE, &M[0][0]);

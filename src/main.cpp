@@ -1,6 +1,6 @@
 //Changes the number of cells in the maze!
-const int xsize=50;
-const int ysize=50;
+const int xsize=10;
+const int ysize=10;
 
 #define printusers() printf("Program by pastorsj+persinme+porterjc+robinsat\n");
 
@@ -8,7 +8,7 @@ const int ysize=50;
 #define RESOLUTION 512
 #define TARGET_FPS 30                // controls spin update rate
 #define TIME_BETWEEN_UPDATES 0.015   // seconds between motion updates
-#define PRINT_FPS_INTERVAL 10.0f
+#define PRINT_FPS_INTERVAL 5.0f
 
 
 #ifdef __APPLE__
@@ -50,6 +50,10 @@ public:
 		buttonDown[0]=false;
 		buttonDown[1]=false;
 		buttonDown[2]=false;
+		state.setMovingForward(false);
+		state.setMovingBackward(false);
+		state.setRotatingLeft(false);
+		state.setRotatingRight(false);
 		
 		sf::Clock c;
 		float lastFrame = c.restart().asSeconds();
@@ -75,6 +79,7 @@ public:
 			if(sinceLastPrint > PRINT_FPS_INTERVAL) {
 				lastPrint = currentTime;
 				state.printFPS();
+				state.printMotionState();
 			}
             
 			render.display(state);
@@ -113,7 +118,39 @@ private:
                 state.toggleModelRotate();
 			if((event.type == sf::Event::TextEntered) && (event.text.unicode == 't'))
                 state.toggleLightRotate();
+
+			//Key events to move the player around
+			if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::W))
+				state.setMovingForward(true);
+			if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::S))
+				state.setMovingBackward(true);
+			if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::A))
+				state.setRotatingLeft(true);
+			if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::D))
+				state.setRotatingRight(true);
+
+			if ((event.type == sf::Event::KeyReleased) && (event.key.code == sf::Keyboard::W))
+				state.setMovingForward(false);
+			if ((event.type == sf::Event::KeyReleased) && (event.key.code == sf::Keyboard::S))
+				state.setMovingBackward(false);
+			if ((event.type == sf::Event::KeyReleased) && (event.key.code == sf::Keyboard::A))
+				state.setRotatingLeft(false);
+			if ((event.type == sf::Event::KeyReleased) && (event.key.code == sf::Keyboard::D))
+				state.setRotatingRight(false);
 		}
+
+		/*lastUpdate = timer.getElapsedTime().asSeconds();
+		bool needsUpdate = lastUpdate > TIME_BETWEEN_UPDATES;
+		if (needsUpdate)
+		{
+			//glm::ivec2 newPos = glm::ivec2(sf::Mouse::getPosition(*App).x, sf::Mouse::getPosition(*App).y);
+
+			if (state.isMovingForward())
+				state.stepForward();
+
+			lastUpdate = timer.restart().asSeconds();
+			//previousPos = newPos;
+		} */
 	}
 	
 	void getWindowContext()
