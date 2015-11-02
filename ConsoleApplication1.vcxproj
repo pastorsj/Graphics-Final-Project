@@ -86,7 +86,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -213,15 +213,14 @@ xcopy /Y $(SolutionDir)..\Shaders $(SolutionDir)\Shaders\
       <AdditionalDependencies>sfml-window.lib;sfml-system.lib;opengl32.lib;winmm.lib;gdi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <CustomBuildStep>
-      <Command>mkdir $(SolutionDir)\Shaders
-xcopy /Y $(SolutionDir)..\Shaders $(SolutionDir)\Shaders\
-</Command>
+      <Command>mkdir $(OutDir)\resources
+xcopy /Y $(SolutionDir)\resources $(OutDir)\resources\</Command>
     </CustomBuildStep>
     <CustomBuildStep>
-      <Message>Copying shaders...</Message>
+      <Message>Copying resources</Message>
     </CustomBuildStep>
     <CustomBuildStep>
-      <Outputs>$(SolutionDir)\Shaders\*.frag;$(SolutionDir)\Shaders\*.vert;%(Outputs)</Outputs>
+      <Outputs>$(OutDir)\resources\*.frag;$(OutDir)\resources\*.vert;%(Outputs)</Outputs>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

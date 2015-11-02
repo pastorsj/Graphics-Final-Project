@@ -73,10 +73,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="resources\simple.frag">
-      <Filter>resources</Filter>
-    </None>
-    <None Include="resources\simple.vert">
+    <None Include="resources\cube.obj">
       <Filter>resources</Filter>
     </None>
     <None Include="resources\lightPos.frag">
@@ -85,7 +82,10 @@
     <None Include="resources\lightPos.vert">
       <Filter>resources</Filter>
     </None>
-    <None Include="resources\cube.obj">
+    <None Include="resources\simple.frag">
+      <Filter>resources</Filter>
+    </None>
+    <None Include="resources\simple.vert">
       <Filter>resources</Filter>
     </None>
     <None Include="resources\sphere.obj">
