@@ -3,13 +3,13 @@
 #include "Model.h"
 
 #define NUM_TRACKED_FRAMES 10
-#define ROTATION_SENSITIVITY 0.01f;
 
 class WorldState
 {
 private:
 	float frameTimes[NUM_TRACKED_FRAMES];
 	float currentTime;
+	float cameraAngle;
 	bool running;
 	Model model;
     int shadingMode;
@@ -36,6 +36,15 @@ private:
 	bool rotatingLeft;
 	bool rotatingRight;
 
+	GLfloat TRANSLATION_SENSITIVITY = 0.03f;
+	float ROTATION_SENSITIVITY = 0.03f;
+	// The cell within the maze that the player is currently in
+	int xCell = 0;
+	int yCell = 0;
+	// The x and y position of the player/camera within a cell. This assumes that 0,0 corresponds to the top left corner of a cell, while 1,1 is the bottom right
+	float xPos = 0;
+	float yPos = 0;
+
 public:
 	WorldState()
 	{
@@ -47,6 +56,8 @@ public:
 		model = Model();
         model.init();
 		
+		cameraAngle = 0;
+
 		glm::vec3 center = model.getCentroid();
 		glm::vec3 max = model.getMaxBound();
 		glm::vec3 min = model.getMinBound();
@@ -56,9 +67,10 @@ public:
 		printf("[%.2f %.2f %.2f] ", max[0], max[1], max[2]);
 		printf("= dim [%.2f %.2f %.2f]\n", dim[0], dim[1], dim[2]);
 		float camDistance = std::max(dim[0], dim[2]);
-		cameraPos = glm::vec3(center[0],camDistance*std::max(xsize,ysize),center[2]);
-        cameraLook = glm::vec3(0,-1,0);
-        cameraUp = glm::vec3(0,0,1);
+		//cameraPos = glm::vec3(center[0],camDistance*std::max(xsize,ysize),center[2]);
+		cameraPos = glm::vec3(0, 0, 0);
+        cameraLook = glm::vec3(1,0,0);
+        cameraUp = glm::vec3(0,1,0);
         
 		lightPos = glm::vec4((max-center)*1.3f, 1);
         lightIntensity = glm::vec3(1,1,1);
@@ -131,6 +143,18 @@ public:
 		//move camera
 		if (movingForward)
 			stepForward();
+
+		if (movingBackward)
+			stepBackward();
+
+		if (rotatingLeft)
+			turnLeft();
+
+		if (rotatingRight)
+			turnRight();
+
+		updateCameraAngle();
+		updateCameraPosition();
 		
 		this->currentTime = t;
 	}
@@ -167,7 +191,42 @@ public:
 
 	void stepForward()
 	{
-		cameraPos += glm::vec3(0.01, 0, 0);
+		/*cameraPos += glm::vec3(cameraLook[0] * TRANSLATION_SENSITIVITY, 
+			cameraLook[1] * TRANSLATION_SENSITIVITY, 
+			cameraLook[2] * TRANSLATION_SENSITIVITY); */
+		xPos += cameraLook[0] * TRANSLATION_SENSITIVITY;
+		yPos += cameraLook[2] * TRANSLATION_SENSITIVITY;
+	}
+
+	void stepBackward()
+	{
+		/*cameraPos -= glm::vec3(cameraLook[0] * TRANSLATION_SENSITIVITY,
+			cameraLook[1] * TRANSLATION_SENSITIVITY,
+			cameraLook[2] * TRANSLATION_SENSITIVITY); */
+		xPos -= cameraLook[0] * TRANSLATION_SENSITIVITY;
+		yPos -= cameraLook[2] * TRANSLATION_SENSITIVITY;
+	}
+
+	void turnRight()
+	{
+		cameraAngle += ROTATION_SENSITIVITY;
+		if (cameraAngle > 2 * PI)
+			cameraAngle -= 2 * PI;
+	}
+
+	void turnLeft()
+	{
+		cameraAngle -= ROTATION_SENSITIVITY;
+		if (cameraAngle < 0)
+			cameraAngle += 2 * PI;
+	}
+
+	void updateCameraAngle(){
+		cameraLook = glm::vec3(cos(cameraAngle), cameraLook[1], sin(cameraAngle));
+	}
+
+	void updateCameraPosition() {
+		
 	}
 	
 	void toggleModelRotate()
