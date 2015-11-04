@@ -11,39 +11,103 @@ using namespace std; //makes using vectors easy
 class Model
 {
 public:
-	
 
     void init()
     {
 		makeMaze();
-		//objLoader loader;
-		//loader.load("resources/cube.obj");
-		//loader.load("resources/sphere.obj");
-		//loader.load("resources/teapot.obj");
-        //loader.load("resources/test.obj");
-		/*
-		for(size_t i=0; i<loader.vertexCount; i++) {
-			positions.push_back(loader.vertexList[i]->e[0]);
-			positions.push_back(loader.vertexList[i]->e[1]);
-			positions.push_back(loader.vertexList[i]->e[2]);
-			//printf("v%zu: %f %f %f\n", i, positions[i*3+0], positions[i*3+1], positions[i*3+2]);
-		}
-		
-		for(size_t i=0; i<loader.faceCount; i++) {
-			if(loader.faceList[i]->vertex_count != 3) {
-				fprintf(stderr, "Only triangle primitives are supported.\n");
-				exit(1);
-			}
-			
-			elements.push_back(loader.faceList[i]->vertex_index[0]);
-			elements.push_back(loader.faceList[i]->vertex_index[1]);
-			elements.push_back(loader.faceList[i]->vertex_index[2]);
-			//printf("f%zu: %i %i %i\n", i, elements[i*3+0], elements[i*3+1], elements[i*3+2]);
-		}
-		*/
 
 		GLfloat centerX = ((GLfloat)xsize-1) / 2.0f;
 		GLfloat centerY = ((GLfloat)ysize-1) / 2.0f;
+
+		initWall();
+		initFloor();
+
+		glm::mat4 finalTrans = glm::translate(glm::mat4(1.0f), glm::vec3(-centerX, 0, -centerY));
+		glm::mat4 leftWall = glm::translate(glm::rotate(glm::mat4(1.0f),PI/2,glm::vec3(0,1,0)), glm::vec3(-0.5,0,-0.5));
+        for(int i = 1 ; i < xsize ; ++i)
+		{
+			for(int j = 1 ; j < ysize ; ++j)
+			{
+				glm::mat4 buildTrans = glm::translate(glm::mat4(1.0f), glm::vec3(i, 0, j));
+				if(MAZE[i][j].up)
+				{
+					wallTransforms.push_back(finalTrans * buildTrans);
+				}
+				if(MAZE[i][j].left)
+				{
+					wallTransforms.push_back(finalTrans * buildTrans * leftWall);
+				}
+				if(j > 1 && i < xsize - 1)
+				{
+					floorTransforms.push_back(finalTrans * buildTrans);
+				}
+			}
+		}
+	}
+	
+	vector<GLfloat> const getWallPosition() const
+	{ return wallPositions; }
+	
+	vector<GLfloat> const getWallColor() const
+	{ return wallColors; }
+	
+	vector<GLuint> const getWallElements() const
+	{ return wallElements; }
+	
+	size_t getWallVertexCount() const
+	{ return wallPositions.size()/3; }
+	
+	size_t getWallPositionBytes() const
+	{ return wallPositions.size()*sizeof(GLfloat); }
+	
+	size_t getWallColorBytes() const
+	{ return wallColors.size()*sizeof(GLfloat); }
+	
+	size_t getWallElementBytes() const
+	{ return wallElements.size()*sizeof(GLuint); }
+	
+	vector<GLfloat> const getFloorPosition() const
+	{ return floorPositions; }
+	
+	vector<GLfloat> const getFloorColor() const
+	{ return floorColors; }
+	
+	vector<GLuint> const getFloorElements() const
+	{ return floorElements; }
+	
+	size_t getFloorVertexCount() const
+	{ return floorPositions.size()/3; }
+	
+	size_t getFloorPositionBytes() const
+	{ return floorPositions.size()*sizeof(GLfloat); }
+	
+	size_t getFloorColorBytes() const
+	{ return floorColors.size()*sizeof(GLfloat); }
+	
+	size_t getFloorElementBytes() const
+	{ return floorElements.size()*sizeof(GLuint); }
+
+	vector<glm::mat4> getWallTransforms() const
+	{ return this->wallTransforms; }
+
+	vector<glm::mat4> getFloorTransforms() const
+	{ return this->floorTransforms; }
+    
+private:
+
+	void makeWallDoubleSided()
+	{
+		int upperBound = wallElements.size() / 3;
+		for(int i = 0 ; i < upperBound ; ++i)
+		{
+			wallElements.push_back(wallElements[i*3+2]);
+			wallElements.push_back(wallElements[i*3+1]);
+			wallElements.push_back(wallElements[i*3+0]);
+		}
+	}
+
+	void initWall()
+	{
 
 		wallPositions.push_back(-0.5);
 		wallPositions.push_back(-0.5);
@@ -97,109 +161,63 @@ public:
 				wallColors.push_back(1);
 			}
         }
-		glm::mat4 finalTrans = glm::translate(glm::mat4(1.0f), glm::vec3(-centerX, 0, -centerY));
-		glm::mat4 leftWall = glm::translate(glm::rotate(glm::mat4(1.0f),PI/2,glm::vec3(0,1,0)), glm::vec3(-0.5,0,-0.5));
-		glm::mat4 floor = glm::translate(glm::rotate(glm::mat4(1.0f),PI/2,glm::vec3(1,0,0)), glm::vec3(0, -0.5, 0));
-        for(int i = 1 ; i < xsize ; ++i)
-		{
-			for(int j = 1 ; j < ysize ; ++j)
-			{
-				glm::mat4 buildTrans = glm::translate(glm::mat4(1.0f), glm::vec3(i, 0, j));
-				if(MAZE[i][j].up)
-				{
-					wallTransforms.push_back(finalTrans * buildTrans);
-				}
-				if(MAZE[i][j].left)
-				{
-					wallTransforms.push_back(finalTrans * buildTrans * leftWall);
-				}
-				if(j > 1 && i < xsize - 1)
-				{
-					wallTransforms.push_back(finalTrans * buildTrans * floor);
-				}
-			}
-		}
-
-		/*
-        //Compute all face normals
-        vector<glm::vec3> vertexNormals;
-        //fill this with position.size 0 vec3s
-        for(size_t i = 0; i < positions.size(); i++) {
-            vertexNormals.push_back(glm::vec3(0.0f));
-        }
-        
-        for(size_t i = 0; i < elements.size(); i+=3) {
-            size_t vertexId[3];
-            for(size_t v=0; v<3; v++)
-                vertexId[v] = elements[i+v];
-            
-            glm::vec3 vertices[3];
-            for(size_t v=0; v<3; v++)
-                for(size_t c=0; c<3; c++)
-                    vertices[v][c] = positions[ vertexId[v]*3 + c ];
-            
-            glm::vec3 a = vertices[1] - vertices[0];
-            glm::vec3 b = vertices[2] - vertices[1];
-            glm::vec3 faceNormal = glm::normalize(glm::cross(a, b));
-            
-            //Accumulate face normals at vertices
-            for(size_t j = 0; j < 3; j++) {
-                //for each vertex on the triangle, add the face normal to that normal
-                vertexNormals[vertexId[j] * 3] += faceNormal;
-            }
-
-        }
-        
-        //Normalize vertex normals
-        for(size_t i = 0; i < vertexNormals.size(); i++) {
-            vertexNormals[i] = glm::normalize(vertexNormals[i]);
-            vertexNormals[i] = (vertexNormals[i] + 1.0f) * 0.5f;
-        }
-		
-        
-        for(size_t i = 0; i < elements.size(); i++) {
-            for (size_t v = 0; v<3; v++) {
-                colors[elements[i+v]*3 + v] = 1;
-            }
-        }
-		*/
 	}
-	
-	vector<GLfloat> const getPosition() const
-	{ return wallPositions; }
-	
-	vector<GLfloat> const getColor() const
-	{ return wallColors; }
-	
-	vector<GLuint> const getElements() const
-	{ return wallElements; }
-	
-	size_t getWallVertexCount() const
-	{ return wallPositions.size()/3; }
-	
-	size_t getWallPositionBytes() const
-	{ return wallPositions.size()*sizeof(GLfloat); }
-	
-	size_t getWallColorBytes() const
-	{ return wallColors.size()*sizeof(GLfloat); }
-	
-	size_t getElementBytes() const
-	{ return wallElements.size()*sizeof(GLuint); }
 
-	vector<glm::mat4> getWallTransforms() const
-	{ return this->wallTransforms; }
-    
-private:
-
-	void makeWallDoubleSided()
+	void initFloor()
 	{
-		int upperBound = wallElements.size() / 3;
-		for(int i = 0 ; i < upperBound ; ++i)
-		{
-			wallElements.push_back(wallElements[i*3+2]);
-			wallElements.push_back(wallElements[i*3+1]);
-			wallElements.push_back(wallElements[i*3+0]);
-		}
+
+		floorPositions.push_back(-0.5);
+		floorPositions.push_back(-0.5);
+		floorPositions.push_back(-1);
+
+		floorPositions.push_back(0.5);
+		floorPositions.push_back(-0.5);
+		floorPositions.push_back(-1);
+
+		floorPositions.push_back(0.5);
+		floorPositions.push_back(-0.5);
+		floorPositions.push_back(0);
+
+		floorPositions.push_back(-0.5);
+		floorPositions.push_back(-0.5);
+		floorPositions.push_back(0);
+
+		floorPositions.push_back(0);
+		floorPositions.push_back(-0.5);
+		floorPositions.push_back(-0.5);
+
+		int offset = 5;
+		
+		floorElements.push_back(4+offset);
+		floorElements.push_back(1+offset);
+		floorElements.push_back(0+offset);
+		
+		floorElements.push_back(4+offset);
+		floorElements.push_back(2+offset);
+		floorElements.push_back(1+offset);
+		
+		floorElements.push_back(4+offset);
+		floorElements.push_back(3+offset);
+		floorElements.push_back(2+offset);
+		
+		floorElements.push_back(4+offset);
+		floorElements.push_back(0+offset);
+		floorElements.push_back(3+offset);
+
+        for(size_t i=0; i<floorPositions.size()/3; i++) {
+			if(i % 5 == 4)
+			{
+				floorColors.push_back(0);
+				floorColors.push_back(0);
+				floorColors.push_back(1);
+			}
+			else
+			{
+				floorColors.push_back(0);
+				floorColors.push_back(1);
+				floorColors.push_back(0);
+			}
+        }
 	}
 /*	
 	glm::vec3 computeMinBound()
@@ -269,7 +287,8 @@ private:
 	vector<glm::mat4> wallTransforms;
 	vector<GLfloat> floorPositions;
 	vector<GLfloat> floorColors;
-	vector<GLfloat> floorElements;
+	vector<GLuint> floorElements;
+	vector<glm::mat4> floorTransforms;
 	size_t objectCount;
 };
 
