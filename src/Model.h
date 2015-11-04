@@ -45,60 +45,61 @@ public:
 		GLfloat centerX = ((GLfloat)xsize-1) / 2.0f;
 		GLfloat centerY = ((GLfloat)ysize-1) / 2.0f;
 
-		positions.push_back(-0.5);
-		positions.push_back(-0.5);
-		positions.push_back(0);
+		wallPositions.push_back(-0.5);
+		wallPositions.push_back(-0.5);
+		wallPositions.push_back(0);
 
-		positions.push_back(0.5);
-		positions.push_back(-0.5);
-		positions.push_back(0);
+		wallPositions.push_back(0.5);
+		wallPositions.push_back(-0.5);
+		wallPositions.push_back(0);
 
-		positions.push_back(0.5);
-		positions.push_back(0.5);
-		positions.push_back(0);
+		wallPositions.push_back(0.5);
+		wallPositions.push_back(0.5);
+		wallPositions.push_back(0);
 
-		positions.push_back(-0.5);
-		positions.push_back(0.5);
-		positions.push_back(0);
+		wallPositions.push_back(-0.5);
+		wallPositions.push_back(0.5);
+		wallPositions.push_back(0);
 
-		positions.push_back(0);
-		positions.push_back(0);
-		positions.push_back(0);
+		wallPositions.push_back(0);
+		wallPositions.push_back(0);
+		wallPositions.push_back(0);
 
-		elements.push_back(0);
-		elements.push_back(1);
-		elements.push_back(4);
+		wallElements.push_back(0);
+		wallElements.push_back(1);
+		wallElements.push_back(4);
 
-		elements.push_back(1);
-		elements.push_back(2);
-		elements.push_back(4);
+		wallElements.push_back(1);
+		wallElements.push_back(2);
+		wallElements.push_back(4);
 
-		elements.push_back(2);
-		elements.push_back(3);
-		elements.push_back(4);
+		wallElements.push_back(2);
+		wallElements.push_back(3);
+		wallElements.push_back(4);
 
-		elements.push_back(3);
-		elements.push_back(0);
-		elements.push_back(4);
+		wallElements.push_back(3);
+		wallElements.push_back(0);
+		wallElements.push_back(4);
 
-		makeDoubleSided();
+		makeWallDoubleSided();
 
-        for(size_t i=0; i<positions.size()/3; i++) {
+        for(size_t i=0; i<wallPositions.size()/3; i++) {
 			if(i % 5 == 4)
 			{
-				colors.push_back(0);
-				colors.push_back(0);
-				colors.push_back(0);
+				wallColors.push_back(0);
+				wallColors.push_back(0);
+				wallColors.push_back(0);
 			}
 			else
 			{
-				colors.push_back(1);
-				colors.push_back(1);
-				colors.push_back(1);
+				wallColors.push_back(1);
+				wallColors.push_back(1);
+				wallColors.push_back(1);
 			}
         }
 		glm::mat4 finalTrans = glm::translate(glm::mat4(1.0f), glm::vec3(-centerX, 0, -centerY));
 		glm::mat4 leftWall = glm::translate(glm::rotate(glm::mat4(1.0f),PI/2,glm::vec3(0,1,0)), glm::vec3(-0.5,0,-0.5));
+		glm::mat4 floor = glm::translate(glm::rotate(glm::mat4(1.0f),PI/2,glm::vec3(1,0,0)), glm::vec3(0, -0.5, 0));
         for(int i = 1 ; i < xsize ; ++i)
 		{
 			for(int j = 1 ; j < ysize ; ++j)
@@ -111,6 +112,10 @@ public:
 				if(MAZE[i][j].left)
 				{
 					wallTransforms.push_back(finalTrans * buildTrans * leftWall);
+				}
+				if(j > 1 && i < xsize - 1)
+				{
+					wallTransforms.push_back(finalTrans * buildTrans * floor);
 				}
 			}
 		}
@@ -158,64 +163,45 @@ public:
             }
         }
 		*/
-
-		
-
-        min = computeMinBound();
-        max = computeMaxBound();
-        center = computeCentroid();
-        dim = computeDimension();
 	}
 	
 	vector<GLfloat> const getPosition() const
-	{ return positions; }
+	{ return wallPositions; }
 	
 	vector<GLfloat> const getColor() const
-	{ return colors; }
+	{ return wallColors; }
 	
 	vector<GLuint> const getElements() const
-	{ return elements; }
+	{ return wallElements; }
 	
-	size_t getVertexCount() const
-	{ return positions.size()/3; }
+	size_t getWallVertexCount() const
+	{ return wallPositions.size()/3; }
 	
-	size_t getPositionBytes() const
-	{ return positions.size()*sizeof(GLfloat); }
+	size_t getWallPositionBytes() const
+	{ return wallPositions.size()*sizeof(GLfloat); }
 	
-	size_t getColorBytes() const
-	{ return colors.size()*sizeof(GLfloat); }
+	size_t getWallColorBytes() const
+	{ return wallColors.size()*sizeof(GLfloat); }
 	
 	size_t getElementBytes() const
-	{ return elements.size()*sizeof(GLuint); }
-    
-    glm::vec3 getMinBound()
-    { return min; }
-    
-    glm::vec3 getMaxBound()
-    { return max; }
-    
-    glm::vec3 getCentroid()
-    { return center; }
-    
-    glm::vec3 getDimension()
-    { return dim; }	
+	{ return wallElements.size()*sizeof(GLuint); }
 
 	vector<glm::mat4> getWallTransforms() const
 	{ return this->wallTransforms; }
     
 private:
 
-	void makeDoubleSided()
+	void makeWallDoubleSided()
 	{
-		int upperBound = elements.size() / 3;
+		int upperBound = wallElements.size() / 3;
 		for(int i = 0 ; i < upperBound ; ++i)
 		{
-			elements.push_back(elements[i*3+2]);
-			elements.push_back(elements[i*3+1]);
-			elements.push_back(elements[i*3+0]);
+			wallElements.push_back(wallElements[i*3+2]);
+			wallElements.push_back(wallElements[i*3+1]);
+			wallElements.push_back(wallElements[i*3+0]);
 		}
 	}
-	
+/*	
 	glm::vec3 computeMinBound()
 	{
 		glm::vec3 bound;
@@ -276,17 +262,15 @@ private:
 		glm::vec3 dim = max - min;
 		return dim;
 	}
-	
-	vector<GLfloat> positions;
-	vector<GLfloat> colors;
-	vector<GLuint> elements;
+*/	
+	vector<GLfloat> wallPositions;
+	vector<GLfloat> wallColors;
+	vector<GLuint> wallElements;
 	vector<glm::mat4> wallTransforms;
+	vector<GLfloat> floorPositions;
+	vector<GLfloat> floorColors;
+	vector<GLfloat> floorElements;
 	size_t objectCount;
-    
-    glm::vec3 min;
-    glm::vec3 max;
-    glm::vec3 dim;
-    glm::vec3 center;
 };
 
 #endif

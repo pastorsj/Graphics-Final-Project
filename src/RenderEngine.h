@@ -44,10 +44,8 @@ public:
 		glEnable(GL_DEPTH_TEST);
 		glCullFace(GL_BACK);
 		glEnable(GL_CULL_FACE);
-        
-		glm::vec3 dim = state.getModel().getDimension();
-		float maxDim = std::max(dim[0], std::max(dim[1], dim[2]));
-		this->P = glm::perspective(1.0f, 1.0f, maxDim*0.01f, maxDim*std::max(xsize,ysize));
+
+		this->P = glm::perspective(1.0f, 1.0f, (std::max(xsize,ysize)+1)*0.01f, 1.0f*(std::max(xsize,ysize)+1));
         C = state.getCameraMatrix();
 		
 		setupShader();
@@ -72,9 +70,9 @@ public:
 		glm::mat4 trans = glm::mat4(1.0f);
         
         //hacky light source size change
-        GLfloat maxDis = state.getModel().getDimension()[2] * 3;
-        GLfloat distScale = 1.0f / (glm::length(L*lightPos - camPos) / maxDis);
-        glPointSize(glm::mix(1.0f, 10.0f, distScale));
+//        GLfloat maxDis = state.getModel().getDimension()[2] * 3;
+//        GLfloat distScale = 1.0f / (glm::length(L*lightPos - camPos) / maxDis);
+ //       glPointSize(glm::mix(1.0f, 10.0f, distScale));
         
         printf("cam %f %f %f\n", camPos[0], camPos[1], camPos[2]);
         //printf("light %f %f %f\n", lightPos[0], lightPos[1], lightPos[2]);
@@ -233,7 +231,7 @@ private:
 		//setup position buffer
 		glGenBuffers(1, &positionBuffer);
 		glBindBuffer(GL_ARRAY_BUFFER, positionBuffer);
-		glBufferData(GL_ARRAY_BUFFER, model.getPositionBytes(), &model.getPosition()[0], GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, model.getWallPositionBytes(), &model.getPosition()[0], GL_STATIC_DRAW);
 		positionSlot = glGetAttribLocation(shaderProg, "pos");
 		glEnableVertexAttribArray(positionSlot);
 		glVertexAttribPointer(positionSlot, 3, GL_FLOAT, GL_FALSE, 0, 0);
@@ -242,7 +240,7 @@ private:
 		// Do the same thing for the color data
 		glGenBuffers(1, &colorBuffer);
 		glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
-		glBufferData(GL_ARRAY_BUFFER, model.getColorBytes(), &model.getColor()[0], GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, model.getWallColorBytes(), &model.getColor()[0], GL_STATIC_DRAW);
 		colorSlot =    glGetAttribLocation(shaderProg, "colorIn");
 		glEnableVertexAttribArray(colorSlot);
 		glVertexAttribPointer(colorSlot, 3, GL_FLOAT, GL_FALSE, 0, 0);

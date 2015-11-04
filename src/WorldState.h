@@ -36,20 +36,27 @@ private:
 	bool rotatingLeft;
 	bool rotatingRight;
 
-	GLfloat TRANSLATION_SENSITIVITY = 0.03f;
-	float ROTATION_SENSITIVITY = 0.03f;
+	GLfloat TRANSLATION_SENSITIVITY;
+	float ROTATION_SENSITIVITY;
 	// The cell within the maze that the player is currently in
-	int xCell = 0;
-	int yCell = 0;
+	int xCell;
+	int yCell;
 	// The x and y position of the player/camera within a cell. This assumes that 0,0 corresponds to the top left corner of a cell, while 1,1 is the bottom right
-	float xPos = 0;
-	float yPos = 0;
+	float xPos;
+	float yPos;
 
 public:
 	WorldState()
 	{
 		for(size_t i=0; i<NUM_TRACKED_FRAMES; i++)
 			frameTimes[i] = 0.0f;
+
+		xCell = 0;
+		yCell = 0;
+		xPos = 0;
+		yPos = 0;
+		TRANSLATION_SENSITIVITY = 0.03f;
+		ROTATION_SENSITIVITY = 0.03f;
         
         shadingMode = 0;
 		running = true;
@@ -57,33 +64,10 @@ public:
         model.init();
 		
 		cameraAngle = 0;
-
-		glm::vec3 center = model.getCentroid();
-		glm::vec3 max = model.getMaxBound();
-		glm::vec3 min = model.getMinBound();
-		glm::vec3 dim = model.getDimension();
-        printf("model loaded: bounds");
-		printf("[%.2f %.2f %.2f]..", min[0], min[1], min[2]);
-		printf("[%.2f %.2f %.2f] ", max[0], max[1], max[2]);
-		printf("= dim [%.2f %.2f %.2f]\n", dim[0], dim[1], dim[2]);
-		float camDistance = std::max(dim[0], dim[2]);
 		//cameraPos = glm::vec3(center[0],camDistance*std::max(xsize,ysize),center[2]);
 		cameraPos = glm::vec3(0, 0, 0);
         cameraLook = glm::vec3(1,0,0);
         cameraUp = glm::vec3(0,1,0);
-        
-		lightPos = glm::vec4((max-center)*1.3f, 1);
-        lightIntensity = glm::vec3(1,1,1);
-        
-        lightRotate = glm::mat4(1);
-        lightIncrement = glm::rotate(glm::mat4(1), -0.05f, glm::vec3(0,1,0));
-        
-        modelRotate = glm::mat4(1);
-        modelIncrement = glm::rotate(glm::mat4(1), 0.02f, glm::vec3(0,1,0));
-        modelTranslate = glm::translate(glm::mat4(1), -model.getCentroid());
-		
-		lightRotating = false;
-		modelRotating = false;
 	}
 	
 	void updateFrameTime(float timeAsSeconds)
