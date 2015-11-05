@@ -22,7 +22,8 @@ public:
 		initWall();
 		initFloor();
 
-		glm::mat4 finalTrans = glm::translate(glm::mat4(1.0f), glm::vec3(-centerX, 0, -centerY));
+		//glm::mat4 finalTrans = glm::translate(glm::mat4(1.0f), glm::vec3(-centerX, 0, -centerY));
+		glm::mat4 finalTrans = glm::mat4(1.0f);
 		glm::mat4 leftWall = glm::translate(glm::rotate(glm::mat4(1.0f),PI/2,glm::vec3(0,1,0)), glm::vec3(-0.5,0,-0.5));
         for(int i = 1 ; i < xsize ; ++i)
 		{
