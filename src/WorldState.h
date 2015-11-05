@@ -210,7 +210,7 @@ public:
 	}
 
 	void updateCameraPosition() {
-		
+		cameraPos = glm::vec3(xPos, cameraPos[1], yPos);
 	}
 	
 	void toggleModelRotate()
