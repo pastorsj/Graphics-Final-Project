@@ -227,27 +227,27 @@ public:
 
 	void turnRight()
 	{
-		/*cameraAngle += ROTATION_SENSITIVITY;
+		cameraAngle += ROTATION_SENSITIVITY;
 		if (cameraAngle > 2 * PI)
-			cameraAngle -= 2 * PI;*/
-		cameraRotate = -cameraIncrement * cameraRotate;
+			cameraAngle = 0;
+		//cameraRotate = -cameraIncrement * cameraRotate;
 	}
 
 	void turnLeft()
 	{
-		/*cameraAngle -= ROTATION_SENSITIVITY;
+		cameraAngle -= ROTATION_SENSITIVITY;
 		if (cameraAngle < 0)
-			cameraAngle += 2 * PI;*/
-		cameraRotate = cameraIncrement * cameraRotate;
+			cameraAngle = 2 * PI;
+		//cameraRotate = cameraIncrement * cameraRotate;
 	}
 
 	void updateCameraAngle(){
 		//glm::mat3 rotation = glm::mat3(cos(cameraAngle), 0, sin(cameraAngle), 0, 1, 0, -sin(cameraAngle), 0, cos(cameraAngle));
 		//glm::vec3 baseVec = glm::vec3(1, 0, 0);
-		//cameraLook = glm::normalize(glm::vec3(cos(cameraAngle) + 1, cameraLook[1], sin(cameraAngle) + 1));
-		//cameraLook = glm::normalize(rotation * baseVec);
-		glm::vec4 rot = cameraRotate * glm::vec4(1, 0, 0, 0);
-		cameraLook = glm::vec3(rot[0], rot[1], rot[2]);
+		cameraLook = glm::vec3(cos(cameraAngle) * 2 * PI, cameraLook[1], sin(cameraAngle) * 2 * PI);
+		//cameraLook = rotation * baseVec;
+		//glm::vec4 rot = cameraRotate * glm::vec4(1, 0, 0, 0);
+		//cameraLook = glm::vec3(rot[0], rot[1], rot[2]);
 	}
 
 	void updateCameraPosition() {
