@@ -27,6 +27,10 @@ private:
     glm::mat4 modelIncrement;
     glm::mat4 modelTranslate;
     glm::mat4 cameraMatrix;
+
+	glm::mat4 cameraRotate;
+	glm::mat4 cameraIncrement;
+	glm::mat4 cameraTranslate;
 	
 	bool lightRotating;
 	bool modelRotating;
@@ -51,12 +55,15 @@ public:
 		for(size_t i=0; i<NUM_TRACKED_FRAMES; i++)
 			frameTimes[i] = 0.0f;
 
-		xCell = 0;
-		yCell = 0;
+		xCell = 1;
+		yCell = 1;
 		xPos = 0;
 		yPos = 0;
 		TRANSLATION_SENSITIVITY = 0.03f;
 		ROTATION_SENSITIVITY = 0.03f;
+
+		cameraRotate = glm::mat4(1);
+		cameraIncrement = glm::rotate(glm::mat4(1), 0.02f, glm::vec3(0, 1, 0));
         
         shadingMode = 0;
 		running = true;
@@ -173,6 +180,15 @@ public:
     glm::vec4 getCameraPos() const
     { return glm::vec4(this->cameraPos, 1); }
 
+	glm::vec4 getCameraLook() const
+	{
+		return glm::vec4(this->cameraLook, 1);
+	}
+	float getCameraAngle() const
+	{
+		return cameraAngle;
+	}
+
 	void stepForward()
 	{
 		/*cameraPos += glm::vec3(cameraLook[0] * TRANSLATION_SENSITIVITY, 
@@ -180,6 +196,15 @@ public:
 			cameraLook[2] * TRANSLATION_SENSITIVITY); */
 		xPos += cameraLook[0] * TRANSLATION_SENSITIVITY;
 		yPos += cameraLook[2] * TRANSLATION_SENSITIVITY;
+
+		if (xPos >= 1) {
+			xPos = 0;
+			xCell++;
+		}
+		if (yPos >= 1) {
+			yPos = 0;
+			yCell++;
+		}
 	}
 
 	void stepBackward()
@@ -189,28 +214,44 @@ public:
 			cameraLook[2] * TRANSLATION_SENSITIVITY); */
 		xPos -= cameraLook[0] * TRANSLATION_SENSITIVITY;
 		yPos -= cameraLook[2] * TRANSLATION_SENSITIVITY;
+
+		if (xPos <= 0) {
+			xPos = 1;
+			xCell--;
+		}
+		if (yPos <= 0) {
+			yPos = 1;
+			yCell--;
+		}
 	}
 
 	void turnRight()
 	{
-		cameraAngle += ROTATION_SENSITIVITY;
+		/*cameraAngle += ROTATION_SENSITIVITY;
 		if (cameraAngle > 2 * PI)
-			cameraAngle -= 2 * PI;
+			cameraAngle -= 2 * PI;*/
+		cameraRotate = -cameraIncrement * cameraRotate;
 	}
 
 	void turnLeft()
 	{
-		cameraAngle -= ROTATION_SENSITIVITY;
+		/*cameraAngle -= ROTATION_SENSITIVITY;
 		if (cameraAngle < 0)
-			cameraAngle += 2 * PI;
+			cameraAngle += 2 * PI;*/
+		cameraRotate = cameraIncrement * cameraRotate;
 	}
 
 	void updateCameraAngle(){
-		cameraLook = glm::vec3(cos(cameraAngle), cameraLook[1], sin(cameraAngle));
+		//glm::mat3 rotation = glm::mat3(cos(cameraAngle), 0, sin(cameraAngle), 0, 1, 0, -sin(cameraAngle), 0, cos(cameraAngle));
+		//glm::vec3 baseVec = glm::vec3(1, 0, 0);
+		//cameraLook = glm::normalize(glm::vec3(cos(cameraAngle) + 1, cameraLook[1], sin(cameraAngle) + 1));
+		//cameraLook = glm::normalize(rotation * baseVec);
+		glm::vec4 rot = cameraRotate * glm::vec4(1, 0, 0, 0);
+		cameraLook = glm::vec3(rot[0], rot[1], rot[2]);
 	}
 
 	void updateCameraPosition() {
-		cameraPos = glm::vec3(xPos, cameraPos[1], yPos);
+		cameraPos = glm::vec3(xCell + xPos, cameraPos[1], yCell + yPos);
 	}
 	
 	void toggleModelRotate()
