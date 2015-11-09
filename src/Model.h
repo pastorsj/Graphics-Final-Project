@@ -1,295 +1,214 @@
 #ifndef __MODEL
 #define __MODEL
 
+#include <string>
 #include <vector>
-#include <iostream>
 #include "glm/glm.hpp"
 #include "objload/objLoader.h"
-#include "MazeGenerator.h"
 using namespace std; //makes using vectors easy
 
 class Model
 {
 public:
 
-    void init()
+    void init(string objName)
     {
-		makeMaze();
-
-		GLfloat centerX = ((GLfloat)xsize-1) / 2.0f;
-		GLfloat centerY = ((GLfloat)ysize-1) / 2.0f;
-
-		initWall();
-		initFloor();
-
-		//glm::mat4 finalTrans = glm::translate(glm::mat4(1.0f), glm::vec3(-centerX, 0, -centerY));
-		glm::mat4 finalTrans = glm::mat4(1.0f);
-		glm::mat4 leftWall = glm::translate(glm::rotate(glm::mat4(1.0f),PI/2,glm::vec3(0,1,0)), glm::vec3(-0.5,0,-0.5));
-        for(int i = 1 ; i < xsize ; ++i)
+		if(strcmp(objName.c_str(), "wall") == 0)
 		{
-			for(int j = 1 ; j < ysize ; ++j)
-			{
-				glm::mat4 buildTrans = glm::translate(glm::mat4(1.0f), glm::vec3(i, 0, j));
-				if(MAZE[i][j].up)
-				{
-					wallTransforms.push_back(finalTrans * buildTrans);
-				}
-				if(MAZE[i][j].left)
-				{
-					wallTransforms.push_back(finalTrans * buildTrans * leftWall);
-				}
-				if(j > 1 && i < xsize - 1)
-				{
-					floorTransforms.push_back(finalTrans * buildTrans);
-				}
-			}
+			initWall();
+		}
+		else if(strcmp(objName.c_str(), "floor") == 0)
+		{
+			initFloor();
+		}
+		else
+		{
+			// do something else..  probably will integrate objloader here
 		}
 	}
 	
-	vector<GLfloat> const getWallPosition() const
-	{ return wallPositions; }
+	vector<GLfloat> const getPosition() const
+	{ return positions; }
 	
-	vector<GLfloat> const getWallColor() const
-	{ return wallColors; }
+	vector<GLfloat> const getColor() const
+	{ return colors; }
 	
-	vector<GLuint> const getWallElements() const
-	{ return wallElements; }
+	vector<GLuint> const getElement() const
+	{ return elements; }
 	
-	size_t getWallVertexCount() const
-	{ return wallPositions.size()/3; }
+	size_t getVertexCount() const
+	{ return positions.size()/3; }
 	
-	size_t getWallPositionBytes() const
-	{ return wallPositions.size()*sizeof(GLfloat); }
+	size_t getPositionBytes() const
+	{ return positions.size()*sizeof(GLfloat); }
 	
-	size_t getWallColorBytes() const
-	{ return wallColors.size()*sizeof(GLfloat); }
+	size_t getColorBytes() const
+	{ return colors.size()*sizeof(GLfloat); }
 	
-	size_t getWallElementBytes() const
-	{ return wallElements.size()*sizeof(GLuint); }
-	
-	vector<GLfloat> const getFloorPosition() const
-	{ return floorPositions; }
-	
-	vector<GLfloat> const getFloorColor() const
-	{ return floorColors; }
-	
-	vector<GLuint> const getFloorElements() const
-	{ return floorElements; }
-	
-	size_t getFloorVertexCount() const
-	{ return floorPositions.size()/3; }
-	
-	size_t getFloorPositionBytes() const
-	{ return floorPositions.size()*sizeof(GLfloat); }
-	
-	size_t getFloorColorBytes() const
-	{ return floorColors.size()*sizeof(GLfloat); }
-	
-	size_t getFloorElementBytes() const
-	{ return floorElements.size()*sizeof(GLuint); }
+	size_t getElementBytes() const
+	{ return elements.size()*sizeof(GLuint); }
 
-	vector<glm::mat4> getWallTransforms() const
-	{ return this->wallTransforms; }
-
-	vector<glm::mat4> getFloorTransforms() const
-	{ return this->floorTransforms; }
+	vector<glm::mat4> getTransforms(int x = 0, int y = 0) const
+	{ return this->transforms; }
     
 private:
 
-	void makeWallDoubleSided()
+	void makeDoubleSided()
 	{
-		int upperBound = wallElements.size() / 3;
+		int upperBound = elements.size() / 3;
 		for(int i = 0 ; i < upperBound ; ++i)
 		{
-			wallElements.push_back(wallElements[i*3+2]);
-			wallElements.push_back(wallElements[i*3+1]);
-			wallElements.push_back(wallElements[i*3+0]);
+			elements.push_back(elements[i*3+2]);
+			elements.push_back(elements[i*3+1]);
+			elements.push_back(elements[i*3+0]);
 		}
 	}
 
 	void initWall()
 	{
 
-		wallPositions.push_back(-0.5);
-		wallPositions.push_back(-0.5);
-		wallPositions.push_back(0);
+		positions.push_back(-0.5);
+		positions.push_back(-0.5);
+		positions.push_back(0);
 
-		wallPositions.push_back(0.5);
-		wallPositions.push_back(-0.5);
-		wallPositions.push_back(0);
+		positions.push_back(0.5);
+		positions.push_back(-0.5);
+		positions.push_back(0);
 
-		wallPositions.push_back(0.5);
-		wallPositions.push_back(0.5);
-		wallPositions.push_back(0);
+		positions.push_back(0.5);
+		positions.push_back(0.5);
+		positions.push_back(0);
 
-		wallPositions.push_back(-0.5);
-		wallPositions.push_back(0.5);
-		wallPositions.push_back(0);
+		positions.push_back(-0.5);
+		positions.push_back(0.5);
+		positions.push_back(0);
 
-		wallPositions.push_back(0);
-		wallPositions.push_back(0);
-		wallPositions.push_back(0);
+		positions.push_back(0);
+		positions.push_back(0);
+		positions.push_back(0);
 
-		wallElements.push_back(0);
-		wallElements.push_back(1);
-		wallElements.push_back(4);
+		elements.push_back(0);
+		elements.push_back(1);
+		elements.push_back(4);
 
-		wallElements.push_back(1);
-		wallElements.push_back(2);
-		wallElements.push_back(4);
+		elements.push_back(1);
+		elements.push_back(2);
+		elements.push_back(4);
 
-		wallElements.push_back(2);
-		wallElements.push_back(3);
-		wallElements.push_back(4);
+		elements.push_back(2);
+		elements.push_back(3);
+		elements.push_back(4);
 
-		wallElements.push_back(3);
-		wallElements.push_back(0);
-		wallElements.push_back(4);
+		elements.push_back(3);
+		elements.push_back(0);
+		elements.push_back(4);
 
-		makeWallDoubleSided();
+		makeDoubleSided();
 
-        for(size_t i=0; i<wallPositions.size()/3; i++) {
+        for(size_t i=0; i<positions.size()/3; i++) {
 			if(i % 5 == 4)
 			{
-				wallColors.push_back(0);
-				wallColors.push_back(0);
-				wallColors.push_back(0);
+				colors.push_back(0);
+				colors.push_back(0);
+				colors.push_back(0);
 			}
 			else
 			{
-				wallColors.push_back(1);
-				wallColors.push_back(1);
-				wallColors.push_back(1);
+				colors.push_back(1);
+				colors.push_back(1);
+				colors.push_back(1);
 			}
         }
+
+		glm::mat4 leftWall = glm::translate(glm::rotate(glm::mat4(1.0f),PI/2,glm::vec3(0,1,0)), glm::vec3(-0.5,0,-0.5));
+		for(int i = 1 ; i < xsize ; ++i)
+		{
+			for(int j = 1 ; j < ysize ; ++j)
+			{
+				glm::mat4 buildTrans = glm::translate(glm::mat4(1.0f), glm::vec3(i, 0, j));
+				if(MAZE[i][j].up)
+				{
+					transforms.push_back(buildTrans);
+				}
+				if(MAZE[i][j].left)
+				{
+					transforms.push_back(buildTrans * leftWall);
+				}
+			}
+		}
 	}
 
 	void initFloor()
 	{
 
-		floorPositions.push_back(-0.5);
-		floorPositions.push_back(-0.5);
-		floorPositions.push_back(-1);
+		positions.push_back(-0.5);
+		positions.push_back(-0.5);
+		positions.push_back(-1);
 
-		floorPositions.push_back(0.5);
-		floorPositions.push_back(-0.5);
-		floorPositions.push_back(-1);
+		positions.push_back(0.5);
+		positions.push_back(-0.5);
+		positions.push_back(-1);
 
-		floorPositions.push_back(0.5);
-		floorPositions.push_back(-0.5);
-		floorPositions.push_back(0);
+		positions.push_back(0.5);
+		positions.push_back(-0.5);
+		positions.push_back(0);
 
-		floorPositions.push_back(-0.5);
-		floorPositions.push_back(-0.5);
-		floorPositions.push_back(0);
+		positions.push_back(-0.5);
+		positions.push_back(-0.5);
+		positions.push_back(0);
 
-		floorPositions.push_back(0);
-		floorPositions.push_back(-0.5);
-		floorPositions.push_back(-0.5);
+		positions.push_back(0);
+		positions.push_back(-0.5);
+		positions.push_back(-0.5);
 
-		int offset = 5;
+		elements.push_back(4);
+		elements.push_back(1);
+		elements.push_back(0);
 		
-		floorElements.push_back(4+offset);
-		floorElements.push_back(1+offset);
-		floorElements.push_back(0+offset);
+		elements.push_back(4);
+		elements.push_back(2);
+		elements.push_back(1);
 		
-		floorElements.push_back(4+offset);
-		floorElements.push_back(2+offset);
-		floorElements.push_back(1+offset);
+		elements.push_back(4);
+		elements.push_back(3);
+		elements.push_back(2);
 		
-		floorElements.push_back(4+offset);
-		floorElements.push_back(3+offset);
-		floorElements.push_back(2+offset);
-		
-		floorElements.push_back(4+offset);
-		floorElements.push_back(0+offset);
-		floorElements.push_back(3+offset);
+		elements.push_back(4);
+		elements.push_back(0);
+		elements.push_back(3);
 
-        for(size_t i=0; i<floorPositions.size()/3; i++) {
+        for(size_t i=0; i<positions.size()/3; i++) {
 			if(i % 5 == 4)
 			{
-				floorColors.push_back(0);
-				floorColors.push_back(0);
-				floorColors.push_back(1);
+				colors.push_back(0);
+				colors.push_back(0);
+				colors.push_back(1);
 			}
 			else
 			{
-				floorColors.push_back(0);
-				floorColors.push_back(1);
-				floorColors.push_back(0);
+				colors.push_back(0);
+				colors.push_back(1);
+				colors.push_back(0);
 			}
         }
-	}
-/*	
-	glm::vec3 computeMinBound()
-	{
-		glm::vec3 bound;
-		
-		for(int c=0; c<3; c++)
-			bound[c] = std::numeric_limits<float>::max();
-		
-		for(int i=0; i<positions.size(); i+=3)
+
+		for(int i = 1 ; i < xsize ; ++i)
 		{
-			for(int c=0; c<3; c++)
+			for(int j = 1 ; j < ysize ; ++j)
 			{
-				if(positions[i+c] < bound[c])
-					bound[c] = positions[i+c];
+				glm::mat4 buildTrans = glm::translate(glm::mat4(1.0f), glm::vec3(i, 0, j));
+				if(j > 1 && i < xsize - 1)
+				{
+					transforms.push_back(buildTrans);
+				}
 			}
 		}
-		
-		return bound;
 	}
-	
-	glm::vec3 computeMaxBound()
-	{
-		glm::vec3 bound;
-		
-		for(int c=0; c<3; c++)
-			bound[c] = -std::numeric_limits<float>::max();
-		
-		for(int i=0; i<positions.size(); i+=3)
-		{
-			for(int c=0; c<3; c++)
-			{
-				if(positions[i+c] > bound[c])
-					bound[c] = positions[i+c];
-			}
-		}
-		
-		return bound;
-	}
-	
-	glm::vec3 computeCentroid()
-	{
-		glm::vec3 center = glm::vec3(0);
-		float positionCount = 1.0f/(positions.size()/3.0f);
-		
-		for(int i=0; i<positions.size(); i+=3)
-		{
-			center[0] += positions[i] * positionCount;
-			center[1] += positions[i+1] * positionCount;
-			center[2] += positions[i+2] * positionCount;
-		}
-		
-		return center;
-	}
-	
-	glm::vec3 computeDimension()
-	{
-		glm::vec3 max = getMaxBound();
-		glm::vec3 min = getMinBound();
-		glm::vec3 dim = max - min;
-		return dim;
-	}
-*/	
-	vector<GLfloat> wallPositions;
-	vector<GLfloat> wallColors;
-	vector<GLuint> wallElements;
-	vector<glm::mat4> wallTransforms;
-	vector<GLfloat> floorPositions;
-	vector<GLfloat> floorColors;
-	vector<GLuint> floorElements;
-	vector<glm::mat4> floorTransforms;
+
+	vector<GLfloat> positions;
+	vector<GLfloat> colors;
+	vector<GLuint> elements;
+	vector<glm::mat4> transforms;
 	size_t objectCount;
 };
 

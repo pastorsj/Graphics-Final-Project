@@ -1,6 +1,6 @@
 #ifndef __WORLDSTATE_H
 #define __WORLDSTATE_H
-#include "Model.h"
+#include "ModelManager.h"
 
 #define NUM_TRACKED_FRAMES 10
 
@@ -11,7 +11,7 @@ private:
 	float currentTime;
 	float cameraAngle;
 	bool running;
-	Model model;
+	ModelManager models;
     int shadingMode;
 	
     glm::vec3 cameraPos;
@@ -67,8 +67,8 @@ public:
         
         shadingMode = 0;
 		running = true;
-		model = Model();
-        model.init();
+		models = ModelManager();
+        models.init();
 		
 		cameraAngle = 0;
 		//cameraPos = glm::vec3(center[0],camDistance*std::max(xsize,ysize),center[2]);
@@ -105,9 +105,6 @@ public:
 		printf(rotatingLeft ? "A" : "a");
 		printf(rotatingRight ? "D" : "d");
 	}
-	
-	Model const & getModel() const
-	{ return model; }
 	
 	void setRunning(bool r)
 	{ running = r; }
@@ -149,8 +146,8 @@ public:
 		this->currentTime = t;
 	}
 	
-	Model & getModel()
-	{ return model; }
+	ModelManager & getModels()
+	{ return models; }
 	
 	glm::mat4 getModelTranslate() const
 	{ return modelTranslate; }
