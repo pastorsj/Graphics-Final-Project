@@ -54,6 +54,8 @@ public:
 
 	void display(WorldState & state)
 	{
+		glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+
 		//clear the old frame
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -79,32 +81,32 @@ public:
         //printf("light %f %f %f\n", lightPos[0], lightPos[1], lightPos[2]);
 		
 		//use shader
-		glUseProgram(shaderProg);
+		glUseProgram(shaderProg[0]);
         
-        glUniformMatrix4fv(glGetUniformLocation(shaderProg, "P"), 1, GL_FALSE, &P[0][0]);
-        glUniformMatrix4fv(glGetUniformLocation(shaderProg, "C"), 1, GL_FALSE, &mC[0][0]);
-        glUniformMatrix4fv(glGetUniformLocation(shaderProg, "mR"), 1, GL_FALSE, &mR[0][0]);
-        glUniformMatrix4fv(glGetUniformLocation(shaderProg, "mT"), 1, GL_FALSE, &mT[0][0]);
-        glUniformMatrix4fv(glGetUniformLocation(shaderProg, "M"), 1, GL_FALSE, &M[0][0]);
-        glUniformMatrix4fv(glGetUniformLocation(shaderProg, "N"), 1, GL_FALSE, &N[0][0]);
-        glUniformMatrix4fv(glGetUniformLocation(shaderProg, "L"), 1, GL_FALSE, &L[0][0]);
-        glUniform4fv(glGetUniformLocation(shaderProg, "lightPos"), 1, &lightPos[0]);
-        glUniform4fv(glGetUniformLocation(shaderProg, "camPos"), 1, &camPos[0]);
-        glUniform1i(glGetUniformLocation(shaderProg, "shadingMode"), state.getShadingMode());
+        glUniformMatrix4fv(glGetUniformLocation(shaderProg[0], "P"), 1, GL_FALSE, &P[0][0]);
+        glUniformMatrix4fv(glGetUniformLocation(shaderProg[0], "C"), 1, GL_FALSE, &mC[0][0]);
+        glUniformMatrix4fv(glGetUniformLocation(shaderProg[0], "mR"), 1, GL_FALSE, &mR[0][0]);
+        glUniformMatrix4fv(glGetUniformLocation(shaderProg[0], "mT"), 1, GL_FALSE, &mT[0][0]);
+        glUniformMatrix4fv(glGetUniformLocation(shaderProg[0], "M"), 1, GL_FALSE, &M[0][0]);
+        glUniformMatrix4fv(glGetUniformLocation(shaderProg[0], "N"), 1, GL_FALSE, &N[0][0]);
+        glUniformMatrix4fv(glGetUniformLocation(shaderProg[0], "L"), 1, GL_FALSE, &L[0][0]);
+        glUniform4fv(glGetUniformLocation(shaderProg[0], "lightPos"), 1, &lightPos[0]);
+        glUniform4fv(glGetUniformLocation(shaderProg[0], "camPos"), 1, &camPos[0]);
+        glUniform1i(glGetUniformLocation(shaderProg[0], "shadingMode"), state.getShadingMode());
 		
 		glBindVertexArray(vertexArray);
 		//draw
 		for(int i = 0 ; i < wallTransList.size() ; ++i)
 		{
 			trans = wallTransList[i];
-			glUniformMatrix4fv(glGetUniformLocation(shaderProg, "trans"), 1, GL_FALSE, &trans[0][0]);
+			glUniformMatrix4fv(glGetUniformLocation(shaderProg[0], "trans"), 1, GL_FALSE, &trans[0][0]);
 			glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_INT, 0);
 		}
 
 		for(int i = 0 ; i < floorTransList.size() ; ++i)
 		{
 			trans = floorTransList[i];
-			glUniformMatrix4fv(glGetUniformLocation(shaderProg, "trans"), 1, GL_FALSE, &trans[0][0]);
+			glUniformMatrix4fv(glGetUniformLocation(shaderProg[0], "trans"), 1, GL_FALSE, &trans[0][0]);
 			glDrawElementsBaseVertex(GL_TRIANGLES, 12, GL_UNSIGNED_INT, (void*)(24*sizeof(GLfloat)), 0);
 		}
 		glBindVertexArray(0);
@@ -112,33 +114,96 @@ public:
         checkGLError("model");
         
         
-        glUseProgram(lightProg);
+        glUseProgram(shaderProg[1]);
         
-        glUniformMatrix4fv(glGetUniformLocation(lightProg, "P"), 1, GL_FALSE, &P[0][0]);
-        glUniformMatrix4fv(glGetUniformLocation(lightProg, "C"), 1, GL_FALSE, &mC[0][0]);
-        glUniformMatrix4fv(glGetUniformLocation(lightProg, "mR"), 1, GL_FALSE, &mR[0][0]);
-        glUniformMatrix4fv(glGetUniformLocation(lightProg, "mT"), 1, GL_FALSE, &mT[0][0]);
-		glUniformMatrix4fv(glGetUniformLocation(lightProg, "M"), 1, GL_FALSE, &M[0][0]);
-		glUniformMatrix4fv(glGetUniformLocation(lightProg, "N"), 1, GL_FALSE, &N[0][0]);
-        glUniformMatrix4fv(glGetUniformLocation(lightProg, "L"), 1, GL_FALSE, &L[0][0]);
-        glUniform4fv(glGetUniformLocation(lightProg, "lightPos"), 1, &lightPos[0]);
-        glUniform4fv(glGetUniformLocation(lightProg, "camPos"), 1, &camPos[0]);
-        glUniform1i(glGetUniformLocation(lightProg, "shadingMode"), state.getShadingMode());
+        glUniformMatrix4fv(glGetUniformLocation(shaderProg[1], "P"), 1, GL_FALSE, &P[0][0]);
+        glUniformMatrix4fv(glGetUniformLocation(shaderProg[1], "C"), 1, GL_FALSE, &mC[0][0]);
+        glUniformMatrix4fv(glGetUniformLocation(shaderProg[1], "mR"), 1, GL_FALSE, &mR[0][0]);
+        glUniformMatrix4fv(glGetUniformLocation(shaderProg[1], "mT"), 1, GL_FALSE, &mT[0][0]);
+		glUniformMatrix4fv(glGetUniformLocation(shaderProg[1], "M"), 1, GL_FALSE, &M[0][0]);
+		glUniformMatrix4fv(glGetUniformLocation(shaderProg[1], "N"), 1, GL_FALSE, &N[0][0]);
+        glUniformMatrix4fv(glGetUniformLocation(shaderProg[1], "L"), 1, GL_FALSE, &L[0][0]);
+        glUniform4fv(glGetUniformLocation(shaderProg[1], "lightPos"), 1, &lightPos[0]);
+        glUniform4fv(glGetUniformLocation(shaderProg[1], "camPos"), 1, &camPos[0]);
+        glUniform1i(glGetUniformLocation(shaderProg[1], "shadingMode"), state.getShadingMode());
         
         glBindVertexArray(lightArray);
         glDrawElements(GL_POINTS, 1, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
         glUseProgram(0);
         checkGLError("light");
+
+		// default framebuffer
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		// clear old frame
+		glClearColor(0.8f, 0.8f, 0.8f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		glUseProgram(shaderProg[2]);
+		checkGLError("render tex2");
+		glUniform2f(glGetUniformLocation(shaderProg[2], "resolution"), RESOLUTION, RESOLUTION);
+		glActiveTexture(GL_TEXTURE0+0); // this 0 should match 0 in 2 lines
+		glBindTexture(GL_TEXTURE_2D, renderTexture);
+		glUniform1i( glGetUniformLocation(shaderProg[2], "texId"), 0);
+
+		glBindVertexArray(quadVertexArray);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+		glBindVertexArray(0);
+		glUseProgram(0);
+		checkGLError("render texture");
+	}
+
+	void buildRenderBuffers(size_t xRes, size_t yRes)
+	{
+		if(renderTexture != 0) {
+			glDeleteTextures(1, &renderTexture);
+			glDeleteRenderbuffers(1, &renderBuffer);
+		}
+
+		// framebuffer
+		glGenFramebuffers(1, &frameBuffer);
+		glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+
+		// make renderbuffer for depth, attach
+		glGenRenderbuffers(1, &renderBuffer);
+		glBindRenderbuffer(GL_RENDERBUFFER, renderBuffer);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, xRes, yRes);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, renderBuffer);
+
+		// make texture
+		glGenTextures(1, &renderTexture);
+		glBindTexture(GL_TEXTURE_2D, renderTexture);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, xRes, yRes, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		
+		// attach texture to framebuffer
+		glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, renderTexture, 0);
+		GLenum colorBuffer = GL_COLOR_ATTACHMENT0;
+		glDrawBuffers(1, &colorBuffer);
+
+		if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+			cout << "Frame buffer setup failed\n";
+			return;
+		}
+
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		checkGLError("frame buffer");
 	}
 
 
 private:
 	bool initialized;
-	GLuint shaderProg;
-    GLuint lightProg;
+	GLuint shaderProg[3];
 	GLuint vertexArray;
     GLuint lightArray;
+
+	// Render to Texture Variables
+	GLuint quadVertexArray;
+	GLuint frameBuffer;
+	GLuint renderTexture;
+	GLuint renderBuffer;
 	
 	glm::mat4 P;
 	glm::mat4 C;
@@ -215,12 +280,17 @@ private:
 	{
 		char const * vertPath = "resources/simple.vert";
 		char const * fragPath = "resources/simple.frag";
-		shaderProg = ShaderManager::shaderFromFile(&vertPath, &fragPath, 1, 1);
+		shaderProg[0] = ShaderManager::shaderFromFile(&vertPath, &fragPath, 1, 1);
         
         
         char const * lightVPath = "resources/lightPos.vert";
         char const * lightFPath = "resources/lightPos.frag";
-        lightProg = ShaderManager::shaderFromFile(&lightVPath, &lightFPath, 1, 1);
+        shaderProg[1] = ShaderManager::shaderFromFile(&lightVPath, &lightFPath, 1, 1);
+
+		char const * texVPath = "resources/texture.vert";
+		char const * texFPath = "resources/texture.frag";
+		shaderProg[2] = ShaderManager::shaderFromFile(&texVPath, &texFPath, 1, 1);
+
 
 		checkGLError("shader");
 	}
@@ -252,7 +322,7 @@ private:
 			positions.push_back(temp[i]);
 		}
 		glBufferData(GL_ARRAY_BUFFER, model.getWallPositionBytes()+model.getFloorPositionBytes(), &positions[0], GL_STATIC_DRAW);
-		positionSlot = glGetAttribLocation(shaderProg, "pos");
+		positionSlot = glGetAttribLocation(shaderProg[0], "pos");
 		glEnableVertexAttribArray(positionSlot);
 		glVertexAttribPointer(positionSlot, 3, GL_FLOAT, GL_FALSE, 0, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -272,7 +342,7 @@ private:
 			colors.push_back(temp[i]);
 		}
 		glBufferData(GL_ARRAY_BUFFER, model.getWallColorBytes() + model.getFloorColorBytes(), &colors[0], GL_STATIC_DRAW);
-		colorSlot =    glGetAttribLocation(shaderProg, "colorIn");
+		colorSlot =    glGetAttribLocation(shaderProg[0], "colorIn");
 		glEnableVertexAttribArray(colorSlot);
 		glVertexAttribPointer(colorSlot, 3, GL_FLOAT, GL_FALSE, 0, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -294,6 +364,32 @@ private:
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, model.getWallElementBytes() + model.getFloorElementBytes(), &eles[0], GL_STATIC_DRAW);
 		//leave the element buffer active
         
+		// quad for render to texture
+		static const GLfloat quadVertexData[] = {
+			-1.0f, -1.0f, 0.0f,
+			 1.0f, -1.0f, 0.0f,
+			 1.0f,  1.0f, 0.0f,
+			-1.0f, -1.0f, 0.0f,
+			 1.0f,  1.0f, 0.0f,
+			-1.0f,  1.0f, 0.0f,
+		};
+		
+
+		checkGLError("setupx1");
+
+		glGenVertexArrays(1, &quadVertexArray);
+		glBindVertexArray(quadVertexArray);
+		GLuint quadVertexBuffer;
+		glGenBuffers(1, &quadVertexBuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, quadVertexBuffer);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertexData), quadVertexData, GL_STATIC_DRAW);
+		checkGLError("setupx3");
+		glEnableVertexAttribArray(glGetAttribLocation(shaderProg[2], "pos"));
+		glVertexAttribPointer(glGetAttribLocation(shaderProg[2], "pos"), 3, GL_FLOAT, GL_FALSE, 0, 0);
+		
+
+		checkGLError("setupx2");
+
 		//hacky way to draw the light
         glGenVertexArrays(1, &lightArray);
         glBindVertexArray(lightArray);

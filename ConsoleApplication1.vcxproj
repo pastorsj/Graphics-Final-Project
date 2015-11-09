@@ -51,6 +51,8 @@
     <None Include="resources\cube.obj" />
     <None Include="resources\sphere.obj" />
     <None Include="resources\teapot.obj" />
+    <None Include="resources\texture.frag" />
+    <None Include="resources\texture.vert" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\lightPos.frag" />

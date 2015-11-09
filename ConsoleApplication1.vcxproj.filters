@@ -94,5 +94,11 @@
     <None Include="resources\teapot.obj">
       <Filter>resources</Filter>
     </None>
+    <None Include="resources\texture.frag">
+      <Filter>resources</Filter>
+    </None>
+    <None Include="resources\texture.vert">
+      <Filter>resources</Filter>
+    </None>
   </ItemGroup>
 </Project>
