@@ -49,10 +49,10 @@ public:
         C = state.getCameraMatrix();
 		
 		setupShader();
-		setupBuffers(state.getModel());
+		setupBuffers(state.getModels());
 	}
 
-	void display(WorldState & state)
+	void display(WorldState &state)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 
@@ -70,9 +70,6 @@ public:
 		glm::vec4 camLook = state.getCameraLook();
 		float camAngle = state.getCameraAngle();
         glm::mat4 L = state.getLightRotate();
-		vector<glm::mat4> wallTransList = state.getModel().getWallTransforms();
-		vector<glm::mat4> floorTransList = state.getModel().getFloorTransforms();
-		glm::mat4 trans = glm::mat4(1.0f);
         
         //hacky light source size change
 //        GLfloat maxDis = state.getModel().getDimension()[2] * 3;
@@ -110,23 +107,11 @@ public:
         glUniform1i(glGetUniformLocation(shaderProg[0], "shadingMode"), state.getShadingMode());
 		
 		glBindVertexArray(vertexArray);
-		//draw
-		for(int i = 0 ; i < wallTransList.size() ; ++i)
-		{
-			trans = wallTransList[i];
-			glUniformMatrix4fv(glGetUniformLocation(shaderProg[0], "trans"), 1, GL_FALSE, &trans[0][0]);
-			glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_INT, 0);
-		}
-
-		for(int i = 0 ; i < floorTransList.size() ; ++i)
-		{
-			trans = floorTransList[i];
-			glUniformMatrix4fv(glGetUniformLocation(shaderProg[0], "trans"), 1, GL_FALSE, &trans[0][0]);
-			glDrawElementsBaseVertex(GL_TRIANGLES, 12, GL_UNSIGNED_INT, (void*)(24*sizeof(GLfloat)), 0);
-		}
+		// draw!
+		state.getModels().draw(shaderProg[0]);
 		glBindVertexArray(0);
 		glUseProgram(0);
-        checkGLError("model");
+		checkGLError("model");
         
         
         glUseProgram(shaderProg[1]);
@@ -310,7 +295,7 @@ private:
 		checkGLError("shader");
 	}
 
-	void setupBuffers(Model & model)
+	void setupBuffers(ModelManager & models)
 	{
 		glGenVertexArrays(1, &vertexArray);
 		glBindVertexArray(vertexArray);
@@ -324,19 +309,8 @@ private:
 		//setup position buffer
 		glGenBuffers(1, &positionBuffer);
 		glBindBuffer(GL_ARRAY_BUFFER, positionBuffer);
-		vector<GLfloat> positions;
-		vector<GLfloat> temp;
-		temp = model.getWallPosition();
-		for(int i = 0 ; i < temp.size() ; ++i)
-		{
-			positions.push_back(temp[i]);
-		}
-		temp = model.getFloorPosition();
-		for(int i = 0 ; i < temp.size() ; ++i)
-		{
-			positions.push_back(temp[i]);
-		}
-		glBufferData(GL_ARRAY_BUFFER, model.getWallPositionBytes()+model.getFloorPositionBytes(), &positions[0], GL_STATIC_DRAW);
+		vector<GLfloat> pos = models.getPosition();
+		glBufferData(GL_ARRAY_BUFFER, models.getPositionBytes(), &pos[0], GL_STATIC_DRAW);
 		positionSlot = glGetAttribLocation(shaderProg[0], "pos");
 		glEnableVertexAttribArray(positionSlot);
 		glVertexAttribPointer(positionSlot, 3, GL_FLOAT, GL_FALSE, 0, 0);
@@ -345,18 +319,8 @@ private:
 		// Do the same thing for the color data
 		glGenBuffers(1, &colorBuffer);
 		glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
-		vector<GLfloat> colors;
-		temp = model.getWallColor();
-		for(int i = 0 ; i < temp.size() ; ++i)
-		{
-			colors.push_back(temp[i]);
-		}
-		temp = model.getFloorColor();
-		for(int i = 0 ; i < temp.size() ; ++i)
-		{
-			colors.push_back(temp[i]);
-		}
-		glBufferData(GL_ARRAY_BUFFER, model.getWallColorBytes() + model.getFloorColorBytes(), &colors[0], GL_STATIC_DRAW);
+		vector<GLfloat> col = models.getColor();
+		glBufferData(GL_ARRAY_BUFFER, models.getColorBytes(), &col[0], GL_STATIC_DRAW);
 		colorSlot =    glGetAttribLocation(shaderProg[0], "colorIn");
 		glEnableVertexAttribArray(colorSlot);
 		glVertexAttribPointer(colorSlot, 3, GL_FLOAT, GL_FALSE, 0, 0);
@@ -365,18 +329,8 @@ private:
 		// now the elements
 		glGenBuffers(1, &elementBuffer);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
-		vector<GLuint> eles;
-		vector<GLuint> temp2 = model.getWallElements();
-		for(int i = 0 ; i < temp2.size() ; ++i)
-		{
-			eles.push_back(temp2[i]);
-		}
-		temp2 = model.getFloorElements();
-		for(int i = 0 ; i < temp2.size() ; ++i)
-		{
-			eles.push_back(temp2[i]);
-		}
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, model.getWallElementBytes() + model.getFloorElementBytes(), &eles[0], GL_STATIC_DRAW);
+		vector<GLuint> ele = models.getElement();
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, models.getElementBytes(), &ele[0], GL_STATIC_DRAW);
 		//leave the element buffer active
         
 		// quad for render to texture

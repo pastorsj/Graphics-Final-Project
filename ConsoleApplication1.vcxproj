@@ -38,6 +38,7 @@
     <ClInclude Include="src\glew\wglew.h" />
     <ClInclude Include="src\GLHelper.h" />
     <ClInclude Include="src\Model.h" />
+    <ClInclude Include="src\ModelManager.h" />
     <ClInclude Include="src\objload\list.h" />
     <ClInclude Include="src\objload\objLoader.h" />
     <ClInclude Include="src\objload\obj_parser.h" />

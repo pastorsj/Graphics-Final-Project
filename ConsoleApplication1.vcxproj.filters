@@ -60,6 +60,7 @@
       <Filter>loader</Filter>
     </ClInclude>
     <ClInclude Include="src\MazeGenerator.h" />
+    <ClInclude Include="src\ModelManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="helpers">
