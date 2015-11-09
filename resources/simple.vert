@@ -4,7 +4,8 @@ uniform mat4 P;
 uniform mat4 C;
 uniform mat4 mT;
 uniform mat4 mR;
-uniform mat4 trans;
+uniform mat4 preTrans;
+uniform mat4 postTrans;
 uniform mat4 M;
 uniform mat4 N;
 uniform mat4 L;
@@ -56,7 +57,7 @@ void main()
     //surfaceNormal = C*mR*vec4(colorIn * 2 - vec3(1,1,1), 0);
     //lightVector = normalize(L*lightPos - mR*pos);
     //viewVector = normalize(camPos- mR*pos);
-	gl_Position = P*M*trans*pos;
+	gl_Position = P*C*postTrans*mR*preTrans*pos;
     /*
     if(shadingMode == 0)
         smoothColor = justColor();
