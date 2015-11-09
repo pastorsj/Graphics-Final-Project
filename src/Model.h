@@ -23,7 +23,37 @@ public:
 		}
 		else
 		{
-			// do something else..  probably will integrate objloader here
+			objLoader loader;
+			loader.load(objName.c_str());
+			//loader.load("resources/sphere.obj");
+			//loader.load("resources/teapot.obj");
+			//loader.load("resources/test.obj");
+		
+			for(size_t i=0; i<loader.vertexCount; i++) {
+				positions.push_back(loader.vertexList[i]->e[0]);
+				positions.push_back(loader.vertexList[i]->e[1]);
+				positions.push_back(loader.vertexList[i]->e[2]);
+				//printf("v%zu: %f %f %f\n", i, positions[i*3+0], positions[i*3+1], positions[i*3+2]);
+			}
+		
+			for(size_t i=0; i<loader.faceCount; i++) {
+				if(loader.faceList[i]->vertex_count != 3) {
+					fprintf(stderr, "Only triangle primitives are supported.\n");
+					exit(1);
+				}
+			
+				elements.push_back(loader.faceList[i]->vertex_index[0]);
+				elements.push_back(loader.faceList[i]->vertex_index[1]);
+				elements.push_back(loader.faceList[i]->vertex_index[2]);
+				//printf("f%zu: %i %i %i\n", i, elements[i*3+0], elements[i*3+1], elements[i*3+2]);
+			}
+
+			for(size_t i = 0 ; i < elements.size() ; ++i)
+			{
+				colors.push_back((rand()%255)/255.0f); // this probably should change
+			}
+
+			transforms.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(5, 1, 5)));
 		}
 	}
 	
