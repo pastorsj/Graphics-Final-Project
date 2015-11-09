@@ -240,15 +240,6 @@ public:
 		//cameraRotate = cameraIncrement * cameraRotate;
 	}
 
-/*	void updateCameraAngle(){
-		//glm::mat3 rotation = glm::mat3(cos(cameraAngle), 0, sin(cameraAngle), 0, 1, 0, -sin(cameraAngle), 0, cos(cameraAngle));
-		//glm::vec3 baseVec = glm::vec3(1, 0, 0);
-		cameraLook = glm::vec3(cos(cameraAngle) * 2 * PI, cameraLook[1], sin(cameraAngle) * 2 * PI);
-		//cameraLook = rotation * baseVec;
-		//glm::vec4 rot = cameraRotate * glm::vec4(1, 0, 0, 0);
-		//cameraLook = glm::vec3(rot[0], rot[1], rot[2]);
-	}
-	*/
 	void updateCamera() {
 		cameraPos = glm::vec3(xCell + xPos, cameraPos[1], yCell + yPos);
 		cameraLook = glm::vec3(xCell + xPos + cos(cameraAngle), cameraLook[1], yCell + yPos + sin(cameraAngle));
