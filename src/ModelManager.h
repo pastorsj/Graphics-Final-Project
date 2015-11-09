@@ -18,10 +18,10 @@ public:
 	void init()
 	{
 		makeMaze();
-		models.resize(2);
+		models.resize(3);
 		models[0].init(string("wall"));
 		models[1].init(string("floor"));
-		//models[2].init(string("resources/teapot.obj"));
+		models[2].init(string("resources/teapot.obj"));
 	}
 
 	vector<GLfloat> const getPosition() const
