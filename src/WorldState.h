@@ -3,6 +3,7 @@
 #include "Model.h"
 
 #define NUM_TRACKED_FRAMES 10
+#define COLLISION_TOLERANCE 0.2f
 
 class WorldState
 {
@@ -144,8 +145,7 @@ public:
 		if (rotatingRight)
 			turnRight();
 
-		updateCameraAngle();
-		updateCameraPosition();
+		updateCamera();
 		
 		this->currentTime = t;
 	}
@@ -194,16 +194,22 @@ public:
 		/*cameraPos += glm::vec3(cameraLook[0] * TRANSLATION_SENSITIVITY, 
 			cameraLook[1] * TRANSLATION_SENSITIVITY, 
 			cameraLook[2] * TRANSLATION_SENSITIVITY); */
-		xPos += cos(cameraAngle) * TRANSLATION_SENSITIVITY;
-		yPos += sin(cameraAngle) * TRANSLATION_SENSITIVITY;
 
-		if (xPos >= 1) {
-			xPos = 0;
-			xCell++;
+		if (!MAZE[xCell][yCell].left || xPos < 1 - COLLISION_TOLERANCE) {
+			xPos += cos(cameraAngle) * TRANSLATION_SENSITIVITY;
+			if (xPos >= 1) {
+				xPos = 0;
+				xCell++;
+			}
 		}
-		if (yPos >= 1) {
-			yPos = 0;
-			yCell++;
+
+		if (!MAZE[xCell][yCell].up || yPos < 1 - COLLISION_TOLERANCE) {
+			yPos += sin(cameraAngle) * TRANSLATION_SENSITIVITY;
+
+			if (yPos >= 1) {
+				yPos = 0;
+				yCell++;
+			}
 		}
 	}
 
@@ -212,16 +218,22 @@ public:
 		/*cameraPos -= glm::vec3(cameraLook[0] * TRANSLATION_SENSITIVITY,
 			cameraLook[1] * TRANSLATION_SENSITIVITY,
 			cameraLook[2] * TRANSLATION_SENSITIVITY); */
-		xPos -= cos(cameraAngle) * TRANSLATION_SENSITIVITY;
-		yPos -= sin(cameraAngle) * TRANSLATION_SENSITIVITY;
+		if (!MAZE[xCell - 1][yCell].left || xPos > COLLISION_TOLERANCE) {
+			xPos -= cos(cameraAngle) * TRANSLATION_SENSITIVITY;
 
-		if (xPos <= 0) {
-			xPos = 1;
-			xCell--;
+			if (xPos <= 0) {
+				xPos = 1;
+				xCell--;
+			}
 		}
-		if (yPos <= 0) {
-			yPos = 1;
-			yCell--;
+		
+		if (!MAZE[xCell][yCell - 1].up || yPos > COLLISION_TOLERANCE) {
+			yPos -= sin(cameraAngle) * TRANSLATION_SENSITIVITY;
+
+			if (yPos <= 0) {
+				yPos = 1;
+				yCell--;
+			}
 		}
 	}
 
@@ -250,8 +262,9 @@ public:
 		//cameraLook = glm::vec3(rot[0], rot[1], rot[2]);
 	}
 
-	void updateCameraPosition() {
-		cameraPos = glm::vec3(xCell + xPos, cameraPos[1], yCell + yPos);
+	void updateCamera() {
+		cameraPos = glm::vec3(getXPos(), cameraPos[1], getYPos());
+		cameraLook = glm::vec3(getXPos() + cos(cameraAngle), cameraLook[1], getYPos() + sin(cameraAngle));
 	}
 	
 	void toggleModelRotate()
@@ -298,6 +311,22 @@ public:
 	bool isRotatingRight() const
 	{
 		return rotatingRight;
+	}
+
+	float getXPos() {
+		return xCell + xPos + 0.5;
+	}
+
+	float getYPos() {
+		return yCell + yPos + 0.5;
+	}
+
+	int getXCell() {
+		return xCell;
+	}
+
+	int getYCell() {
+		return yCell;
 	}
 };
 

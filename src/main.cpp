@@ -45,6 +45,7 @@ public:
 
 		WorldState state;
 		render.init(state);
+		render.buildRenderBuffers(RESOLUTION, RESOLUTION);
 		
 		previousPos = glm::vec2(0);
 		buttonDown[0]=false;
