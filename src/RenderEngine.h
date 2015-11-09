@@ -94,9 +94,9 @@ public:
 		glBindVertexArray(vertexArray);
 		// draw!
 		state.getModels().draw(shaderProg[0]);
-//		glBindVertexArray(0);
-//		glUseProgram(0);
-//        checkGLError("model");
+		glBindVertexArray(0);
+		glUseProgram(0);
+		checkGLError("model");
         
         
         glUseProgram(shaderProg[1]);
@@ -294,7 +294,8 @@ private:
 		//setup position buffer
 		glGenBuffers(1, &positionBuffer);
 		glBindBuffer(GL_ARRAY_BUFFER, positionBuffer);
-		glBufferData(GL_ARRAY_BUFFER, models.getPositionBytes(), &models.getPosition(), GL_STATIC_DRAW);
+		vector<GLfloat> pos = models.getPosition();
+		glBufferData(GL_ARRAY_BUFFER, models.getPositionBytes(), &pos[0], GL_STATIC_DRAW);
 		positionSlot = glGetAttribLocation(shaderProg[0], "pos");
 		glEnableVertexAttribArray(positionSlot);
 		glVertexAttribPointer(positionSlot, 3, GL_FLOAT, GL_FALSE, 0, 0);
@@ -303,7 +304,8 @@ private:
 		// Do the same thing for the color data
 		glGenBuffers(1, &colorBuffer);
 		glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
-		glBufferData(GL_ARRAY_BUFFER, models.getColorBytes(), &models.getColor(), GL_STATIC_DRAW);
+		vector<GLfloat> col = models.getColor();
+		glBufferData(GL_ARRAY_BUFFER, models.getColorBytes(), &col[0], GL_STATIC_DRAW);
 		colorSlot =    glGetAttribLocation(shaderProg[0], "colorIn");
 		glEnableVertexAttribArray(colorSlot);
 		glVertexAttribPointer(colorSlot, 3, GL_FLOAT, GL_FALSE, 0, 0);
@@ -312,7 +314,8 @@ private:
 		// now the elements
 		glGenBuffers(1, &elementBuffer);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, models.getElementBytes(), &models.getElement(), GL_STATIC_DRAW);
+		vector<GLuint> ele = models.getElement();
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, models.getElementBytes(), &ele[0], GL_STATIC_DRAW);
 		//leave the element buffer active
         
 		// quad for render to texture

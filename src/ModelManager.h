@@ -117,10 +117,13 @@ public:
 			prevElements += models[i].getElement().size();
 			prevVertices += models[i].getVertexCount();
 		}
-		glBindVertexArray(0);
-		glUseProgram(0);
-		checkGLError("Model manager");
 	}
+
+	vector<Model> & getRawModels()
+	{
+		return models;
+	}
+
 
 private:
 	vector<Model> models;
