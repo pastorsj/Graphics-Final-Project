@@ -194,8 +194,8 @@ public:
 		/*cameraPos += glm::vec3(cameraLook[0] * TRANSLATION_SENSITIVITY, 
 			cameraLook[1] * TRANSLATION_SENSITIVITY, 
 			cameraLook[2] * TRANSLATION_SENSITIVITY); */
-		xPos += cameraLook[0] * TRANSLATION_SENSITIVITY;
-		yPos += cameraLook[2] * TRANSLATION_SENSITIVITY;
+		xPos += cos(cameraAngle) * TRANSLATION_SENSITIVITY;
+		yPos += sin(cameraAngle) * TRANSLATION_SENSITIVITY;
 
 		if (xPos >= 1) {
 			xPos = 0;
@@ -212,8 +212,8 @@ public:
 		/*cameraPos -= glm::vec3(cameraLook[0] * TRANSLATION_SENSITIVITY,
 			cameraLook[1] * TRANSLATION_SENSITIVITY,
 			cameraLook[2] * TRANSLATION_SENSITIVITY); */
-		xPos -= cameraLook[0] * TRANSLATION_SENSITIVITY;
-		yPos -= cameraLook[2] * TRANSLATION_SENSITIVITY;
+		xPos -= cos(cameraAngle) * TRANSLATION_SENSITIVITY;
+		yPos -= sin(cameraAngle) * TRANSLATION_SENSITIVITY;
 
 		if (xPos <= 0) {
 			xPos = 1;
@@ -244,7 +244,7 @@ public:
 	void updateCameraAngle(){
 		//glm::mat3 rotation = glm::mat3(cos(cameraAngle), 0, sin(cameraAngle), 0, 1, 0, -sin(cameraAngle), 0, cos(cameraAngle));
 		//glm::vec3 baseVec = glm::vec3(1, 0, 0);
-		cameraLook = glm::vec3(cos(cameraAngle) * 2 * PI, cameraLook[1], sin(cameraAngle) * 2 * PI);
+		cameraLook = glm::vec3(cos(cameraAngle) * 2 * PI, 0, sin(cameraAngle) * 2 * PI);
 		//cameraLook = rotation * baseVec;
 		//glm::vec4 rot = cameraRotate * glm::vec4(1, 0, 0, 0);
 		//cameraLook = glm::vec3(rot[0], rot[1], rot[2]);
