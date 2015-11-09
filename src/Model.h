@@ -16,7 +16,7 @@ public:
 		rotates = false;
 	}
 
-    void init(string objName)
+    void init(string objName, int xCell = 0, int yCell = 0, bool rotate = false, float yOffset = 0)
     {
 		preTrans = glm::mat4(1.0f);
 		if(strcmp(objName.c_str(), "wall") == 0)
@@ -64,15 +64,13 @@ public:
 			center = computeCentroid();
 			dim = computeDimension();
 
-			int desX = 4;
-			int desY = 4;
-
 			glm::mat4 moveCenter = glm::translate(glm::mat4(1.0f), -center);
 			int maxDim = dim[0] > dim[2] ? dim[0] : dim[2];
+			maxDim = maxDim > dim[1] ? maxDim : dim[1];
 			float scaler = 0.8f / maxDim;
 			glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(scaler));
-			glm::mat4 moveCell = glm::translate(glm::mat4(1.0f), glm::vec3(desX, -0.25, desY+0.5));
-			rotates = true;
+			glm::mat4 moveCell = glm::translate(glm::mat4(1.0f), glm::vec3(xCell, yOffset, yCell+0.5));
+			rotates = rotate;
 			preTrans = scale * moveCenter;
 			postTrans.push_back(moveCell);
 		}
