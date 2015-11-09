@@ -131,10 +131,10 @@ public:
 
 		//move camera
 		if (movingForward)
-			stepForward();
+			step(true);
 
 		if (movingBackward)
-			stepBackward();
+			step(false);
 
 		if (rotatingLeft)
 			turnLeft();
@@ -186,23 +186,32 @@ public:
 		return cameraAngle;
 	}
 
-	void stepForward()
+	/*void stepForward()
 	{
 		/*cameraPos += glm::vec3(cameraLook[0] * TRANSLATION_SENSITIVITY, 
 			cameraLook[1] * TRANSLATION_SENSITIVITY, 
-			cameraLook[2] * TRANSLATION_SENSITIVITY); */
+			cameraLook[2] * TRANSLATION_SENSITIVITY); 
 
-		if (!MAZE[xCell][yCell].left || xPos < 1 - COLLISION_TOLERANCE) {
+		if ((!MAZE[xCell][yCell].left || xPos < 1 - COLLISION_TOLERANCE) && (!MAZE[xCell - 1][yCell].left || xPos > COLLISION_TOLERANCE)) {
 			xPos += cos(cameraAngle) * TRANSLATION_SENSITIVITY;
+
+			if (xPos <= 0) {
+				xPos = 1;
+				xCell--;
+			} else
 			if (xPos >= 1) {
 				xPos = 0;
 				xCell++;
 			}
 		}
 
-		if (!MAZE[xCell][yCell].up || yPos < 1 - COLLISION_TOLERANCE) {
+		if ((!MAZE[xCell][yCell].up || yPos < 1 - COLLISION_TOLERANCE) && (!MAZE[xCell][yCell - 1].up || yPos > COLLISION_TOLERANCE)) {
 			yPos += sin(cameraAngle) * TRANSLATION_SENSITIVITY;
 
+			if (yPos <= 0) {
+				yPos = 1;
+				yCell--;
+			} else
 			if (yPos >= 1) {
 				yPos = 0;
 				yCell++;
@@ -214,24 +223,71 @@ public:
 	{
 		/*cameraPos -= glm::vec3(cameraLook[0] * TRANSLATION_SENSITIVITY,
 			cameraLook[1] * TRANSLATION_SENSITIVITY,
-			cameraLook[2] * TRANSLATION_SENSITIVITY); */
-		if (!MAZE[xCell - 1][yCell].left || xPos > COLLISION_TOLERANCE) {
+			cameraLook[2] * TRANSLATION_SENSITIVITY); 
+		if ((!MAZE[xCell][yCell].left || xPos < 1 - COLLISION_TOLERANCE) && (!MAZE[xCell - 1][yCell].left || xPos > COLLISION_TOLERANCE)) {
 			xPos -= cos(cameraAngle) * TRANSLATION_SENSITIVITY;
 
-			if (xPos <= 0) {
+			if (xPos >= 1) {
+				xPos = 0;
+				xCell++;
+			} else if (xPos <= 0) {
 				xPos = 1;
 				xCell--;
 			}
 		}
 		
-		if (!MAZE[xCell][yCell - 1].up || yPos > COLLISION_TOLERANCE) {
+		if ((!MAZE[xCell][yCell].up || yPos < 1 - COLLISION_TOLERANCE) && (!MAZE[xCell][yCell - 1].up || yPos > COLLISION_TOLERANCE)) {
 			yPos -= sin(cameraAngle) * TRANSLATION_SENSITIVITY;
 
+			if (yPos >= 1) {
+				yPos = 0;
+				yCell++;
+			} else 
 			if (yPos <= 0) {
 				yPos = 1;
 				yCell--;
 			}
 		}
+	} */
+
+	void step(bool forward) {
+		float xInterval = forward ? (cos(cameraAngle) * TRANSLATION_SENSITIVITY) : -(cos(cameraAngle * TRANSLATION_SENSITIVITY));
+		float yInterval = forward ? (sin(cameraAngle) * TRANSLATION_SENSITIVITY) : -(sin(cameraAngle * TRANSLATION_SENSITIVITY));
+
+		if (xInterval > 0 && (!MAZE[xCell + 1][yCell].left || xPos < 1 - COLLISION_TOLERANCE)) {
+			xPos += xInterval;
+		}
+		if (MAZE[xCell][yCell].left && xPos < 1 - COLLISION_TOLERANCE ) {
+
+		}
+
+		if (xPos <= 0) {
+			xPos = 1;
+			xCell--;
+		}
+		else
+			if (xPos >= 1) {
+			xPos = 0;
+			xCell++;
+			}
+
+		if (!MAZE[xCell][yCell].up || yPos < 1 - COLLISION_TOLERANCE) {
+		
+		}
+		
+		else if(!MAZE[xCell][yCell - 1].up || yPos > COLLISION_TOLERANCE) {
+
+		}
+
+		if (yPos <= 0) {
+			yPos = 1;
+			yCell--;
+		}
+		else
+			if (yPos >= 1) {
+			yPos = 0;
+			yCell++;
+			}
 	}
 
 	void turnRight()
@@ -324,6 +380,14 @@ public:
 
 	int getYCell() {
 		return yCell;
+	}
+
+	float getXPosComp(){
+		return xPos;
+	}
+
+	float getYPosComp(){
+		return yPos;
 	}
 };
 

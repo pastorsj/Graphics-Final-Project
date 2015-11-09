@@ -77,19 +77,23 @@ public:
  //       glPointSize(glm::mix(1.0f, 10.0f, distScale));
         
 		//printf("cam %f %f %f\n", camPos[0], camPos[1], camPos[2]);
-		//printf("look %f %f %f\n", camLook[0], camLook[1], camLook[2]);
+		printf("look %f %f %f\n", camLook[0], camLook[1], camLook[2]);
 		//printf("angle : %f\n", camAngle);
         //printf("light %f %f %f\n", lightPos[0], lightPos[1], lightPos[2]);
 
 		float x = state.getXPos();
 		float y = state.getYPos();
 
+		float xPos = state.getXPosComp();
+		float yPos = state.getYPosComp();
+
 	
 
 		printf("x pos: %f, y pos: %f\n", x, y);
+		printf("x pos: %f, y pos: %f\n", xPos, yPos);
 		printf("x cell: %i, y cell: %i\n", state.getXCell(), state.getYCell());
-		printf(MAZE[state.getXCell()][state.getYCell()].left ? "left wall\n" : "no left wall\n");
-		printf(MAZE[state.getXCell()][state.getYCell()].up ? "up wall\n" : "no up wall\n");
+		//printf(MAZE[state.getXCell()][state.getYCell()].left ? "left wall\n" : "no left wall\n");
+		//printf(MAZE[state.getXCell()][state.getYCell()].up ? "up wall\n" : "no up wall\n");
 
 		
 		//use shader
