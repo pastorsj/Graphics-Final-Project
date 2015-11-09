@@ -19,6 +19,9 @@
 
 /* Begin PBXFileReference section */
 		412381101BE92F5700AD9485 /* MazeGenerator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MazeGenerator.h; sourceTree = "<group>"; };
+		413938A41BF1080A00562D25 /* ModelManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ModelManager.h; sourceTree = "<group>"; };
+		413938A51BF1081900562D25 /* texture.frag */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = texture.frag; sourceTree = "<group>"; };
+		413938A61BF1081900562D25 /* texture.vert */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = texture.vert; sourceTree = "<group>"; };
 		AF0E3A7F1BC05DD900D0BE0D /* lightPos.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = lightPos.vert; sourceTree = "<group>"; };
 		AF0E3A821BC05DD900D0BE0D /* simple.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = simple.frag; sourceTree = "<group>"; };
 		AF0E3A831BC05DD900D0BE0D /* simple.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = simple.vert; sourceTree = "<group>"; };
@@ -319,6 +322,8 @@
 				AF0E3A821BC05DD900D0BE0D /* simple.frag */,
 				AF0E3A831BC05DD900D0BE0D /* simple.vert */,
 				AF2172661BC42DE900AF0C02 /* lightPos.frag */,
+				413938A51BF1081900562D25 /* texture.frag */,
+				413938A61BF1081900562D25 /* texture.vert */,
 			);
 			path = resources;
 			sourceTree = SOURCE_ROOT;
@@ -349,6 +354,7 @@
 				AFE01D3A1BAA530B00AE18A3 /* RenderEngine.h */,
 				AF8B437F1B97FA77005AB0AE /* main.cpp */,
 				412381101BE92F5700AD9485 /* MazeGenerator.h */,
+				413938A41BF1080A00562D25 /* ModelManager.h */,
 			);
 			path = src;
 			sourceTree = "<group>";
