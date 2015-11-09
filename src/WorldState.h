@@ -60,11 +60,13 @@ public:
 		yCell = 1;
 		xPos = 0;
 		yPos = 0;
-		TRANSLATION_SENSITIVITY = 0.03f;
-		ROTATION_SENSITIVITY = 0.03f;
+		TRANSLATION_SENSITIVITY = 0.07f;
+		ROTATION_SENSITIVITY = 0.07f;
 
 		cameraRotate = glm::mat4(1);
 		cameraIncrement = glm::rotate(glm::mat4(1), 0.02f, glm::vec3(0, 1, 0));
+
+		modelIncrement = glm::rotate(glm::mat4(1.0f), 0.02f, glm::vec3(0, 1, 0));
         
         shadingMode = 0;
 		running = true;
@@ -122,12 +124,10 @@ public:
 		this->updateFrameTime(elapsed);
 		
 		//spin light
-		if(lightRotating)
-			lightRotate = lightIncrement * lightRotate;
+		lightRotate = lightIncrement * lightRotate;
         
         //spin model
-		if(modelRotating)
-			modelRotate = modelIncrement * modelRotate;
+		modelRotate = modelIncrement * modelRotate;
 
 		//move camera
 		if (movingForward)

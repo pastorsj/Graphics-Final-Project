@@ -112,7 +112,7 @@ public:
 		
 		glBindVertexArray(vertexArray);
 		// draw!
-		state.getModels().draw(shaderProg[0]);
+		state.getModels().draw(shaderProg[0], mR);
 		glBindVertexArray(0);
 		glUseProgram(0);
 		checkGLError("model");

@@ -18,10 +18,14 @@ public:
 	void init()
 	{
 		makeMaze();
-		models.resize(2);
+		models.resize(7);
 		models[0].init(string("wall"));
 		models[1].init(string("floor"));
-		//models[2].init(string("resources/teapot.obj"));
+		models[2].init(string("resources/teapot.obj"), 4, 4, true, -0.25);
+		models[3].init(string("resources/gourd.obj"), 1, 7, true);
+		models[4].init(string("resources/sphere.obj"), 4, 6, true);
+        models[5].init(string("resources/teddy.obj"), 7, 1, true);
+        models[6].init(string("resources/cow.obj"), 5, 2, false);
 	}
 
 	vector<GLfloat> const getPosition() const
@@ -99,19 +103,30 @@ public:
 		return runningTotal;
 	}
 
-	void draw(GLuint shaderProg)
+	void draw(GLuint shaderProg, glm::mat4 mR)
 	{
 		size_t prevElements = 0;
 		size_t prevVertices = 0;
-		vector<glm::mat4> transList;
-		glm::mat4 trans;
+		vector<glm::mat4> postTransList;
+		glm::mat4 preTrans, postTrans;
+		glm::mat4 ident = glm::mat4(1.0f);
 		for(int i = 0 ; i < models.size() ; ++i)
 		{
-			transList = models[i].getTransforms();
-			for(int j = 0 ; j < transList.size() ; ++j)
+			preTrans = models[i].getPreTrans();
+			postTransList = models[i].getPostTrans();
+			glUniformMatrix4fv(glGetUniformLocation(shaderProg, "preTrans"), 1, GL_FALSE, &preTrans[0][0]);
+			if(models[i].getRotate())
 			{
-				trans = transList[j];
-				glUniformMatrix4fv(glGetUniformLocation(shaderProg, "trans"), 1, GL_FALSE, &trans[0][0]);
+				glUniformMatrix4fv(glGetUniformLocation(shaderProg, "mR"), 1, GL_FALSE, &mR[0][0]);
+			}
+			else
+			{
+				glUniformMatrix4fv(glGetUniformLocation(shaderProg, "mR"), 1, GL_FALSE, &ident[0][0]);
+			}
+			for(int j = 0 ; j < postTransList.size() ; ++j)
+			{
+				postTrans = postTransList[j];
+				glUniformMatrix4fv(glGetUniformLocation(shaderProg, "postTrans"), 1, GL_FALSE, &postTrans[0][0]);
 				//cout << models[i].getElement().size() << " " << prevElements << " " << prevVertices << endl;
 				glDrawElementsBaseVertex(GL_TRIANGLES, models[i].getElement().size(), GL_UNSIGNED_INT, (void*)(prevElements*sizeof(GLfloat)), prevVertices);
 			}

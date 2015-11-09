@@ -11,8 +11,14 @@ class Model
 {
 public:
 
-    void init(string objName)
+	Model()
+	{
+		rotates = false;
+	}
+
+    void init(string objName, int xCell = 0, int yCell = 0, bool rotate = false, float yOffset = 0)
     {
+		preTrans = glm::mat4(1.0f);
 		if(strcmp(objName.c_str(), "wall") == 0)
 		{
 			initWall();
@@ -53,7 +59,20 @@ public:
 				colors.push_back((rand()%255)/255.0f); // this probably should change
 			}
 
-			transforms.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(5, 1, 5)));
+			min = computeMinBound();
+			max = computeMaxBound();
+			center = computeCentroid();
+			dim = computeDimension();
+
+			glm::mat4 moveCenter = glm::translate(glm::mat4(1.0f), -center);
+			int maxDim = dim[0] > dim[2] ? dim[0] : dim[2];
+			maxDim = maxDim > dim[1] ? maxDim : dim[1];
+			float scaler = 0.8f / maxDim;
+			glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(scaler));
+			glm::mat4 moveCell = glm::translate(glm::mat4(1.0f), glm::vec3(xCell, yOffset, yCell+0.5));
+			rotates = rotate;
+			preTrans = scale * moveCenter;
+			postTrans.push_back(moveCell);
 		}
 	}
 	
@@ -78,8 +97,26 @@ public:
 	size_t getElementBytes() const
 	{ return elements.size()*sizeof(GLuint); }
 
-	vector<glm::mat4> getTransforms(int x = 0, int y = 0) const
-	{ return this->transforms; }
+	glm::vec3 getMinBound()
+	{ return min; }
+
+	glm::vec3 getMaxBound()
+	{ return max; }
+
+	glm::vec3 getCentroid()
+	{ return center; }
+
+	glm::vec3 getDimension()
+	{ return dim; }
+
+	glm::mat4 getPreTrans(int x = 0, int y = 0) const
+	{ return this->preTrans; }
+
+	vector<glm::mat4> getPostTrans(int x = 0, int y = 0) const
+	{ return this->postTrans; }
+
+	bool getRotate()
+	{ return rotates; }
     
 private:
 
@@ -92,6 +129,73 @@ private:
 			elements.push_back(elements[i*3+1]);
 			elements.push_back(elements[i*3+0]);
 		}
+	}
+
+	glm::vec3 computeCentroid()
+	{
+		glm::vec3 center = glm::vec3(0);
+		float positionCount = 1.0f/(positions.size()/3.0f);
+
+		for(int i = 0 ; i < positions.size() ; i += 3)
+		{
+			center[0] = positions[i] * positionCount;
+			center[1] = positions[i+1] * positionCount;
+			center[2] = positions[i+2] * positionCount;
+		}
+
+		return center;	
+	}
+
+	glm::vec3 computeMinBound()
+	{
+		glm::vec3 bound;
+
+		for(int c = 0 ; c < 3 ; ++c)
+		{
+			bound[c] = std::numeric_limits<float>::max();
+		}
+
+		for(int i = 0 ; i < positions.size() ; i+=3)
+		{
+			for(int c = 0 ; c < 3 ; ++c)
+			{
+				if(positions[i+c] < bound[c])
+				{
+					bound[c] = positions[i+c];
+				}
+			}
+		}
+		return bound;
+	}
+
+	glm::vec3 computeMaxBound()
+	{
+		glm::vec3 bound;
+
+		for(int c = 0 ; c < 3 ; ++c)
+		{
+			bound[c] = -std::numeric_limits<float>::max();
+		}
+
+		for(int i = 0 ; i < positions.size() ; i+=3)
+		{
+			for(int c = 0 ; c < 3 ; ++c)
+			{
+				if(positions[i+c] > bound[c])
+				{
+					bound[c] = positions[i+c];
+				}
+			}
+		}
+		return bound;
+	}
+
+	glm::vec3 computeDimension()
+	{
+		glm::vec3 max = getMaxBound();
+		glm::vec3 min = getMinBound();
+		glm::vec3 dim = max - min;
+		return dim;
 	}
 
 	void initWall()
@@ -158,11 +262,11 @@ private:
 				glm::mat4 buildTrans = glm::translate(glm::mat4(1.0f), glm::vec3(i, 0, j));
 				if(MAZE[i][j].up)
 				{
-					transforms.push_back(buildTrans);
+					postTrans.push_back(buildTrans);
 				}
 				if(MAZE[i][j].left)
 				{
-					transforms.push_back(buildTrans * leftWall);
+					postTrans.push_back(buildTrans * leftWall);
 				}
 			}
 		}
@@ -229,7 +333,7 @@ private:
 				glm::mat4 buildTrans = glm::translate(glm::mat4(1.0f), glm::vec3(i, 0, j));
 				if(j > 1 && i < xsize - 1)
 				{
-					transforms.push_back(buildTrans);
+					postTrans.push_back(buildTrans);
 				}
 			}
 		}
@@ -238,8 +342,14 @@ private:
 	vector<GLfloat> positions;
 	vector<GLfloat> colors;
 	vector<GLuint> elements;
-	vector<glm::mat4> transforms;
+	glm::mat4 preTrans;
+	vector<glm::mat4> postTrans;
 	size_t objectCount;
+	bool rotates;
+	glm::vec3 min;
+	glm::vec3 max;
+	glm::vec3 dim;
+	glm::vec3 center;
 };
 
 #endif
