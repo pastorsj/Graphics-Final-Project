@@ -1,6 +1,6 @@
 //Changes the number of cells in the maze!
-const int xsize=30;
-const int ysize=30;
+const int xsize=10;
+const int ysize=10;
 
 #define printusers() printf("Program by pastorsj+persinme+porterjc+robinsat\n");
 
@@ -79,8 +79,8 @@ public:
             
 			if(sinceLastPrint > PRINT_FPS_INTERVAL) {
 				lastPrint = currentTime;
-				state.printFPS();
-				state.printMotionState();
+				//state.printFPS();
+				//state.printMotionState();
 			}
             
 			render.display(state);
