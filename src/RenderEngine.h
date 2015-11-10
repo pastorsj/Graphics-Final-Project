@@ -45,7 +45,7 @@ public:
 		glCullFace(GL_BACK);
 		glEnable(GL_CULL_FACE);
 
-		this->P = glm::perspective(1.0f, 1.0f, (std::max(xsize,ysize)+1)*0.01f, 1.0f*(std::max(xsize,ysize)+1));
+		this->P = glm::perspective(1.0f, 1.0f, 0.01f, 1.0f*xsize);
         C = state.getCameraMatrix();
 		
 		setupShader();
