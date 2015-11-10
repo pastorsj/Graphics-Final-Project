@@ -713,7 +713,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0610;
-				ORGANIZATIONNAME = "Micah Taylor";
+				ORGANIZATIONNAME = "Sam Pastoriza";
 				TargetAttributes = {
 					AFB3E07C1B979AAA004F3018 = {
 						CreatedOnToolsVersion = 6.1;
@@ -868,6 +868,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = SFMLApp;
+				SFML_GRAPHICS = "-framework sfml-graphics";
 			};
 			name = Debug;
 		};
@@ -875,6 +876,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = SFMLApp;
+				SFML_GRAPHICS = "-framework sfml-graphics";
 			};
 			name = Release;
 		};

@@ -130,6 +130,10 @@ private:
 				state.setRotatingLeft(true);
 			if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::D))
 				state.setRotatingRight(true);
+            if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::R))
+                state.setRise(true);
+            if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::F))
+                state.setFall(true);
 
 			if ((event.type == sf::Event::KeyReleased) && (event.key.code == sf::Keyboard::W))
 				state.setMovingForward(false);
@@ -139,6 +143,10 @@ private:
 				state.setRotatingLeft(false);
 			if ((event.type == sf::Event::KeyReleased) && (event.key.code == sf::Keyboard::D))
 				state.setRotatingRight(false);
+            if ((event.type == sf::Event::KeyReleased) && (event.key.code == sf::Keyboard::R))
+                state.setRise(false);
+            if ((event.type == sf::Event::KeyReleased) && (event.key.code == sf::Keyboard::F))
+                state.setFall(false);
 		}
 
 		/*lastUpdate = timer.getElapsedTime().asSeconds();
