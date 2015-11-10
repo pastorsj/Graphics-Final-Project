@@ -314,7 +314,7 @@ private:
 		glGenTextures(numTextures, textures);
 		sf::Image image;
 
-		char const * imagePaths[numTextures] = {"resources/rose.png"};
+		char const * imagePaths[numTextures] = {"resources/corn.png"};
 		for(int i = 0 ; i < numTextures ; ++i)
 		{
 			if(!image.loadFromFile(imagePaths[i])) {

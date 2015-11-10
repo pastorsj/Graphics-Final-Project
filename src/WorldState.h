@@ -40,6 +40,8 @@ private:
 	bool movingBackward;
 	bool rotatingLeft;
 	bool rotatingRight;
+    bool rise;
+    bool fall;
 
 	GLfloat TRANSLATION_SENSITIVITY;
 	float ROTATION_SENSITIVITY;
@@ -150,6 +152,12 @@ public:
 
 		if (rotatingRight)
 			turnRight();
+        
+        if(rise)
+            riseUp();
+        
+        if(fall)
+            fallDown();
 
 		updateCamera();
 		
@@ -333,6 +341,18 @@ public:
 			cameraAngle = 2 * PI;
 		//cameraRotate = cameraIncrement * cameraRotate;
 	}
+    
+    void riseUp()
+    {
+        cameraPos = glm::vec3(getXPos(), cameraPos[1] += TRANSLATION_SENSITIVITY, getYPos());
+        cameraLook[1] += TRANSLATION_SENSITIVITY;
+    }
+    
+    void fallDown()
+    {
+        cameraPos = glm::vec3(getXPos(), 0, getYPos());
+        cameraLook[1] = 0;
+    }
 
 	void updateCameraAngle(){
 		//glm::mat3 rotation = glm::mat3(cos(cameraAngle), 0, sin(cameraAngle), 0, 1, 0, -sin(cameraAngle), 0, cos(cameraAngle));
@@ -393,6 +413,26 @@ public:
 	{
 		return rotatingRight;
 	}
+    
+    void setRise(bool r)
+    {
+        rise = r;
+    }
+    
+    bool isRising() const
+    {
+        return rise;
+    }
+    
+    void setFall(bool f)
+    {
+        fall = f;
+    }
+    
+    bool isFalling() const
+    {
+        return fall;
+    }
 
 	float getXPos() {
 		return xCell + xPos;
