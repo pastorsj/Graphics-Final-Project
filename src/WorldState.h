@@ -75,9 +75,18 @@ public:
 		
 		cameraAngle = 0;
 		//cameraPos = glm::vec3(center[0],camDistance*std::max(xsize,ysize),center[2]);
-		cameraPos = glm::vec3(0, 0, 0);
-        cameraLook = glm::vec3(1,0,0);
+		cameraPos = glm::vec3(1, 0, 1);
+		//cameraPos = glm::vec3(4, 10, 4);
+        cameraLook = glm::vec3(1, 0, 0);
         cameraUp = glm::vec3(0,1,0);
+
+		for (int i = 0; i < xsize; i++) {
+			for (int j = 0; j < ysize; j++) {
+				printf("x: %i, y: %i", i, j);
+				printf(MAZE[i][j].up ? "up" : "no up");
+				printf(MAZE[i][j].left ? "left\n" : "no left\n");
+			}
+		}
 	}
 	
 	void updateFrameTime(float timeAsSeconds)
@@ -251,32 +260,49 @@ public:
 	} */
 
 	void step(bool forward) {
-		float xInterval = forward ? (cos(cameraAngle) * TRANSLATION_SENSITIVITY) : -(cos(cameraAngle * TRANSLATION_SENSITIVITY));
-		float yInterval = forward ? (sin(cameraAngle) * TRANSLATION_SENSITIVITY) : -(sin(cameraAngle * TRANSLATION_SENSITIVITY));
+		float xInterval = cos(cameraAngle) * TRANSLATION_SENSITIVITY;
+		float yInterval = sin(cameraAngle) * TRANSLATION_SENSITIVITY;
 
-		if (xInterval > 0 && (!MAZE[xCell + 1][yCell].left || xPos < 1 - COLLISION_TOLERANCE)) {
-			xPos += xInterval;
-		}
-		if (MAZE[xCell][yCell].left && xPos < 1 - COLLISION_TOLERANCE ) {
-
+		if (!forward) {
+			xInterval = -xInterval;
+			yInterval = -yInterval;
 		}
 
-		if (xPos <= 0) {
-			xPos = 1;
+		printf("xCell: %i, yCell: %i\n", xCell, yCell);
+		printf("xPos: %f, yPos: %f\n", xPos, yPos);
+
+		if (xInterval > 0) {
+			if (!MAZE[xCell + 1][yCell].left || xPos < 0.5 - COLLISION_TOLERANCE){
+				xPos += xInterval;
+			}
+			else {
+				//printf(MAZE[xCell][yCell].left ? "Hit wall 2\n" : "Can't move\n");
+			}
+		}
+		if (xInterval < 0) {
+			if (!MAZE[xCell][yCell].left || xPos > COLLISION_TOLERANCE - 0.5) {
+				xPos += xInterval;
+			}
+			else {
+				//printf(MAZE[xCell - 1][yCell].left ? "Hit wall 2\n" : "Can't move\n");
+			}
+		}
+
+		if (xPos <= -0.5) {
+			xPos = 0.5;
 			xCell--;
 		}
 		else
-			if (xPos >= 1) {
-			xPos = 0;
+			if (xPos >= 0.5) {
+			xPos = -0.5;
 			xCell++;
 			}
 
-		if (!MAZE[xCell][yCell].up || yPos < 1 - COLLISION_TOLERANCE) {
-		
+		if (yInterval > 0 && (!MAZE[xCell][yCell + 1].up || yPos < 1 - COLLISION_TOLERANCE)) {
+			yPos += yInterval;
 		}
-		
-		else if(!MAZE[xCell][yCell - 1].up || yPos > COLLISION_TOLERANCE) {
-
+		if (yInterval < 0 && (!MAZE[xCell][yCell].up || yPos > COLLISION_TOLERANCE )) {
+			yPos += yInterval;
 		}
 
 		if (yPos <= 0) {
@@ -285,9 +311,11 @@ public:
 		}
 		else
 			if (yPos >= 1) {
-			yPos = 0;
+			yPos = -0;
 			yCell++;
 			}
+
+		//printf("xPos: %f, yPos: %f\n", getXPos(), getYPos());
 	}
 
 	void turnRight()
@@ -367,11 +395,11 @@ public:
 	}
 
 	float getXPos() {
-		return xCell + xPos + 0.5;
+		return xCell + xPos;
 	}
 
 	float getYPos() {
-		return yCell + yPos + 0.5;
+		return yCell + yPos;
 	}
 
 	int getXCell() {
