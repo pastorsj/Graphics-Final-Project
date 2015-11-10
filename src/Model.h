@@ -7,6 +7,61 @@
 #include "objload/objLoader.h"
 using namespace std; //makes using vectors easy
 
+#define OBJ_VEC_SIZE 3
+#define POS_DIM 3
+#define TEX_DIM 2
+#define MAX_FACE_SIZE 3
+
+class Material
+{
+public:
+	
+	Material() {
+		texturePath = NULL;
+		
+		Ka = glm::vec4(0.1, 0.1, 0.1, 1.0);
+		Kd = glm::vec4(0.5, 0.5, 0.5, 1.0);
+		Ks = glm::vec4(0.8, 0.8, 0.8, 1.0);
+		specAlpha = 10;
+	}
+	
+	Material(Material const & m) {
+		texturePath = NULL;
+		*this = m;
+	}
+	
+	Material & operator=(Material const & m) {
+		if(&m == this)
+			return *this;
+
+		if(texturePath != NULL)
+			free(texturePath);
+		
+		Ka = m.Ka;
+		Kd = m.Kd;
+		Ks = m.Ks;
+		specAlpha = m.specAlpha;
+		
+		texturePath = NULL;
+		
+		if(m.texturePath != NULL) {
+			texturePath = (char*) malloc( (strlen(m.texturePath)+1)*sizeof(char));
+			strncpy(texturePath, m.texturePath, strlen(m.texturePath));
+		}
+	}
+	
+	~Material() {
+		if(texturePath != NULL)
+			free(texturePath);
+	}
+	
+	glm::vec4 Ka;
+	glm::vec4 Kd;
+	glm::vec4 Ks;
+	float specAlpha;
+	char * texturePath;
+};
+
 class Model
 {
 public:
@@ -31,34 +86,110 @@ public:
 		{
 			objLoader loader;
 			loader.load(objName.c_str());
-			//loader.load("resources/sphere.obj");
-			//loader.load("resources/teapot.obj");
-			//loader.load("resources/test.obj");
-		
-			for(size_t i=0; i<loader.vertexCount; i++) {
-				positions.push_back(loader.vertexList[i]->e[0]);
-				positions.push_back(loader.vertexList[i]->e[1]);
-				positions.push_back(loader.vertexList[i]->e[2]);
-				//printf("v%zu: %f %f %f\n", i, positions[i*3+0], positions[i*3+1], positions[i*3+2]);
-			}
-		
-			for(size_t i=0; i<loader.faceCount; i++) {
-				if(loader.faceList[i]->vertex_count != 3) {
-					fprintf(stderr, "Only triangle primitives are supported.\n");
-					exit(1);
-				}
 			
-				elements.push_back(loader.faceList[i]->vertex_index[0]);
-				elements.push_back(loader.faceList[i]->vertex_index[1]);
-				elements.push_back(loader.faceList[i]->vertex_index[2]);
-				//printf("f%zu: %i %i %i\n", i, elements[i*3+0], elements[i*3+1], elements[i*3+2]);
-			}
+			Material defaultMaterial;
+			materials.push_back(defaultMaterial);
 
-			for(size_t i = 0 ; i < elements.size() ; ++i)
+			for(size_t i = 0 ; i < loader.materialCount ; ++i)
 			{
-				colors.push_back((rand()%255)/255.0f); // this probably should change
+				Material m;
+				for(size_t c = 0 ; c < 3 ; ++c)
+				{
+					m.Ka[c] = loader.materialList[i]->amb[c];
+					m.Kd[c] = loader.materialList[i]->diff[c];
+					m.Ks[c] = loader.materialList[i]->spec[c];
+					m.specAlpha = loader.materialList[i]->shiny;
+				}
+				materials.push_back(m);
 			}
 
+			positions.resize(loader.vertexCount);
+			texCoords.resize(loader.vertexCount);
+
+			switchMaterialAt.push_back(0);
+
+			for(size_t f = 0 ; f < loader.faceCount; ++f)
+			{
+				obj_face const * face = loader.faceList[f];
+
+				int faceMaterial = face->material_index+1;
+				bool firstMaterial = activeMaterial.size() == 0;
+				bool materialChanged = !firstMaterial && activeMaterial[activeMaterial.size() - 1] != faceMaterial;
+				if(firstMaterial || materialChanged)
+				{
+					activeMaterial.push_back(faceMaterial);
+				}
+
+				if(!firstMaterial && materialChanged)
+				{
+					switchMaterialAt.push_back(f);
+				}
+
+				bool isNotTriangle = face->vertex_count != MAX_FACE_SIZE;
+				if(isNotTriangle) {
+					cerr << "Skipping non-triangle face " << f << "." << endl;
+					continue;
+				}
+
+				bool indicesMatch = true;
+				for(size_t v=0 ; v < face->vertex_count ; ++v)
+				{
+					int pId = face->vertex_index[v];
+					int tId = face->texture_index[v];
+
+					indicesMatch = indicesMatch && (pId == tId);
+				}
+
+				if( !indicesMatch ) {
+				//	cerr << "OBJ has non-matching pos/tex indices. Final model may be incorrect." << endl;
+				}
+
+				for(size_t v = 0 ; v < face->vertex_count ; ++v)
+				{
+					elements.push_back(face->vertex_index[v]);
+				}
+
+				int pId[MAX_FACE_SIZE];
+				int tId[MAX_FACE_SIZE];
+
+				glm::vec3 p[POS_DIM];
+				glm::vec2 t[POS_DIM];
+
+				for(size_t v = 0 ; v < face->vertex_count ; ++v)
+				{
+					pId[v] = face->vertex_index[v];
+					tId[v] = face->texture_index[v];
+				}
+
+				for(size_t v = 0 ; v < face->vertex_count ; ++v)
+				{
+					for(size_t c = 0 ; c < POS_DIM ; ++c)
+					{
+						p[v][c] = loader.vertexList[pId[v]]->e[c];
+					}
+				}
+
+				for(size_t v = 0 ; v < face->vertex_count ; ++v)
+				{
+					bool validTexCoord = tId[v] >= 0;
+					if(validTexCoord)
+					{
+						for(size_t c = 0 ; c < TEX_DIM ; ++c)
+						{
+							t[v][c] = loader.textureList[tId[v]]->e[c];
+						}
+					}
+				}
+
+				for(size_t v = 0 ; v < face->vertex_count ; ++v)
+				{
+					positions[pId[v]] = p[v];
+					texCoords[pId[v]] = t[v];
+				}
+			}
+			switchMaterialAt.push_back(loader.faceCount);
+			
+			// custom stuff
 			min = computeMinBound();
 			max = computeMaxBound();
 			center = computeCentroid();
@@ -75,24 +206,54 @@ public:
 			postTrans.push_back(moveCell);
 		}
 	}
+
+	void draw(GLuint shaderProg, glm::mat4 mR, size_t & prevElements, size_t & prevVertices)
+	{
+		vector<glm::mat4> postTransList;
+		glm::mat4 preTrans, postTrans;
+		glm::mat4 ident = glm::mat4(1.0f);
+		
+		preTrans = this->getPreTrans();
+		postTransList = this->getPostTrans();
+		glUniformMatrix4fv(glGetUniformLocation(shaderProg, "preTrans"), 1, GL_FALSE, &preTrans[0][0]);
+		if(this->getRotate())
+		{
+			glUniformMatrix4fv(glGetUniformLocation(shaderProg, "mR"), 1, GL_FALSE, &mR[0][0]);
+		}
+		else
+		{
+			glUniformMatrix4fv(glGetUniformLocation(shaderProg, "mR"), 1, GL_FALSE, &ident[0][0]);
+		}
+		
+		for(int j = 0 ; j < postTransList.size() ; ++j)
+		{
+			postTrans = postTransList[j];
+			glUniformMatrix4fv(glGetUniformLocation(shaderProg, "postTrans"), 1, GL_FALSE, &postTrans[0][0]);
+			//cout << this->getElement().size() << " " << prevElements << " " << prevVertices << endl;
+			glDrawElementsBaseVertex(GL_TRIANGLES, this->getElement().size(), GL_UNSIGNED_INT, (void*)(prevElements*sizeof(GLfloat)), prevVertices);
+		}
+		
+		prevElements += this->getElement().size();
+		prevVertices += this->getVertexCount();
+	}
 	
-	vector<GLfloat> const getPosition() const
+	vector<glm::vec3> const getPosition() const
 	{ return positions; }
-	
-	vector<GLfloat> const getColor() const
-	{ return colors; }
+
+	vector<glm::vec2> const getTexCoord() const
+	{ return texCoords; }
 	
 	vector<GLuint> const getElement() const
 	{ return elements; }
 	
 	size_t getVertexCount() const
-	{ return positions.size()/3; }
+	{ return positions.size(); }
 	
 	size_t getPositionBytes() const
-	{ return positions.size()*sizeof(GLfloat); }
+	{ return positions.size()*3*sizeof(GLfloat); }
 	
-	size_t getColorBytes() const
-	{ return colors.size()*sizeof(GLfloat); }
+	size_t getTexCoordBytes() const
+	{ return texCoords.size()*2*sizeof(GLfloat); }
 	
 	size_t getElementBytes() const
 	{ return elements.size()*sizeof(GLuint); }
@@ -134,13 +295,13 @@ private:
 	glm::vec3 computeCentroid()
 	{
 		glm::vec3 center = glm::vec3(0);
-		float positionCount = 1.0f/(positions.size()/3.0f);
+		float positionCount = 1.0f/(positions.size());
 
-		for(int i = 0 ; i < positions.size() ; i += 3)
+		for(int i = 0 ; i < positions.size() ; ++i)
 		{
-			center[0] = positions[i] * positionCount;
-			center[1] = positions[i+1] * positionCount;
-			center[2] = positions[i+2] * positionCount;
+			center[0] = positions[i][0] * positionCount;
+			center[1] = positions[i][1] * positionCount;
+			center[2] = positions[i][2] * positionCount;
 		}
 
 		return center;	
@@ -155,13 +316,13 @@ private:
 			bound[c] = std::numeric_limits<float>::max();
 		}
 
-		for(int i = 0 ; i < positions.size() ; i+=3)
+		for(int i = 0 ; i < positions.size() ; ++i)
 		{
 			for(int c = 0 ; c < 3 ; ++c)
 			{
-				if(positions[i+c] < bound[c])
+				if(positions[i][c] < bound[c])
 				{
-					bound[c] = positions[i+c];
+					bound[c] = positions[i][c];
 				}
 			}
 		}
@@ -177,13 +338,13 @@ private:
 			bound[c] = -std::numeric_limits<float>::max();
 		}
 
-		for(int i = 0 ; i < positions.size() ; i+=3)
+		for(int i = 0 ; i < positions.size() ; ++i)
 		{
 			for(int c = 0 ; c < 3 ; ++c)
 			{
-				if(positions[i+c] > bound[c])
+				if(positions[i][c] > bound[c])
 				{
-					bound[c] = positions[i+c];
+					bound[c] = positions[i][c];
 				}
 			}
 		}
@@ -200,26 +361,20 @@ private:
 
 	void initWall()
 	{
+		positions.push_back(glm::vec3(-0.5, -0.5, 0));
+		texCoords.push_back(glm::vec2(0, 1));
 
-		positions.push_back(-0.5);
-		positions.push_back(-0.5);
-		positions.push_back(0);
+		positions.push_back(glm::vec3(0.5, -0.5, 0));
+		texCoords.push_back(glm::vec2(1, 1));
 
-		positions.push_back(0.5);
-		positions.push_back(-0.5);
-		positions.push_back(0);
+		positions.push_back(glm::vec3(0.5, 0.5, 0));
+		texCoords.push_back(glm::vec2(1, 0));
 
-		positions.push_back(0.5);
-		positions.push_back(0.5);
-		positions.push_back(0);
+		positions.push_back(glm::vec3(-0.5, 0.5, 0));
+		texCoords.push_back(glm::vec2(0, 0));
 
-		positions.push_back(-0.5);
-		positions.push_back(0.5);
-		positions.push_back(0);
-
-		positions.push_back(0);
-		positions.push_back(0);
-		positions.push_back(0);
+		positions.push_back(glm::vec3(0, 0, 0));
+		texCoords.push_back(glm::vec2(0.5, 0.5));
 
 		elements.push_back(0);
 		elements.push_back(1);
@@ -238,22 +393,7 @@ private:
 		elements.push_back(4);
 
 		makeDoubleSided();
-
-        for(size_t i=0; i<positions.size()/3; i++) {
-			if(i % 5 == 4)
-			{
-				colors.push_back(0);
-				colors.push_back(0);
-				colors.push_back(0);
-			}
-			else
-			{
-				colors.push_back(1);
-				colors.push_back(1);
-				colors.push_back(1);
-			}
-        }
-
+		
 		glm::mat4 leftWall = glm::translate(glm::rotate(glm::mat4(1.0f),PI/2,glm::vec3(0,1,0)), glm::vec3(-0.5,0,-0.5));
 		for(int i = 1 ; i < xsize ; ++i)
 		{
@@ -274,26 +414,20 @@ private:
 
 	void initFloor()
 	{
+		positions.push_back(glm::vec3(-0.5, -0.5, -1));
+		texCoords.push_back(glm::vec2(0,1));
 
-		positions.push_back(-0.5);
-		positions.push_back(-0.5);
-		positions.push_back(-1);
+		positions.push_back(glm::vec3(0.5, -0.5, -1));
+		texCoords.push_back(glm::vec2(1,0));
 
-		positions.push_back(0.5);
-		positions.push_back(-0.5);
-		positions.push_back(-1);
+		positions.push_back(glm::vec3(0.5, -0.5, 0));
+		texCoords.push_back(glm::vec2(1,1));
 
-		positions.push_back(0.5);
-		positions.push_back(-0.5);
-		positions.push_back(0);
-
-		positions.push_back(-0.5);
-		positions.push_back(-0.5);
-		positions.push_back(0);
-
-		positions.push_back(0);
-		positions.push_back(-0.5);
-		positions.push_back(-0.5);
+		positions.push_back(glm::vec3(-0.5, -0.5, 0));
+		texCoords.push_back(glm::vec2(0,0));
+		
+		positions.push_back(glm::vec3(0, -0.5, -0.5));
+		texCoords.push_back(glm::vec2(0.5, 0.5));
 
 		elements.push_back(4);
 		elements.push_back(1);
@@ -310,21 +444,6 @@ private:
 		elements.push_back(4);
 		elements.push_back(0);
 		elements.push_back(3);
-
-        for(size_t i=0; i<positions.size()/3; i++) {
-			if(i % 5 == 4)
-			{
-				colors.push_back(0);
-				colors.push_back(0);
-				colors.push_back(1);
-			}
-			else
-			{
-				colors.push_back(0);
-				colors.push_back(1);
-				colors.push_back(0);
-			}
-        }
 
 		for(int i = 1 ; i < xsize ; ++i)
 		{
@@ -339,9 +458,13 @@ private:
 		}
 	}
 
-	vector<GLfloat> positions;
-	vector<GLfloat> colors;
+	vector<glm::vec3> positions;
+	vector<glm::vec3> normals;
+	vector<glm::vec2> texCoords;
 	vector<GLuint> elements;
+	vector<Material> materials;
+	vector<size_t> activeMaterial;
+	vector<size_t> switchMaterialAt;
 	glm::mat4 preTrans;
 	vector<glm::mat4> postTrans;
 	size_t objectCount;

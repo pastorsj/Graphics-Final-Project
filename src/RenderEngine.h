@@ -45,9 +45,10 @@ public:
 		glCullFace(GL_BACK);
 		glEnable(GL_CULL_FACE);
 
-		this->P = glm::perspective(1.0f, 1.0f, (std::max(xsize,ysize)+1)*0.01f, 1.0f*(std::max(xsize,ysize)+1));
+		this->P = glm::perspective(1.0f, 1.0f, 0.01f, 1.0f*xsize);
         C = state.getCameraMatrix();
 		
+		setupTextures();
 		setupShader();
 		setupBuffers(state.getModels());
 	}
@@ -112,6 +113,13 @@ public:
 		
 		glBindVertexArray(vertexArray);
 		// draw!
+		glBindTexture(GL_TEXTURE_2D, textures[0]);
+
+		GLint texUnitID = 0;
+		glActiveTexture(GL_TEXTURE0+texUnitID);
+
+		glUniform1i(glGetUniformLocation(shaderProg[0], "texSampler"), texUnitID);
+
 		state.getModels().draw(shaderProg[0], mR);
 		glBindVertexArray(0);
 		glUseProgram(0);
@@ -200,6 +208,7 @@ public:
 private:
 	bool initialized;
 	GLuint shaderProg[3];
+	GLuint textures[1];
 	GLuint vertexArray;
     GLuint lightArray;
 
@@ -299,15 +308,53 @@ private:
 		checkGLError("shader");
 	}
 
+	void setupTextures()
+	{
+		const int numTextures = 1;
+		glGenTextures(numTextures, textures);
+		sf::Image image;
+
+		char const * imagePaths[numTextures] = {"resources/rose.png"};
+		for(int i = 0 ; i < numTextures ; ++i)
+		{
+			if(!image.loadFromFile(imagePaths[i])) {
+				cerr << "Could not load: " << imagePaths[i] << endl;
+				exit(2);
+			}
+			int texSizeX = image.getSize().x;
+			int texSizeY = image.getSize().y;
+			unsigned char * texData = (unsigned char*) image.getPixelsPtr();
+
+			glBindTexture(GL_TEXTURE_2D, textures[i]);
+
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texSizeX, texSizeY, 0, GL_RGBA, GL_UNSIGNED_BYTE, texData);
+			bool mipmapEnabled = true;
+			if(mipmapEnabled)
+			{
+				glGenerateMipmap(GL_TEXTURE_2D);
+			}
+
+			glBindTexture(GL_TEXTURE_2D, 0);
+		}
+		
+		checkGLError("texture");
+	}
+
 	void setupBuffers(ModelManager & models)
 	{
 		glGenVertexArrays(1, &vertexArray);
 		glBindVertexArray(vertexArray);
 		
 		GLuint positionBuffer;
-		GLuint colorBuffer;
+		GLuint texCoordBuffer;
 		GLuint elementBuffer;
-        GLint colorSlot;
+        GLint texCoordSlot;
         GLint positionSlot;
 		
 		//setup position buffer
@@ -321,13 +368,13 @@ private:
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		
 		// Do the same thing for the color data
-		glGenBuffers(1, &colorBuffer);
-		glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
-		vector<GLfloat> col = models.getColor();
-		glBufferData(GL_ARRAY_BUFFER, models.getColorBytes(), &col[0], GL_STATIC_DRAW);
-		colorSlot =    glGetAttribLocation(shaderProg[0], "colorIn");
-		glEnableVertexAttribArray(colorSlot);
-		glVertexAttribPointer(colorSlot, 3, GL_FLOAT, GL_FALSE, 0, 0);
+		glGenBuffers(1, &texCoordBuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, texCoordBuffer);
+		vector<GLfloat> coords = models.getTexCoord();
+		glBufferData(GL_ARRAY_BUFFER, models.getTexCoordBytes(), &coords[0], GL_STATIC_DRAW);
+		texCoordSlot =    glGetAttribLocation(shaderProg[0], "texCoord");
+		glEnableVertexAttribArray(texCoordSlot);
+		glVertexAttribPointer(texCoordSlot, 2, GL_FLOAT, GL_FALSE, 0, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		
 		// now the elements

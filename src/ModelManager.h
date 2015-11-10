@@ -24,38 +24,25 @@ public:
 		models[2].init(string("resources/teapot.obj"), 4, 4, true, -0.25);
 		models[3].init(string("resources/gourd.obj"), 1, 7, true);
 		models[4].init(string("resources/sphere.obj"), 4, 6, true);
-        models[5].init(string("resources/teddy.obj"), 7, 1, true);
-        models[6].init(string("resources/cow.obj"), 5, 2, false);
+		models[5].init(string("resources/teddy.obj"), 7, 1, true);
+		models[6].init(string("resources/buddha.obj"), 5, 2, false);
 	}
 
 	vector<GLfloat> const getPosition() const
 	{
 		vector<GLfloat> positions;
-		vector<GLfloat> modelPos;
+		vector<glm::vec3> modelPos;
 		for(int i = 0 ; i < models.size() ; ++i)
 		{
 			modelPos = models[i].getPosition();
 			for(int j = 0 ; j < modelPos.size() ; ++j)
 			{
-				positions.push_back(modelPos[j]);
+				positions.push_back(modelPos[j][0]);
+				positions.push_back(modelPos[j][1]);
+				positions.push_back(modelPos[j][2]);
 			}
 		}
 		return positions;
-	}
-
-	vector<GLfloat> const getColor() const
-	{
-		vector<GLfloat> colors;
-		vector<GLfloat> modelColor;
-		for(int i = 0 ; i < models.size() ; ++i)
-		{
-			modelColor = models[i].getColor();
-			for(int j = 0 ; j < modelColor.size() ; ++j)
-			{
-				colors.push_back(modelColor[j]);
-			}
-		}
-		return colors;
 	}
 
 	vector<GLuint> const getElement() const
@@ -73,22 +60,28 @@ public:
 		return elements;
 	}
 
+	vector<GLfloat> const getTexCoord() const
+	{
+		vector<GLfloat> coords;
+		vector<glm::vec2> modelCoords;
+		for(int i = 0 ; i < models.size() ; ++i)
+		{
+			modelCoords = models[i].getTexCoord();
+			for(int j = 0 ; j < modelCoords.size() ; ++j)
+			{
+				coords.push_back(modelCoords[j][0]);
+				coords.push_back(modelCoords[j][1]);
+			}
+		}
+		return coords;
+	}
+
 	size_t getPositionBytes() const
 	{
 		size_t runningTotal = 0;
 		for(int i = 0 ; i < models.size() ; ++i)
 		{
 			runningTotal += models[i].getPositionBytes();
-		}
-		return runningTotal;
-	}
-
-	size_t getColorBytes() const
-	{
-		size_t runningTotal = 0;
-		for(int i = 0 ; i < models.size() ; ++i)
-		{
-			runningTotal += models[i].getColorBytes();
 		}
 		return runningTotal;
 	}
@@ -103,35 +96,23 @@ public:
 		return runningTotal;
 	}
 
+	size_t getTexCoordBytes() const
+	{
+		size_t runningTotal = 0;
+		for(int i = 0 ; i < models.size() ; ++i)
+		{
+			runningTotal += models[i].getTexCoordBytes();
+		}
+		return runningTotal;
+	}
+
 	void draw(GLuint shaderProg, glm::mat4 mR)
 	{
 		size_t prevElements = 0;
 		size_t prevVertices = 0;
-		vector<glm::mat4> postTransList;
-		glm::mat4 preTrans, postTrans;
-		glm::mat4 ident = glm::mat4(1.0f);
 		for(int i = 0 ; i < models.size() ; ++i)
 		{
-			preTrans = models[i].getPreTrans();
-			postTransList = models[i].getPostTrans();
-			glUniformMatrix4fv(glGetUniformLocation(shaderProg, "preTrans"), 1, GL_FALSE, &preTrans[0][0]);
-			if(models[i].getRotate())
-			{
-				glUniformMatrix4fv(glGetUniformLocation(shaderProg, "mR"), 1, GL_FALSE, &mR[0][0]);
-			}
-			else
-			{
-				glUniformMatrix4fv(glGetUniformLocation(shaderProg, "mR"), 1, GL_FALSE, &ident[0][0]);
-			}
-			for(int j = 0 ; j < postTransList.size() ; ++j)
-			{
-				postTrans = postTransList[j];
-				glUniformMatrix4fv(glGetUniformLocation(shaderProg, "postTrans"), 1, GL_FALSE, &postTrans[0][0]);
-				//cout << models[i].getElement().size() << " " << prevElements << " " << prevVertices << endl;
-				glDrawElementsBaseVertex(GL_TRIANGLES, models[i].getElement().size(), GL_UNSIGNED_INT, (void*)(prevElements*sizeof(GLfloat)), prevVertices);
-			}
-			prevElements += models[i].getElement().size();
-			prevVertices += models[i].getVertexCount();
+			models[i].draw(shaderProg, mR, prevElements, prevVertices);
 		}
 	}
 
