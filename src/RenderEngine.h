@@ -154,6 +154,7 @@ public:
 		glUseProgram(shaderProg[2]);
 		checkGLError("render tex2");
 		glUniform2f(glGetUniformLocation(shaderProg[2], "resolution"), RESOLUTION, RESOLUTION);
+		glUniform1f(glGetUniformLocation(shaderProg[2], "animationTime"), state.getAnimationTime());
 		glActiveTexture(GL_TEXTURE0+0); // this 0 should match 0 in 2 lines
 		glBindTexture(GL_TEXTURE_2D, renderTexture);
 		glUniform1i( glGetUniformLocation(shaderProg[2], "texId"), 0);

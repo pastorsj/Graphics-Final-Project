@@ -1,6 +1,7 @@
 #version 330
 
 uniform vec2 resolution;          //view resolution in pixels
+uniform float animationTime;
 
 in vec3 pos;
 

@@ -42,6 +42,8 @@ private:
 	bool rotatingRight;
     bool rise;
     bool fall;
+	bool modelCapture;
+	float animationTime;
 
 	GLfloat TRANSLATION_SENSITIVITY;
 	float ROTATION_SENSITIVITY;
@@ -64,6 +66,8 @@ public:
 		yPos = 0;
 		TRANSLATION_SENSITIVITY = 0.07f;
 		ROTATION_SENSITIVITY = 0.07f;
+		modelCapture = false;
+		animationTime = -1;
 
 		cameraRotate = glm::mat4(1);
 		cameraIncrement = glm::rotate(glm::mat4(1), 0.02f, glm::vec3(0, 1, 0));
@@ -141,23 +145,31 @@ public:
 		modelRotate = modelIncrement * modelRotate;
 
 		//move camera
-		if (movingForward)
+		if (movingForward && !modelCapture)
 			step(true);
 
-		if (movingBackward)
+		if (movingBackward && !modelCapture)
 			step(false);
 
-		if (rotatingLeft)
+		if (rotatingLeft && !modelCapture)
 			turnLeft();
 
-		if (rotatingRight)
+		if (rotatingRight && !modelCapture)
 			turnRight();
         
-        if(rise)
+        if(rise && !modelCapture)
             riseUp();
         
-        if(fall)
+        if(fall && !modelCapture)
             fallDown();
+
+		if (modelCapture) {
+			animationTime += 1;
+			if (animationTime > 60) {
+				modelCapture = false;
+				animationTime = -1;
+			}
+		}
 
 		updateCamera();
 		
@@ -203,70 +215,6 @@ public:
 		return cameraAngle;
 	}
 
-	/*void stepForward()
-	{
-		/*cameraPos += glm::vec3(cameraLook[0] * TRANSLATION_SENSITIVITY, 
-			cameraLook[1] * TRANSLATION_SENSITIVITY, 
-			cameraLook[2] * TRANSLATION_SENSITIVITY); 
-
-		if ((!MAZE[xCell][yCell].left || xPos < 1 - COLLISION_TOLERANCE) && (!MAZE[xCell - 1][yCell].left || xPos > COLLISION_TOLERANCE)) {
-			xPos += cos(cameraAngle) * TRANSLATION_SENSITIVITY;
-
-			if (xPos <= 0) {
-				xPos = 1;
-				xCell--;
-			} else
-			if (xPos >= 1) {
-				xPos = 0;
-				xCell++;
-			}
-		}
-
-		if ((!MAZE[xCell][yCell].up || yPos < 1 - COLLISION_TOLERANCE) && (!MAZE[xCell][yCell - 1].up || yPos > COLLISION_TOLERANCE)) {
-			yPos += sin(cameraAngle) * TRANSLATION_SENSITIVITY;
-
-			if (yPos <= 0) {
-				yPos = 1;
-				yCell--;
-			} else
-			if (yPos >= 1) {
-				yPos = 0;
-				yCell++;
-			}
-		}
-	}
-
-	void stepBackward()
-	{
-		/*cameraPos -= glm::vec3(cameraLook[0] * TRANSLATION_SENSITIVITY,
-			cameraLook[1] * TRANSLATION_SENSITIVITY,
-			cameraLook[2] * TRANSLATION_SENSITIVITY); 
-		if ((!MAZE[xCell][yCell].left || xPos < 1 - COLLISION_TOLERANCE) && (!MAZE[xCell - 1][yCell].left || xPos > COLLISION_TOLERANCE)) {
-			xPos -= cos(cameraAngle) * TRANSLATION_SENSITIVITY;
-
-			if (xPos >= 1) {
-				xPos = 0;
-				xCell++;
-			} else if (xPos <= 0) {
-				xPos = 1;
-				xCell--;
-			}
-		}
-		
-		if ((!MAZE[xCell][yCell].up || yPos < 1 - COLLISION_TOLERANCE) && (!MAZE[xCell][yCell - 1].up || yPos > COLLISION_TOLERANCE)) {
-			yPos -= sin(cameraAngle) * TRANSLATION_SENSITIVITY;
-
-			if (yPos >= 1) {
-				yPos = 0;
-				yCell++;
-			} else 
-			if (yPos <= 0) {
-				yPos = 1;
-				yCell--;
-			}
-		}
-	} */
-
 	void step(bool forward) {
 		float xInterval = cos(cameraAngle) * TRANSLATION_SENSITIVITY;
 		float yInterval = sin(cameraAngle) * TRANSLATION_SENSITIVITY;
@@ -276,34 +224,30 @@ public:
 			yInterval = -yInterval;
 		}
 
-		printf("xCell: %i, yCell: %i\n", xCell, yCell);
-		printf("xPos: %f, yPos: %f\n", xPos, yPos);
+		//printf("xCell: %i, yCell: %i\n", xCell, yCell);
+		//printf("xPos: %f, yPos: %f\n", xPos, yPos);
 
 		if (xInterval > 0) {
 			if (!MAZE[xCell + 1][yCell].left || xPos < 0.5 - COLLISION_TOLERANCE){
 				xPos += xInterval;
-			}
-			else {
-				//printf(MAZE[xCell][yCell].left ? "Hit wall 2\n" : "Can't move\n");
 			}
 		}
 		if (xInterval < 0) {
 			if (!MAZE[xCell][yCell].left || xPos > COLLISION_TOLERANCE - 0.5) {
 				xPos += xInterval;
 			}
-			else {
-				//printf(MAZE[xCell - 1][yCell].left ? "Hit wall 2\n" : "Can't move\n");
-			}
 		}
 
 		if (xPos <= -0.5) {
 			xPos = 0.5;
 			xCell--;
+			checkModel();
 		}
 		else
 			if (xPos >= 0.5) {
 			xPos = -0.5;
 			xCell++;
+			checkModel();
 			}
 
 		if (yInterval > 0 && (!MAZE[xCell][yCell + 1].up || yPos < 1 - COLLISION_TOLERANCE)) {
@@ -316,11 +260,13 @@ public:
 		if (yPos <= 0) {
 			yPos = 1;
 			yCell--;
+			checkModel();
 		}
 		else
 			if (yPos >= 1) {
 			yPos = -0;
 			yCell++;
+			checkModel();
 			}
 
 		//printf("xPos: %f, yPos: %f\n", getXPos(), getYPos());
@@ -340,6 +286,23 @@ public:
 		if (cameraAngle < 0)
 			cameraAngle = 2 * PI;
 		//cameraRotate = cameraIncrement * cameraRotate;
+	}
+
+	void checkModel()
+	{
+		for (unsigned i = 2; i < models.getRawModels().size(); i++) {
+			Model m = models.getRawModels().at(i);
+			if (m.getXcell() == xCell && m.getYcell() == yCell && !m.hasBeenFound()) {
+				foundModel(i);
+			}
+		}
+		
+	}
+
+	void foundModel(unsigned i)
+	{
+		models.getRawModels().at(i).find();
+		modelCapture = true;
 	}
     
     void riseUp()
@@ -456,6 +419,10 @@ public:
 
 	float getYPosComp(){
 		return yPos;
+	}
+
+	float getAnimationTime() {
+		return animationTime;
 	}
 };
 

@@ -1,6 +1,7 @@
 #version 330
 
 uniform vec2 resolution;          //view resolution in pixels
+uniform float animationTime;
 uniform sampler2D texId;
 //uniform sampler2DRect texId;
 
@@ -28,12 +29,13 @@ vec4 swirl()
 {
 	float range = res / 2;
 	vec2 centerPos = res / 2;
+	float modifier = 1 - (abs(30 - animationTime) / 30);
 
 	vec2 toFrag = fragCoord - centerPos;
 	float dis = length(toFrag);
-	if(dis>range)
+	if(dis>range * modifier)
 		return texture(texId, texCoord);
-	float scale = ( pow(1-dis/range,3))*5;
+	float scale = ( pow(1-dis/(range*modifier),3))*5;
 
 	mat2 rotZ = mat2(cos(scale), sin(scale), -sin(scale), cos(scale));
 	vec2 swlCoord = rotZ * toFrag;
@@ -47,7 +49,12 @@ void main()
 	fragColor = vec4(0, 0, 0, 1);
 //	fragColor = vec4(texCoord, 1, 1);
 
-	fragColor = texture(texId, texCoord);
+	if(animationTime > 0) {
+		fragColor = swirl();
+	}
+	else {
+		fragColor = texture(texId, texCoord);
+	}
 //	fragColor = swirl();
 	
 //	fragColor = edgeDetect();

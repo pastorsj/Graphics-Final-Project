@@ -15,6 +15,7 @@ public:
 	{
 	}
 
+
 	void init()
 	{
 		makeMaze();

@@ -204,6 +204,9 @@ public:
 			rotates = rotate;
 			preTrans = scale * moveCenter;
 			postTrans.push_back(moveCell);
+			cellx = xCell;
+			celly = yCell;
+			found = false;
 		}
 	}
 
@@ -278,6 +281,21 @@ public:
 
 	bool getRotate()
 	{ return rotates; }
+
+	int getXcell()
+	{ return cellx; }
+
+	int getYcell()
+	{ return celly; }
+
+	bool hasBeenFound() {
+		return found;
+	}
+
+	void find() {
+		found = true;
+		printf("Model found\n");
+	}
     
 private:
 
@@ -473,6 +491,9 @@ private:
 	glm::vec3 max;
 	glm::vec3 dim;
 	glm::vec3 center;
+	int cellx;
+	int celly;
+	bool found;
 };
 
 #endif
