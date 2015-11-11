@@ -24,6 +24,22 @@ vec4 edgeDetect()
 	return sharpColor;
 }
 
+vec4 swirl()
+{
+	float range = res / 2;
+	vec2 centerPos = res / 2;
+
+	vec2 toFrag = fragCoord - centerPos;
+	float dis = length(toFrag);
+	if(dis>range)
+		return texture(texId, texCoord);
+	float scale = ( pow(1-dis/range,3))*5;
+
+	mat2 rotZ = mat2(cos(scale), sin(scale), -sin(scale), cos(scale));
+	vec2 swlCoord = rotZ * toFrag;
+	return texture(texId, (centerPos+swlCoord)/res);
+}
+
 void main()
 {
 	texCoord = fragCoord/res;
@@ -32,6 +48,7 @@ void main()
 //	fragColor = vec4(texCoord, 1, 1);
 
 	fragColor = texture(texId, texCoord);
+//	fragColor = swirl();
 	
 //	fragColor = edgeDetect();
 }
