@@ -21,7 +21,7 @@ void main()
 {
 	vec3 newPos = unTransPos.xyz;
 	vec3 dis = newPos - camPosition;
-	float scale = clamp(inversesqrt(dot(dis, dis)), 0, 1);
+	float scale = clamp(pow(inversesqrt(dot(dis, dis)), 2), 0.05, 1);
 	if(immune == 1)
 	{
 		scale = 1.0f;
