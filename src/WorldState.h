@@ -45,6 +45,8 @@ private:
 	bool modelCapture;
 	float animationTime;
 
+	int lastModelFound;
+
 	GLfloat TRANSLATION_SENSITIVITY;
 	float ROTATION_SENSITIVITY;
 	// The cell within the maze that the player is currently in
@@ -168,6 +170,7 @@ public:
 			if (animationTime > 60) {
 				modelCapture = false;
 				animationTime = -1;
+				models.getRawModels().at(lastModelFound).setTexNum(3);
 			}
 		}
 
@@ -301,6 +304,7 @@ public:
 
 	void foundModel(unsigned i)
 	{
+		lastModelFound = i;
 		models.getRawModels().at(i).find();
 		modelCapture = true;
 	}
