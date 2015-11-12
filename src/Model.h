@@ -244,6 +244,10 @@ public:
 		prevElements += this->getElement().size();
 		prevVertices += this->getVertexCount();
 	}
+
+	void setTexNum(int tex){
+		texNum = tex;
+	}
 	
 	vector<glm::vec3> const getPosition() const
 	{ return positions; }
