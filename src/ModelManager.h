@@ -26,12 +26,20 @@ public:
 		models.resize(8);
 		models[0].init(string("wall"), 0);
 		models[1].init(string("floor"), 1);
-		models[2].init(string("resources/teapot.obj"), 2, 4, 4, true, -0.25);
-		models[3].init(string("resources/gourd.obj"), 2, 1, 7, true);
-		models[4].init(string("resources/sphere.obj"), 2, 4, 6, true);
-		models[5].init(string("resources/teddy.obj"), 2, 7, 1, true);
-		models[6].init(string("resources/cow.obj"), 2, 5, 2, false);
+		models[2].init(string("resources/teapot.obj"), 2, getRandomCell(), getRandomCell(), true, -0.25);
+		models[3].init(string("resources/gourd.obj"), 2, getRandomCell(), getRandomCell(), true);
+		models[4].init(string("resources/sphere.obj"), 2, getRandomCell(), getRandomCell(), true);
+		models[5].init(string("resources/teddy.obj"), 2, getRandomCell(), getRandomCell(), true);
+		models[6].init(string("resources/cow.obj"), 2, getRandomCell(), getRandomCell(), false);
 		models[7].init(string("sky"), 4);
+	}
+
+	int getNumObjects() {
+		return models.size() - 3;
+	}
+
+	int getRandomCell(){
+		return rand() % (xsize - 4) + 2;
 	}
 
 	vector<GLfloat> const getPosition() const

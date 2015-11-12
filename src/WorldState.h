@@ -46,6 +46,7 @@ private:
 	float animationTime;
 
 	int lastModelFound;
+	int modelCount;
 
 	GLfloat TRANSLATION_SENSITIVITY;
 	float ROTATION_SENSITIVITY;
@@ -70,6 +71,8 @@ public:
 		ROTATION_SENSITIVITY = 0.07f;
 		modelCapture = false;
 		animationTime = -1;
+
+		modelCount = 0;
 
 		cameraRotate = glm::mat4(1);
 		cameraIncrement = glm::rotate(glm::mat4(1), 0.02f, glm::vec3(0, 1, 0));
@@ -304,9 +307,18 @@ public:
 
 	void foundModel(unsigned i)
 	{
+		modelCount++;
 		lastModelFound = i;
 		models.getRawModels().at(i).find();
 		modelCapture = true;
+		checkEndGame();
+	}
+
+	void checkEndGame(){
+		if (modelCount == models.getNumObjects()) {
+			printf("You Win!");
+			
+		}
 	}
     
     void riseUp()
