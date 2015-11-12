@@ -12,6 +12,7 @@ uniform mat4 L;
 uniform vec4 lightPos;
 uniform vec4 camPos; 
 uniform int shadingMode;
+uniform int immune;
 
 in vec3 pos;
 in vec2 texCoord;

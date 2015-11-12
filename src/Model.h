@@ -73,6 +73,7 @@ public:
 
     void init(string objName, int texNum, int xCell = 0, int yCell = 0, bool rotate = false, float yOffset = 0)
     {
+		immune = 0;
 		preTrans = glm::mat4(1.0f);
 		this->texNum = texNum;
 		if(strcmp(objName.c_str(), "wall") == 0)
@@ -86,6 +87,7 @@ public:
 		else if(strcmp(objName.c_str(), "sky") == 0)
 		{
 			initSky();
+			immune = 1;
 		}
 		else
 		{
@@ -221,6 +223,7 @@ public:
 		GLint texUnitID = 0;
 		glActiveTexture(GL_TEXTURE0+texUnitID);
 		glUniform1i(glGetUniformLocation(shaderProg, "texSampler"), texUnitID);
+		glUniform1i(glGetUniformLocation(shaderProg, "immune"), immune);
 		vector<glm::mat4> postTransList;
 		glm::mat4 preTrans, postTrans;
 		glm::mat4 ident = glm::mat4(1.0f);
@@ -535,6 +538,7 @@ private:
 	int celly;
 	int texNum;
 	bool found;
+	int immune;
 };
 
 #endif

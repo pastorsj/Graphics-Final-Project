@@ -9,6 +9,7 @@ uniform vec4 lightPos;
 uniform vec4 camPos;
 uniform int shadingMode;
 uniform sampler2D texSampler;
+uniform int immune;
 
 in vec2 texMapping;
 smooth in vec4 unTransPos;
@@ -21,5 +22,9 @@ void main()
 	vec3 newPos = unTransPos.xyz;
 	vec3 dis = newPos - camPosition;
 	float scale = clamp(inversesqrt(dot(dis, dis)), 0, 1);
+	if(immune == 1)
+	{
+		scale = 1.0f;
+	}
     fragColor = scale * texture(texSampler, texMapping);
 }
