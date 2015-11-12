@@ -63,7 +63,7 @@ public:
 		xCell = 1;
 		yCell = 1;
 		xPos = 0;
-		yPos = 0;
+		yPos = 0.5;
 		TRANSLATION_SENSITIVITY = 0.07f;
 		ROTATION_SENSITIVITY = 0.07f;
 		modelCapture = false;

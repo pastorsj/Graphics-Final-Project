@@ -1,6 +1,6 @@
 //Changes the number of cells in the maze!
-const int xsize=10;
-const int ysize=10;
+const int xsize=30;
+const int ysize=30;
 
 #define printusers() printf("Program by pastorsj+persinme+porterjc+robinsat\n");
 

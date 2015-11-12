@@ -115,7 +115,7 @@ public:
 		
 		
 		// draw!
-		glBindTexture(GL_TEXTURE_2D, textures[0]);
+		//glBindTexture(GL_TEXTURE_2D, textures[0]);
 		//glBindTexture(GL_TEXTURE_2D, textures[1]);
 
 		GLint texUnitID = 0;
@@ -315,14 +315,14 @@ private:
 
 	void setupTextures(ModelManager & models)
 	{
-		const int numTextures = 2;
+		const int numTextures = 4;
 
 		GLuint tempTextures[numTextures];
 		glGenTextures(numTextures, tempTextures);
 		sf::Image image;
 
 
-		char const * imagePaths[numTextures] = {"resources/corn.png", "resources/rose.png"};
+		char const * imagePaths[numTextures] = {"resources/corn.png", "resources/dirt.jpg", "resources/redpixel.png", "resources/yellowpixel.png"};
 
 		for(int i = 0 ; i < numTextures ; ++i)
 		{

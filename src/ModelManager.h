@@ -27,10 +27,10 @@ public:
 		models[0].init(string("wall"), 0);
 		models[1].init(string("floor"), 1);
 		models[2].init(string("resources/teapot.obj"), 1, 4, 4, true, -0.25);
-		models[3].init(string("resources/gourd.obj"), 1, 1, 7, true);
-		models[4].init(string("resources/sphere.obj"), 1, 4, 6, true);
-		models[5].init(string("resources/teddy.obj"), 1, 7, 1, true);
-		models[6].init(string("resources/buddha.obj"), 1, 5, 2, false);
+		models[3].init(string("resources/gourd.obj"), 2, 1, 7, true);
+		models[4].init(string("resources/sphere.obj"), 3, 4, 6, true);
+		models[5].init(string("resources/teddy.obj"), 3, 7, 1, true);
+		models[6].init(string("resources/cow.obj"), 3, 5, 2, false);
 	}
 
 	vector<GLfloat> const getPosition() const

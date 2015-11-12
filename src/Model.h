@@ -441,10 +441,10 @@ private:
 		texCoords.push_back(glm::vec2(0,1));
 
 		positions.push_back(glm::vec3(0.5, -0.5, -1));
-		texCoords.push_back(glm::vec2(1,0));
+		texCoords.push_back(glm::vec2(1,1));
 
 		positions.push_back(glm::vec3(0.5, -0.5, 0));
-		texCoords.push_back(glm::vec2(1,1));
+		texCoords.push_back(glm::vec2(1,0));
 
 		positions.push_back(glm::vec3(-0.5, -0.5, 0));
 		texCoords.push_back(glm::vec2(0,0));
