@@ -17,6 +17,6 @@ smooth out vec4 smoothColor;
 void main()
 {    
     //hacky easy way to draw the light position
-    gl_Position = P*C*L*lightPos;
-    smoothColor = vec4(1,1,1,1);
+    //gl_Position = P*C*L*lightPos;
+    //smoothColor = vec4(1,1,1,1);
 }
