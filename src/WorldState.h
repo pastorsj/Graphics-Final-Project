@@ -307,6 +307,7 @@ public:
 
 	void foundModel(unsigned i)
 	{
+
 		modelCount++;
 		lastModelFound = i;
 		models.getRawModels().at(i).find();

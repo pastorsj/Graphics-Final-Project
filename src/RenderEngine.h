@@ -322,7 +322,7 @@ private:
 		sf::Image image;
 
 
-		char const * imagePaths[numTextures] = {"resources/corn.png", "resources/dirt.jpg", "resources/redpixel.png", "resources/yellowpixel.png", "resources/sunset.jpg"};
+		char const * imagePaths[numTextures] = {"resources/transparentcorn.png", "resources/dirt.jpg", "resources/redpixel.png", "resources/yellowpixel.png", "resources/sunset.jpg"};
 
 		for(int i = 0 ; i < numTextures ; ++i)
 		{
