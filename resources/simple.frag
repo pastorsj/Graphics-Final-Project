@@ -11,10 +11,15 @@ uniform int shadingMode;
 uniform sampler2D texSampler;
 
 in vec2 texMapping;
+smooth in vec4 unTransPos;
+in vec3 camPosition;
 
 out vec4 fragColor;
 
 void main()
 {
-    fragColor = texture(texSampler, texMapping);
+	vec3 newPos = unTransPos.xyz;
+	vec3 dis = newPos - camPosition;
+	float scale = clamp(inversesqrt(dot(dis, dis)), 0, 1);
+    fragColor = scale * texture(texSampler, texMapping);
 }

@@ -17,12 +17,16 @@ in vec3 pos;
 in vec2 texCoord;
 
 out vec2 texMapping;
+smooth out vec4 unTransPos;
+out vec3 camPosition;
 
 void main()
 {    
 	vec4 pos = vec4(pos, 1);
+	camPosition = camPos.xyz;
+	unTransPos = postTrans*mR*preTrans*pos;
 
 	texMapping = texCoord;
-	gl_Position = P*C*postTrans*mR*preTrans*pos;
+	gl_Position = P*C*unTransPos;
 
 }
