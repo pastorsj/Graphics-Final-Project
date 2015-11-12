@@ -112,11 +112,14 @@ public:
         glUniform1i(glGetUniformLocation(shaderProg[0], "shadingMode"), state.getShadingMode());
 		
 		glBindVertexArray(vertexArray);
+		
+		
 		// draw!
 		glBindTexture(GL_TEXTURE_2D, textures[0]);
+		//glBindTexture(GL_TEXTURE_2D, textures[1]);
 
 		GLint texUnitID = 0;
-		glActiveTexture(GL_TEXTURE0+texUnitID);
+		glActiveTexture(GL_TEXTURE0 + texUnitID);
 
 		glUniform1i(glGetUniformLocation(shaderProg[0], "texSampler"), texUnitID);
 
@@ -124,26 +127,26 @@ public:
 		glBindVertexArray(0);
 		glUseProgram(0);
 		checkGLError("model");
-        
-        
-        glUseProgram(shaderProg[1]);
-        
-        glUniformMatrix4fv(glGetUniformLocation(shaderProg[1], "P"), 1, GL_FALSE, &P[0][0]);
-        glUniformMatrix4fv(glGetUniformLocation(shaderProg[1], "C"), 1, GL_FALSE, &mC[0][0]);
-        glUniformMatrix4fv(glGetUniformLocation(shaderProg[1], "mR"), 1, GL_FALSE, &mR[0][0]);
-        glUniformMatrix4fv(glGetUniformLocation(shaderProg[1], "mT"), 1, GL_FALSE, &mT[0][0]);
+
+
+		glUseProgram(shaderProg[1]);
+
+		glUniformMatrix4fv(glGetUniformLocation(shaderProg[1], "P"), 1, GL_FALSE, &P[0][0]);
+		glUniformMatrix4fv(glGetUniformLocation(shaderProg[1], "C"), 1, GL_FALSE, &mC[0][0]);
+		glUniformMatrix4fv(glGetUniformLocation(shaderProg[1], "mR"), 1, GL_FALSE, &mR[0][0]);
+		glUniformMatrix4fv(glGetUniformLocation(shaderProg[1], "mT"), 1, GL_FALSE, &mT[0][0]);
 		glUniformMatrix4fv(glGetUniformLocation(shaderProg[1], "M"), 1, GL_FALSE, &M[0][0]);
 		glUniformMatrix4fv(glGetUniformLocation(shaderProg[1], "N"), 1, GL_FALSE, &N[0][0]);
-        glUniformMatrix4fv(glGetUniformLocation(shaderProg[1], "L"), 1, GL_FALSE, &L[0][0]);
-        glUniform4fv(glGetUniformLocation(shaderProg[1], "lightPos"), 1, &lightPos[0]);
-        glUniform4fv(glGetUniformLocation(shaderProg[1], "camPos"), 1, &camPos[0]);
-        glUniform1i(glGetUniformLocation(shaderProg[1], "shadingMode"), state.getShadingMode());
-        
-        glBindVertexArray(lightArray);
-        glDrawElements(GL_POINTS, 1, GL_UNSIGNED_INT, 0);
-        glBindVertexArray(0);
-        glUseProgram(0);
-        checkGLError("light");
+		glUniformMatrix4fv(glGetUniformLocation(shaderProg[1], "L"), 1, GL_FALSE, &L[0][0]);
+		glUniform4fv(glGetUniformLocation(shaderProg[1], "lightPos"), 1, &lightPos[0]);
+		glUniform4fv(glGetUniformLocation(shaderProg[1], "camPos"), 1, &camPos[0]);
+		glUniform1i(glGetUniformLocation(shaderProg[1], "shadingMode"), state.getShadingMode());
+
+		glBindVertexArray(lightArray);
+		glDrawElements(GL_POINTS, 1, GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
+		glUseProgram(0);
+		checkGLError("light");
 
 		// default framebuffer
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -155,12 +158,13 @@ public:
 		checkGLError("render tex2");
 		glUniform2f(glGetUniformLocation(shaderProg[2], "resolution"), RESOLUTION, RESOLUTION);
 		glUniform1f(glGetUniformLocation(shaderProg[2], "animationTime"), state.getAnimationTime());
-		glActiveTexture(GL_TEXTURE0+0); // this 0 should match 0 in 2 lines
+		glActiveTexture(GL_TEXTURE0 + 0); // this 0 should match 0 in 2 lines
 		glBindTexture(GL_TEXTURE_2D, renderTexture);
-		glUniform1i( glGetUniformLocation(shaderProg[2], "texId"), 0);
+		glUniform1i(glGetUniformLocation(shaderProg[2], "texId"), 0);
 
 		glBindVertexArray(quadVertexArray);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
+		
 		glBindVertexArray(0);
 		glUseProgram(0);
 		checkGLError("render texture");
@@ -209,7 +213,7 @@ public:
 private:
 	bool initialized;
 	GLuint shaderProg[3];
-	GLuint textures[1];
+	GLuint textures[2];
 	GLuint vertexArray;
     GLuint lightArray;
 
@@ -311,11 +315,11 @@ private:
 
 	void setupTextures()
 	{
-		const int numTextures = 1;
+		const int numTextures = 2;
 		glGenTextures(numTextures, textures);
 		sf::Image image;
 
-		char const * imagePaths[numTextures] = {"resources/corn.png"};
+		char const * imagePaths[numTextures] = {"resources/corn.png", "resources/grass.jpg"};
 		for(int i = 0 ; i < numTextures ; ++i)
 		{
 			if(!image.loadFromFile(imagePaths[i])) {
