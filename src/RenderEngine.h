@@ -45,7 +45,7 @@ public:
 		glCullFace(GL_BACK);
 		glEnable(GL_CULL_FACE);
 
-		this->P = glm::perspective(1.0f, 1.0f, 0.01f, 1.0f*xsize);
+		this->P = glm::perspective(1.0f, 1.0f, 0.01f, sqrt(40*40+2.0f*xsize*xsize));
         C = state.getCameraMatrix();
 		
 		setupTextures(state.getModels());
@@ -315,14 +315,14 @@ private:
 
 	void setupTextures(ModelManager & models)
 	{
-		const int numTextures = 4;
+		const int numTextures = 5;
 
 		GLuint tempTextures[numTextures];
 		glGenTextures(numTextures, tempTextures);
 		sf::Image image;
 
 
-		char const * imagePaths[numTextures] = {"resources/corn.png", "resources/dirt.jpg", "resources/redpixel.png", "resources/yellowpixel.png"};
+		char const * imagePaths[numTextures] = {"resources/corn.png", "resources/dirt.jpg", "resources/redpixel.png", "resources/yellowpixel.png", "resources/sunset.jpg"};
 
 		for(int i = 0 ; i < numTextures ; ++i)
 		{
