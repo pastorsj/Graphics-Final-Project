@@ -48,7 +48,7 @@ public:
 		this->P = glm::perspective(1.0f, 1.0f, 0.01f, 1.0f*xsize);
         C = state.getCameraMatrix();
 		
-		setupTextures();
+		setupTextures(state.getModels());
 		setupShader();
 		setupBuffers(state.getModels());
 	}
@@ -313,15 +313,20 @@ private:
 		checkGLError("shader");
 	}
 
-	void setupTextures()
+	void setupTextures(ModelManager & models)
 	{
 		const int numTextures = 2;
-		glGenTextures(numTextures, textures);
+
+		GLuint tempTextures[numTextures];
+		glGenTextures(numTextures, tempTextures);
 		sf::Image image;
 
-		char const * imagePaths[numTextures] = {"resources/corn.png", "resources/grass.jpg"};
+
+		char const * imagePaths[numTextures] = {"resources/corn.png", "resources/rose.png"};
+
 		for(int i = 0 ; i < numTextures ; ++i)
 		{
+			models.addTexture(tempTextures[i]);
 			if(!image.loadFromFile(imagePaths[i])) {
 				cerr << "Could not load: " << imagePaths[i] << endl;
 				exit(2);
@@ -330,7 +335,7 @@ private:
 			int texSizeY = image.getSize().y;
 			unsigned char * texData = (unsigned char*) image.getPixelsPtr();
 
-			glBindTexture(GL_TEXTURE_2D, textures[i]);
+			glBindTexture(GL_TEXTURE_2D, tempTextures[i]);
 
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);

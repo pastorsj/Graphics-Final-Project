@@ -15,18 +15,22 @@ public:
 	{
 	}
 
+	void addTexture(GLuint newTextureId)
+	{
+		textures.push_back(newTextureId);
+	}
 
 	void init()
 	{
 		makeMaze();
 		models.resize(7);
-		models[0].init(string("wall"));
-		models[1].init(string("floor"));
-		models[2].init(string("resources/teapot.obj"), 4, 4, true, -0.25);
-		models[3].init(string("resources/gourd.obj"), 1, 7, true);
-		models[4].init(string("resources/sphere.obj"), 4, 6, true);
-		models[5].init(string("resources/teddy.obj"), 7, 1, true);
-		models[6].init(string("resources/buddha.obj"), 5, 2, false);
+		models[0].init(string("wall"), 0);
+		models[1].init(string("floor"), 1);
+		models[2].init(string("resources/teapot.obj"), 1, 4, 4, true, -0.25);
+		models[3].init(string("resources/gourd.obj"), 1, 1, 7, true);
+		models[4].init(string("resources/sphere.obj"), 1, 4, 6, true);
+		models[5].init(string("resources/teddy.obj"), 1, 7, 1, true);
+		models[6].init(string("resources/buddha.obj"), 1, 5, 2, false);
 	}
 
 	vector<GLfloat> const getPosition() const
@@ -111,9 +115,10 @@ public:
 	{
 		size_t prevElements = 0;
 		size_t prevVertices = 0;
+
 		for(int i = 0 ; i < models.size() ; ++i)
 		{
-			models[i].draw(shaderProg, mR, prevElements, prevVertices);
+			models[i].draw(shaderProg, mR, prevElements, prevVertices, textures);
 		}
 	}
 
@@ -125,6 +130,7 @@ public:
 
 private:
 	vector<Model> models;
+	vector<GLuint> textures;
 	
 };
 
