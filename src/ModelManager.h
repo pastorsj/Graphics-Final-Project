@@ -22,7 +22,8 @@ public:
 
 	void init()
 	{
-		makeMaze();
+		MazeGenerator mg;
+		mg.makeMaze();
 		models.resize(8);
 		models[0].init(string("wall"), 0);
 		models[1].init(string("floor"), 1);
