@@ -70,6 +70,8 @@ public:
 		TRANSLATION_SENSITIVITY = 0.07f;
 		ROTATION_SENSITIVITY = 0.07f;
 		modelCapture = false;
+		rise = false;
+		fall = false;
 		animationTime = -1;
 
 		modelCount = 0;
