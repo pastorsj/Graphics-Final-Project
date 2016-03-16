@@ -22,8 +22,8 @@ public:
 
 	void init()
 	{
-		MazeGenerator mg;
-		mg.makeMaze();
+		MazeGenerator * mg = MazeGenerator::instance();
+		mg->makeMaze();
 		models.resize(8);
 		models[0].init(string("wall"), 0);
 		models[1].init(string("floor"), 1);

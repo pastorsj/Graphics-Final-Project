@@ -25,7 +25,21 @@ struct cell{
 cell MAZE[xsize][ysize];
 
 class MazeGenerator {
+private:
+	static MazeGenerator * mg;
+
+	MazeGenerator() {
+
+	}
+
 public:
+
+	static MazeGenerator * instance() {
+		if (mg == NULL) {
+			mg = new MazeGenerator;
+		}
+		return mg;
+	}
 
 	int makeMaze() {
 		srand((unsigned int)time(NULL)); //seed random number generator with system time
@@ -148,3 +162,5 @@ public:
 		return;
 	}
 };
+
+MazeGenerator * MazeGenerator::mg;
