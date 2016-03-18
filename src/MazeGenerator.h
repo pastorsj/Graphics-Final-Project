@@ -9,11 +9,6 @@
 #define xsize 20
 #define ysize 20
 
-#define UP 0     //-y
-#define DOWN 1   //+y
-#define LEFT 2   //-x
-#define RIGHT 3  //+x
-
 long numin=1;     //Number of cells in the maze.
 
 struct cell{
@@ -70,6 +65,11 @@ public:
 	}
 
 	void generate() {
+		const int UP = 0;
+		const int DOWN = 1;
+		const int LEFT = 2;
+		const int RIGHT = 3;
+
 		int xcur = 1, ycur = 1;//start growing from the corner. It could theoretically start growing from anywhere, doesn't matter.
 		MAZE[xcur][ycur].in = 1;
 		int whichway;
