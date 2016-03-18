@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <vector>
 
 // changes the size of the maze
 #define xsize 20
@@ -21,7 +22,7 @@ struct cell{
 class MazeGenerator {
 private:
 
-	cell MAZE[xsize][ysize];
+	std::vector<std::vector<cell>> maze;
 
 	static MazeGenerator * mg;
 
@@ -38,27 +39,43 @@ public:
 		return mg;
 	}
 
-	cell getCell(int xCoord, int yCoord) {
-		return MAZE[xCoord][yCoord];
+	int getXSize() {
+		return xsize;
 	}
 
-	int makeMaze() {
+	int getYSize() {
+		return ysize;
+	}
+
+	cell getCell(int xCoord, int yCoord) {
+		return maze[xCoord][yCoord];
+	}
+
+	int makeMaze(int xsizetemp, int ysizetemp) {
 		srand((unsigned int)time(NULL)); //seed random number generator with system time
-		initialize();      //initialize the maze
+		initialize(xsizetemp, ysizetemp);      //initialize the maze
 		generate();        //generate the maze
 		return 0;
 	}
 
 
-	void initialize() {
+	void initialize(int xsizetemp, int ysizetemp) {
+		//this->xsize = xsize;
+		//this->ysize = ysize;
+		
+		maze.resize(xsize);
+		for (int i = 0; i < xsize; ++i) {
+			maze[i].resize(ysize);
+		}
+
 		//Initialize the maze!
 		for (int x = 0; x < xsize; x++) {
 			for (int y = 0; y < ysize; y++) {
 				//The maze cells on the edges of the maze are "in" to provide padding. Otherwise, all maze cells are not in.
-				MAZE[x][y].in = (x == 0 || x == xsize - 1 || y == 0 || y == ysize - 1) ? 1 : 0;
+				maze[x][y].in = (x == 0 || x == xsize - 1 || y == 0 || y == ysize - 1) ? 1 : 0;
 				//All maze cells have all walls existing by default, except the perimeter cells.
-				MAZE[x][y].up = (x == 0 || x == xsize - 1 || y == 0) ? 0 : 1;
-				MAZE[x][y].left = (x == 0 || y == 0 || y == ysize - 1) ? 0 : 1;
+				maze[x][y].up = (x == 0 || x == xsize - 1 || y == 0) ? 0 : 1;
+				maze[x][y].left = (x == 0 || y == 0 || y == ysize - 1) ? 0 : 1;
 			}
 		}
 		return;
@@ -71,7 +88,7 @@ public:
 		const int RIGHT = 3;
 
 		int xcur = 1, ycur = 1;//start growing from the corner. It could theoretically start growing from anywhere, doesn't matter.
-		MAZE[xcur][ycur].in = 1;
+		maze[xcur][ycur].in = 1;
 		int whichway;
 		bool success;
 		do {
@@ -79,8 +96,8 @@ public:
 				//randomly find a cell that's in the maze
 				xcur = rand() % (xsize - 2) + 1;
 				ycur = rand() % (ysize - 2) + 1;
-			} while (!MAZE[xcur][ycur].in ||
-				(MAZE[xcur][ycur - 1].in && MAZE[xcur][ycur + 1].in && MAZE[xcur - 1][ycur].in && MAZE[xcur + 1][ycur].in));
+			} while (!maze[xcur][ycur].in ||
+				(maze[xcur][ycur - 1].in && maze[xcur][ycur + 1].in && maze[xcur - 1][ycur].in && maze[xcur + 1][ycur].in));
 			//
 			do {
 				//Randomly grow the maze if possible.
@@ -88,44 +105,44 @@ public:
 				whichway = rand() % 4;
 				switch (whichway) {
 				case UP:
-					if (!MAZE[xcur][ycur - 1].in) {
+					if (!maze[xcur][ycur - 1].in) {
 						success = 1;
-						MAZE[xcur][ycur].up = 0;
-						MAZE[xcur][ycur - 1].prevx = xcur;
-						MAZE[xcur][ycur - 1].prevy = ycur;
+						maze[xcur][ycur].up = 0;
+						maze[xcur][ycur - 1].prevx = xcur;
+						maze[xcur][ycur - 1].prevy = ycur;
 						ycur--;
 					}
 					break;
 				case DOWN:
-					if (!MAZE[xcur][ycur + 1].in) {
+					if (!maze[xcur][ycur + 1].in) {
 						success = 1;
-						MAZE[xcur][ycur + 1].up = 0;
-						MAZE[xcur][ycur + 1].prevx = xcur;
-						MAZE[xcur][ycur + 1].prevy = ycur;
+						maze[xcur][ycur + 1].up = 0;
+						maze[xcur][ycur + 1].prevx = xcur;
+						maze[xcur][ycur + 1].prevy = ycur;
 						ycur++;
 					}
 					break;
 				case LEFT:
-					if (!MAZE[xcur - 1][ycur].in) {
+					if (!maze[xcur - 1][ycur].in) {
 						success = 1;
-						MAZE[xcur][ycur].left = 0;
-						MAZE[xcur - 1][ycur].prevx = xcur;
-						MAZE[xcur - 1][ycur].prevy = ycur;
+						maze[xcur][ycur].left = 0;
+						maze[xcur - 1][ycur].prevx = xcur;
+						maze[xcur - 1][ycur].prevy = ycur;
 						xcur--;
 					}
 					break;
 				case RIGHT:
-					if (!MAZE[xcur + 1][ycur].in) {
+					if (!maze[xcur + 1][ycur].in) {
 						success = 1;
-						MAZE[xcur + 1][ycur].left = 0;
-						MAZE[xcur + 1][ycur].prevx = xcur;
-						MAZE[xcur + 1][ycur].prevy = ycur;
+						maze[xcur + 1][ycur].left = 0;
+						maze[xcur + 1][ycur].prevx = xcur;
+						maze[xcur + 1][ycur].prevy = ycur;
 						xcur++;
 					}
 					break;
 				}
 			} while (!success);
-			MAZE[xcur][ycur].in = 1;
+			maze[xcur][ycur].in = 1;
 			numin++; //Every iteration of this loop, one maze cell is added to the maze.
 		} while (numin < (xsize - 2)*(ysize - 2));
 		return;
@@ -133,3 +150,4 @@ public:
 };
 
 MazeGenerator * MazeGenerator::mg;
+std::vector<std::vector<cell>> maze;
