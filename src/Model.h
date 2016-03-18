@@ -1,10 +1,25 @@
 #ifndef __MODEL
 #define __MODEL
 
+#define NOMINMAX
+
 #include <string>
 #include <vector>
 #include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/matrix_integer.hpp"
 #include "objload/objLoader.h"
+#include <iostream>
+#include <limits>
+#define PI 3.14159f
+#define GL3W
+#ifdef GLEW
+#define GLEW_STATIC
+#include "glew/glew.h"
+#endif
+#ifdef GL3W
+#include "gl3w/gl3w.h"
+#endif
 using namespace std; //makes using vectors easy
 
 #define OBJ_VEC_SIZE 3

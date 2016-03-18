@@ -3,6 +3,20 @@
 
 #include <SFML/Window.hpp>
 #include <stdio.h>
+#define PI 3.14159f
+
+#define GL3W
+#ifdef GLEW
+#define GLEW_STATIC
+#include "glew/glew.h"
+#endif
+#ifdef GL3W
+#include "gl3w/gl3w.h"
+#endif
+
+#if _MSC_VER
+#define snprintf _snprintf
+#endif
 
 class ShaderManager
 {

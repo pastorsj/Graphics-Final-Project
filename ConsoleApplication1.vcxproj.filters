@@ -20,6 +20,8 @@
     <ClCompile Include="src\objload\string_extra.cpp">
       <Filter>loader</Filter>
     </ClCompile>
+    <ClCompile Include="src\ShaderManager.cpp" />
+    <ClCompile Include="src\WorldState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\glew\glew.h">

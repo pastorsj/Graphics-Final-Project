@@ -1,7 +1,12 @@
+/*
 #ifndef __WORLDSTATE_H
 #define __WORLDSTATE_H
 #include "WorldState.h"
 #include "ModelManager.h"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/matrix_inverse.hpp"
+#include "glm/glm.hpp"
+#define PI 3.14159f
 
 
 
@@ -489,3 +494,4 @@ public:
 };
 
 #endif
+*/
