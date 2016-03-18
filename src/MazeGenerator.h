@@ -9,14 +9,6 @@
 #define xsize 20
 #define ysize 20
 
-#define UP 0     //-y
-#define DOWN 1   //+y
-#define LEFT 2   //-x
-#define RIGHT 3  //+x
-
-//#define nodeadend//generate a maze without any dead ends! (consequently, many solutions to maze)
-#define prim    //enable this to generate mazes using prim's algorithm.
-
 long numin=1;     //Number of cells in the maze.
 
 struct cell{
@@ -73,48 +65,16 @@ public:
 	}
 
 	void generate() {
+		const int UP = 0;
+		const int DOWN = 1;
+		const int LEFT = 2;
+		const int RIGHT = 3;
+
 		int xcur = 1, ycur = 1;//start growing from the corner. It could theoretically start growing from anywhere, doesn't matter.
 		MAZE[xcur][ycur].in = 1;
 		int whichway;
 		bool success;
 		do {
-			/*
-					if( MAZE[xcur][ycur-1].in&&MAZE[xcur][ycur+1].in&&
-					   MAZE[xcur-1][ycur].in&&MAZE[xcur+1][ycur].in ){
-						//If at a dead end, randomly destroy a wall to make it not a dead end!
-						do{
-							success=0;
-							whichway=rand()%4;
-							switch(whichway){
-								case UP:
-									if(MAZE[xcur][ycur].up&&ycur!=1){
-										success=1;
-										MAZE[xcur][ycur].up=0;
-									}
-									break;
-								case DOWN:
-									if(MAZE[xcur][ycur+1].up&&ycur!=ysize-2){
-										success=1;
-										MAZE[xcur][ycur+1].up=0;
-									}
-									break;
-								case LEFT:
-									if(MAZE[xcur][ycur].left&&xcur!=1){
-										success=1;
-										MAZE[xcur][ycur].left=0;
-									}
-									break;
-								case RIGHT:
-									if(MAZE[xcur+1][ycur].left&&xcur!=xsize-2){
-										success=1;
-										MAZE[xcur+1][ycur].left=0;
-									}
-									break;
-							}
-						}while(!success);
-					}
-			*/
-			//
 			do {
 				//randomly find a cell that's in the maze
 				xcur = rand() % (xsize - 2) + 1;
