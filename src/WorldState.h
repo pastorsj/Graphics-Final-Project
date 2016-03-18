@@ -96,8 +96,9 @@ public:
 		for (int i = 0; i < xsize; i++) {
 			for (int j = 0; j < ysize; j++) {
 				printf("x: %i, y: %i", i, j);
-				printf(MAZE[i][j].up ? "up" : "no up");
-				printf(MAZE[i][j].left ? "left\n" : "no left\n");
+				MazeGenerator * mg = MazeGenerator::instance();
+				printf(mg->getCell(i,j).up ? "up" : "no up");
+				printf(mg->getCell(i,j).left ? "left\n" : "no left\n");
 			}
 		}
 	}
@@ -234,14 +235,15 @@ public:
 
 		//printf("xCell: %i, yCell: %i\n", xCell, yCell);
 		//printf("xPos: %f, yPos: %f\n", xPos, yPos);
+		MazeGenerator * mg = MazeGenerator::instance();
 
 		if (xInterval > 0) {
-			if (!MAZE[xCell + 1][yCell].left || xPos < 0.5 - COLLISION_TOLERANCE){
+			if (!mg->getCell(xCell+1,yCell).left || xPos < 0.5 - COLLISION_TOLERANCE){
 				xPos += xInterval;
 			}
 		}
 		if (xInterval < 0) {
-			if (!MAZE[xCell][yCell].left || xPos > COLLISION_TOLERANCE - 0.5) {
+			if (!mg->getCell(xCell,yCell).left || xPos > COLLISION_TOLERANCE - 0.5) {
 				xPos += xInterval;
 			}
 		}
@@ -257,11 +259,10 @@ public:
 			xCell++;
 			checkModel();
 			}
-
-		if (yInterval > 0 && (!MAZE[xCell][yCell + 1].up || yPos < 1 - COLLISION_TOLERANCE)) {
+		if (yInterval > 0 && (!mg->getCell(xCell,yCell + 1).up || yPos < 1 - COLLISION_TOLERANCE)) {
 			yPos += yInterval;
 		}
-		if (yInterval < 0 && (!MAZE[xCell][yCell].up || yPos > COLLISION_TOLERANCE )) {
+		if (yInterval < 0 && (!mg->getCell(xCell,yCell).up || yPos > COLLISION_TOLERANCE )) {
 			yPos += yInterval;
 		}
 

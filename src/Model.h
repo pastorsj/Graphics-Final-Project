@@ -434,11 +434,12 @@ private:
 			for(int j = 1 ; j < ysize ; ++j)
 			{
 				glm::mat4 buildTrans = glm::translate(glm::mat4(1.0f), glm::vec3(i, 0, j));
-				if(MAZE[i][j].up)
+				MazeGenerator * mg = MazeGenerator::instance();
+				if(mg->getCell(i,j).up)
 				{
 					postTrans.push_back(buildTrans);
 				}
-				if(MAZE[i][j].left)
+				if(mg->getCell(i,j).left)
 				{
 					postTrans.push_back(buildTrans * leftWall);
 				}

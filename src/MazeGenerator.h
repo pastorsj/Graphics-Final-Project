@@ -26,10 +26,11 @@ struct cell{
     int prevx, prevy; //The coordinates of the previous cell, used for backtracking.
 };
 
-cell MAZE[xsize][ysize];
-
 class MazeGenerator {
 private:
+
+	cell MAZE[xsize][ysize];
+
 	static MazeGenerator * mg;
 
 	MazeGenerator() {
@@ -43,6 +44,10 @@ public:
 			mg = new MazeGenerator;
 		}
 		return mg;
+	}
+
+	cell getCell(int xCoord, int yCoord) {
+		return MAZE[xCoord][yCoord];
 	}
 
 	int makeMaze() {
