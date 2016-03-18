@@ -1,7 +1,3 @@
-//Changes the number of cells in the maze!
-const int xsize=20;
-const int ysize=20;
-
 #define printusers() printf("Program by pastorsj+persinme+porterjc+robinsat\n");
 
 #define _CRT_SECURE_NO_WARNINGS

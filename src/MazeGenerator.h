@@ -5,6 +5,10 @@
 #include <stdlib.h>
 #include <time.h>
 
+// changes the size of the maze
+#define xsize 20
+#define ysize 20
+
 #define UP 0     //-y
 #define DOWN 1   //+y
 #define LEFT 2   //-x
