@@ -6,10 +6,6 @@
 #include <time.h>
 #include <vector>
 
-// changes the size of the maze
-#define xsize 20
-#define ysize 20
-
 long numin=1;     //Number of cells in the maze.
 
 struct cell{
@@ -23,6 +19,7 @@ class MazeGenerator {
 private:
 
 	std::vector<std::vector<cell>> maze;
+	int xsize, ysize;
 
 	static MazeGenerator * mg;
 
@@ -60,8 +57,8 @@ public:
 
 
 	void initialize(int xsizetemp, int ysizetemp) {
-		//this->xsize = xsize;
-		//this->ysize = ysize;
+		this->xsize = xsize;
+		this->ysize = ysize;
 		
 		maze.resize(xsize);
 		for (int i = 0; i < xsize; ++i) {

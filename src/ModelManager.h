@@ -10,6 +10,11 @@ using namespace std;
 
 class ModelManager
 {
+private:
+	// CHANGE THIS TO CHANGE MAZE SIZE
+	const int DESIRED_X_SIZE = 20;
+	const int DESIRED_Y_SIZE = 20;
+
 public:
 	ModelManager()
 	{
@@ -23,7 +28,7 @@ public:
 	void init()
 	{
 		MazeGenerator * mg = MazeGenerator::instance();
-		mg->makeMaze(xsize, ysize);
+		mg->makeMaze(DESIRED_X_SIZE, DESIRED_Y_SIZE);
 		models.resize(8);
 		models[0].init(string("wall"), 0);
 		models[1].init(string("floor"), 1);
@@ -40,7 +45,7 @@ public:
 	}
 
 	int getRandomCell(){
-		return rand() % (xsize - 4) + 2;
+		return rand() % (DESIRED_X_SIZE - 4) + 2;
 	}
 
 	vector<GLfloat> const getPosition() const

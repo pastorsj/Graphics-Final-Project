@@ -83,7 +83,6 @@ public:
         
         shadingMode = 0;
 		running = true;
-		models = ModelManager();
         models.init();
 		
 		cameraAngle = 0;
@@ -92,9 +91,11 @@ public:
 		//cameraPos = glm::vec3(4, 10, 4);
         cameraLook = glm::vec3(1, 0, 0);
         cameraUp = glm::vec3(0,1,0);
+		
+		MazeGenerator * mg = MazeGenerator::instance();
 
-		for (int i = 0; i < xsize; i++) {
-			for (int j = 0; j < ysize; j++) {
+		for (int i = 0; i < mg->getXSize(); i++) {
+			for (int j = 0; j < mg->getYSize(); j++) {
 				printf("x: %i, y: %i", i, j);
 				MazeGenerator * mg = MazeGenerator::instance();
 				printf(mg->getCell(i,j).up ? "up" : "no up");

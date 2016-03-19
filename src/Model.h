@@ -443,10 +443,11 @@ private:
 
 		makeDoubleSided();
 		
+		MazeGenerator * mg = MazeGenerator::instance();
 		glm::mat4 leftWall = glm::translate(glm::rotate(glm::mat4(1.0f),PI/2,glm::vec3(0,1,0)), glm::vec3(-0.5,0,-0.5));
-		for(int i = 1 ; i < xsize ; ++i)
+		for (int i = 1; i < mg->getXSize() ; ++i)
 		{
-			for(int j = 1 ; j < ysize ; ++j)
+			for(int j = 1 ; j < mg->getYSize() ; ++j)
 			{
 				glm::mat4 buildTrans = glm::translate(glm::mat4(1.0f), glm::vec3(i, 0, j));
 				MazeGenerator * mg = MazeGenerator::instance();
@@ -495,12 +496,13 @@ private:
 		elements.push_back(0);
 		elements.push_back(3);
 
-		for(int i = 1 ; i < xsize ; ++i)
+		MazeGenerator * mg = MazeGenerator::instance();
+		for (int i = 1; i < mg->getXSize(); ++i)
 		{
-			for(int j = 1 ; j < ysize ; ++j)
+			for(int j = 1 ; j < mg->getYSize() ; ++j)
 			{
 				glm::mat4 buildTrans = glm::translate(glm::mat4(1.0f), glm::vec3(i, 0, j));
-				if(j > 1 && i < xsize - 1)
+				if(j > 1 && i < mg->getXSize() - 1)
 				{
 					postTrans.push_back(buildTrans);
 				}
@@ -510,13 +512,14 @@ private:
 
 	void initSky()
 	{
-		positions.push_back(glm::vec3(xsize/2, 0, 0));
+		MazeGenerator * mg = MazeGenerator::instance();
+		positions.push_back(glm::vec3(mg->getXSize()/2, 0, 0));
 		texCoords.push_back(glm::vec2(1, 0.8));
-		positions.push_back(glm::vec3(-xsize/2, 0, 0));
+		positions.push_back(glm::vec3(-mg->getXSize()/2, 0, 0));
 		texCoords.push_back(glm::vec2(0, 0.8));
-		positions.push_back(glm::vec3(xsize/2, 40, 0));
+		positions.push_back(glm::vec3(mg->getXSize()/2, 40, 0));
 		texCoords.push_back(glm::vec2(1, 0));
-		positions.push_back(glm::vec3(-xsize/2, 40, 0));
+		positions.push_back(glm::vec3(-mg->getXSize()/2, 40, 0));
 		texCoords.push_back(glm::vec2(0, 0));
 
 		elements.push_back(1);
@@ -529,10 +532,10 @@ private:
 
 		preTrans = glm::mat4(1.0f);
 		glm::mat4 rot = glm::rotate(glm::mat4(1.0f), PI/2, glm::vec3(0,1,0));
-		postTrans.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(xsize/2, 0, 0)));
-		postTrans.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, xsize/2)) * rot);
-		postTrans.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(xsize/2, 0, xsize)) * rot * rot);
-		postTrans.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(xsize, 0, xsize/2)) * rot * rot * rot);
+		postTrans.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(mg->getXSize()/2, 0, 0)));
+		postTrans.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, mg->getXSize()/2)) * rot);
+		postTrans.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(mg->getXSize()/2, 0, mg->getXSize())) * rot * rot);
+		postTrans.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(mg->getXSize(), 0, mg->getXSize()/2)) * rot * rot * rot);
 	}
 
 	vector<glm::vec3> positions;

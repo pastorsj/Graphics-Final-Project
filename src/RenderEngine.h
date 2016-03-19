@@ -45,6 +45,9 @@ public:
 		glCullFace(GL_BACK);
 		glEnable(GL_CULL_FACE);
 
+		MazeGenerator * mg = MazeGenerator::instance();
+		int xsize = mg->getXSize();
+
 		this->P = glm::perspective(1.0f, 1.0f, 0.01f, sqrt(40*40+2.0f*xsize*xsize));
         C = state.getCameraMatrix();
 		
