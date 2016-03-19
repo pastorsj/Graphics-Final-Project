@@ -6,8 +6,6 @@
 #include <time.h>
 #include <vector>
 
-long numin=1;     //Number of cells in the maze.
-
 struct cell{
     bool in;  //Is this cell in the maze?
     bool up;  //Does the wall above this cell exist?
@@ -83,7 +81,7 @@ public:
 		const int DOWN = 1;
 		const int LEFT = 2;
 		const int RIGHT = 3;
-
+		long numin = 1;     //Number of cells in the maze.
 		int xcur = 1, ycur = 1;//start growing from the corner. It could theoretically start growing from anywhere, doesn't matter.
 		maze[xcur][ycur].in = 1;
 		int whichway;
