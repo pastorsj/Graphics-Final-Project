@@ -57,8 +57,8 @@ public:
 
 
 	void initialize(int xsizetemp, int ysizetemp) {
-		this->xsize = xsize;
-		this->ysize = ysize;
+		this->xsize = xsizetemp;
+		this->ysize = ysizetemp;
 		
 		maze.resize(xsize);
 		for (int i = 0; i < xsize; ++i) {

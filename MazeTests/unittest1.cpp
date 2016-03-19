@@ -16,5 +16,15 @@ namespace MazeTests
 			Assert::IsNotNull(mg);
 		}
 
+		TEST_METHOD(TestMazeSizeGetters)
+		{
+			MazeGenerator * mg = MazeGenerator::instance();
+			int expectedXSize = 20;
+			int expectedYSize = 20;
+			mg->makeMaze(expectedXSize, expectedYSize);
+			Assert::AreEqual(expectedXSize, mg->getXSize());
+			Assert::AreEqual(expectedYSize, mg->getYSize());
+		}
+
 	};
 }
