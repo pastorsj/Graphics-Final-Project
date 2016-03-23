@@ -30,8 +30,9 @@
 #define PI 3.14159f
 #include "ShaderManager.h"
 #include "GLHelper.h"
-#include "RenderEngine.h"
 #include "WorldState.h"
+#include "RenderEngine.h"
+
 
 class Program4
 {

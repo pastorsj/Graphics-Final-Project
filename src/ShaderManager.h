@@ -1,6 +1,7 @@
 #ifndef __SHADERMANAGER_
 #define __SHADERMANAGER_
 
+#pragma once
 #include <SFML/Window.hpp>
 #include <stdio.h>
 #define PI 3.14159f

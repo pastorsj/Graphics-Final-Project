@@ -22,6 +22,8 @@
     </ClCompile>
     <ClCompile Include="src\ShaderManager.cpp" />
     <ClCompile Include="src\WorldState.cpp" />
+    <ClCompile Include="src\ModelManager.cpp" />
+    <ClCompile Include="src\MazeGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\glew\glew.h">

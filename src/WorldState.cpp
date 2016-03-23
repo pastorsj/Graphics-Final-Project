@@ -1,497 +1,420 @@
-/*
-#ifndef __WORLDSTATE_H
-#define __WORLDSTATE_H
 #include "WorldState.h"
-#include "ModelManager.h"
-#include "glm/gtc/matrix_transform.hpp"
-#include "glm/gtc/matrix_inverse.hpp"
-#include "glm/glm.hpp"
-#define PI 3.14159f
 
 
-
-#define GL3W
-#ifdef GLEW
-#define GLEW_STATIC
-#include "glew/glew.h"
-#endif
-#ifdef GL3W
-#include "gl3w/gl3w.h"
-#endif
-
-#define NUM_TRACKED_FRAMES 10
-#define COLLISION_TOLERANCE 0.2f
-
-class WorldState
+WorldState::WorldState()
 {
-private:
-	float frameTimes[NUM_TRACKED_FRAMES];
-	float currentTime;
-	float cameraAngle;
-	bool running;
-	ModelManager models;
-	int shadingMode;
+	for (size_t i = 0; i < NUM_TRACKED_FRAMES; i++)
+		frameTimes[i] = 0.0f;
 
-	glm::vec3 cameraPos;
-	glm::vec3 cameraLook;
-	glm::vec3 cameraUp;
+	xCell = 1;
+	yCell = 1;
+	xPos = 0;
+	yPos = 0.5;
+	TRANSLATION_SENSITIVITY = 0.07f;
+	ROTATION_SENSITIVITY = 0.07f;
+	modelCapture = false;
+	rise = false;
+	fall = false;
+	animationTime = -1;
 
-	glm::vec4 lightPos;
-	glm::vec3 lightIntensity;
+	modelCount = 0;
 
-	glm::mat4 lightRotate;
-	glm::mat4 lightIncrement;
-	glm::mat4 modelRotate;
-	glm::mat4 modelIncrement;
-	glm::mat4 modelTranslate;
-	glm::mat4 cameraMatrix;
+	cameraRotate = glm::mat4(1);
+	cameraIncrement = glm::rotate(glm::mat4(1), 0.02f, glm::vec3(0, 1, 0));
 
-	glm::mat4 cameraRotate;
-	glm::mat4 cameraIncrement;
-	glm::mat4 cameraTranslate;
+	modelIncrement = glm::rotate(glm::mat4(1.0f), 0.02f, glm::vec3(0, 1, 0));
 
-	bool lightRotating;
-	bool modelRotating;
+	shadingMode = 0;
+	running = true;
+	models.init();
 
-	bool movingForward;
-	bool movingBackward;
-	bool rotatingLeft;
-	bool rotatingRight;
-	bool rise;
-	bool fall;
-	bool modelCapture;
-	float animationTime;
+	cameraAngle = 0;
+	//cameraPos = glm::vec3(center[0],camDistance*std::max(xsize,ysize),center[2]);
+	cameraPos = glm::vec3(1, 0, 1);
+	//cameraPos = glm::vec3(4, 10, 4);
+	cameraLook = glm::vec3(1, 0, 0);
+	cameraUp = glm::vec3(0, 1, 0);
 
-	int lastModelFound;
-	int modelCount;
+	MazeGenerator * mg = MazeGenerator::instance();
 
-	GLfloat TRANSLATION_SENSITIVITY;
-	float ROTATION_SENSITIVITY;
-	// The cell within the maze that the player is currently in
-	int xCell;
-	int yCell;
-	// The x and y position of the player/camera within a cell. This assumes that 0,0 corresponds to the top left corner of a cell, while 1,1 is the bottom right
-	float xPos;
-	float yPos;
+	for (int i = 0; i < mg->getXSize(); i++) {
+		for (int j = 0; j < mg->getYSize(); j++) {
+			printf("x: %i, y: %i", i, j);
+			MazeGenerator * mg = MazeGenerator::instance();
+			printf(mg->getCell(i, j).up ? "up" : "no up");
+			printf(mg->getCell(i, j).left ? "left\n" : "no left\n");
+		}
+	}
+}
 
-public:
-	WorldState()
-	{
-		for (size_t i = 0; i<NUM_TRACKED_FRAMES; i++)
-			frameTimes[i] = 0.0f;
+void WorldState::updateFrameTime(float timeAsSeconds)
+{
+	for (size_t i = 1; i < NUM_TRACKED_FRAMES; i++)
+		frameTimes[i] = frameTimes[i - 1];
+	frameTimes[0] = timeAsSeconds;
+}
 
-		xCell = 1;
-		yCell = 1;
-		xPos = 0;
-		yPos = 0.5;
-		TRANSLATION_SENSITIVITY = 0.07f;
-		ROTATION_SENSITIVITY = 0.07f;
-		modelCapture = false;
-		rise = false;
-		fall = false;
-		animationTime = -1;
+void WorldState::printFPS() const
+{
+	float sum = 0.0f;
+	float avg = 0.0f;
+	float fps = 0.0f;
 
-		modelCount = 0;
+	for (size_t i = 0; i < NUM_TRACKED_FRAMES; i++)
+		sum += frameTimes[i];
 
-		cameraRotate = glm::mat4(1);
-		cameraIncrement = glm::rotate(glm::mat4(1), 0.02f, glm::vec3(0, 1, 0));
+	avg = sum / NUM_TRACKED_FRAMES;
+	fps = 1.0f / avg;
+	printf("fps %f\n", fps);
+}
 
-		modelIncrement = glm::rotate(glm::mat4(1.0f), 0.02f, glm::vec3(0, 1, 0));
+void WorldState::printMotionState() const
+{
+	printf(movingForward ? "W" : "w");
+	printf(movingBackward ? "S" : "s");
+	printf(rotatingLeft ? "A" : "a");
+	printf(rotatingRight ? "D" : "d");
+}
 
-		shadingMode = 0;
-		running = true;
-		models = ModelManager();
-		models.init();
+void WorldState::setRunning(bool r)
+{
+	running = r;
+}
 
+bool WorldState::isRunning()
+{
+	return running;
+}
+
+float WorldState::getCurrentTime()
+{
+	return this->currentTime;
+}
+
+void WorldState::timeStep(float t)
+{
+	float elapsed = t - this->currentTime;
+	this->updateFrameTime(elapsed);
+
+	//spin light
+	lightRotate = lightIncrement * lightRotate;
+
+	//spin model
+	modelRotate = modelIncrement * modelRotate;
+
+	//move camera
+	if (movingForward && !modelCapture)
+		step(true);
+
+	if (movingBackward && !modelCapture)
+		step(false);
+
+	if (rotatingLeft && !modelCapture)
+		turnLeft();
+
+	if (rotatingRight && !modelCapture)
+		turnRight();
+
+	if (rise && !modelCapture)
+		riseUp();
+
+	if (fall && !modelCapture)
+		fallDown();
+
+	if (modelCapture) {
+		animationTime += 1;
+		if (animationTime > 60) {
+			modelCapture = false;
+			animationTime = -1;
+			models.getRawModels().at(lastModelFound).setTexNum(3);
+		}
+	}
+
+	updateCamera();
+
+	this->currentTime = t;
+}
+
+ModelManager & WorldState::getModels()
+{
+	return models;
+}
+
+glm::mat4 WorldState::getModelTranslate() const
+{
+	return modelTranslate;
+}
+
+glm::mat4 WorldState::getModelRotate() const
+{
+	return modelRotate;
+}
+
+glm::mat4 WorldState::getLightRotate() const
+{
+	return lightRotate;
+}
+
+glm::vec4 WorldState::getLightPos() const
+{
+	return this->lightPos;
+}
+
+glm::vec3 WorldState::getLightIntensity() const
+{
+	return this->lightIntensity;
+}
+
+glm::mat4 WorldState::getCameraMatrix() const
+{
+	return glm::lookAt(cameraPos, cameraLook, cameraUp);;
+}
+
+void WorldState::setShadingMode(int m)
+{
+	this->shadingMode = m;
+}
+
+int WorldState::getShadingMode() const
+{
+	return this->shadingMode;
+}
+
+glm::vec4 WorldState::getCameraPos() const
+{
+	return glm::vec4(this->cameraPos, 1);
+}
+
+glm::vec4 WorldState::getCameraLook() const
+{
+	return glm::vec4(this->cameraLook, 1);
+}
+float WorldState::getCameraAngle()
+{
+	return cameraAngle;
+}
+
+void WorldState::step(bool forward) {
+	float xInterval = cos(cameraAngle) * TRANSLATION_SENSITIVITY;
+	float yInterval = sin(cameraAngle) * TRANSLATION_SENSITIVITY;
+
+	if (!forward) {
+		xInterval = -xInterval;
+		yInterval = -yInterval;
+	}
+
+	//printf("xCell: %i, yCell: %i\n", xCell, yCell);
+	//printf("xPos: %f, yPos: %f\n", xPos, yPos);
+	MazeGenerator * mg = MazeGenerator::instance();
+
+	if (xInterval > 0) {
+		if (!mg->getCell(xCell + 1, yCell).left || xPos < 0.5 - COLLISION_TOLERANCE){
+			xPos += xInterval;
+		}
+	}
+	if (xInterval < 0) {
+		if (!mg->getCell(xCell, yCell).left || xPos > COLLISION_TOLERANCE - 0.5) {
+			xPos += xInterval;
+		}
+	}
+
+	if (xPos <= -0.5) {
+		xPos = 0.5;
+		xCell--;
+		checkModel();
+	}
+	else
+		if (xPos >= 0.5) {
+		xPos = -0.5;
+		xCell++;
+		checkModel();
+		}
+	if (yInterval > 0 && (!mg->getCell(xCell, yCell + 1).up || yPos < 1 - COLLISION_TOLERANCE)) {
+		yPos += yInterval;
+	}
+	if (yInterval < 0 && (!mg->getCell(xCell, yCell).up || yPos > COLLISION_TOLERANCE)) {
+		yPos += yInterval;
+	}
+
+	if (yPos <= 0) {
+		yPos = 1;
+		yCell--;
+		checkModel();
+	}
+	else
+		if (yPos >= 1) {
+		yPos = -0;
+		yCell++;
+		checkModel();
+		}
+
+	//printf("xPos: %f, yPos: %f\n", getXPos(), getYPos());
+}
+
+void WorldState::turnRight()
+{
+	cameraAngle += ROTATION_SENSITIVITY;
+	if (cameraAngle > 2 * PI)
 		cameraAngle = 0;
-		//cameraPos = glm::vec3(center[0],camDistance*std::max(xsize,ysize),center[2]);
-		cameraPos = glm::vec3(1, 0, 1);
-		//cameraPos = glm::vec3(4, 10, 4);
-		cameraLook = glm::vec3(1, 0, 0);
-		cameraUp = glm::vec3(0, 1, 0);
+	//cameraRotate = -cameraIncrement * cameraRotate;
+}
 
-		for (int i = 0; i < xsize; i++) {
-			for (int j = 0; j < ysize; j++) {
-				printf("x: %i, y: %i", i, j);
-				MazeGenerator * mg = MazeGenerator::instance();
-				printf(mg->getCell(i, j).up ? "up" : "no up");
-				printf(mg->getCell(i, j).left ? "left\n" : "no left\n");
-			}
+void WorldState::turnLeft()
+{
+	cameraAngle -= ROTATION_SENSITIVITY;
+	if (cameraAngle < 0)
+		cameraAngle = 2 * PI;
+	//cameraRotate = cameraIncrement * cameraRotate;
+}
+
+void WorldState::checkModel()
+{
+	for (unsigned i = 2; i < models.getRawModels().size(); i++) {
+		Model m = models.getRawModels().at(i);
+		if (m.getXcell() == xCell && m.getYcell() == yCell && !m.hasBeenFound()) {
+			foundModel(i);
 		}
 	}
 
-	void updateFrameTime(float timeAsSeconds)
-	{
-		for (size_t i = 1; i<NUM_TRACKED_FRAMES; i++)
-			frameTimes[i] = frameTimes[i - 1];
-		frameTimes[0] = timeAsSeconds;
-	}
+}
 
-	void printFPS() const
-	{
-		float sum = 0.0f;
-		float avg = 0.0f;
-		float fps = 0.0f;
+void WorldState::foundModel(unsigned i)
+{
 
-		for (size_t i = 0; i<NUM_TRACKED_FRAMES; i++)
-			sum += frameTimes[i];
+	modelCount++;
+	lastModelFound = i;
+	models.getRawModels().at(i).find();
+	modelCapture = true;
+	checkEndGame();
+}
 
-		avg = sum / NUM_TRACKED_FRAMES;
-		fps = 1.0f / avg;
-		printf("fps %f\n", fps);
-	}
-
-	void printMotionState() const
-	{
-		printf(movingForward ? "W" : "w");
-		printf(movingBackward ? "S" : "s");
-		printf(rotatingLeft ? "A" : "a");
-		printf(rotatingRight ? "D" : "d");
-	}
-
-	void setRunning(bool r)
-	{
-		running = r;
-	}
-
-	bool isRunning() const
-	{
-		return running;
-	}
-
-	float getCurrentTime() const
-	{
-		return this->currentTime;
-	}
-
-	void timeStep(float t)
-	{
-		float elapsed = t - this->currentTime;
-		this->updateFrameTime(elapsed);
-
-		//spin light
-		lightRotate = lightIncrement * lightRotate;
-
-		//spin model
-		modelRotate = modelIncrement * modelRotate;
-
-		//move camera
-		if (movingForward && !modelCapture)
-			step(true);
-
-		if (movingBackward && !modelCapture)
-			step(false);
-
-		if (rotatingLeft && !modelCapture)
-			turnLeft();
-
-		if (rotatingRight && !modelCapture)
-			turnRight();
-
-		if (rise && !modelCapture)
-			riseUp();
-
-		if (fall && !modelCapture)
-			fallDown();
-
-		if (modelCapture) {
-			animationTime += 1;
-			if (animationTime > 60) {
-				modelCapture = false;
-				animationTime = -1;
-				models.getRawModels().at(lastModelFound).setTexNum(3);
-			}
-		}
-
-		updateCamera();
-
-		this->currentTime = t;
-	}
-
-	ModelManager & getModels()
-	{
-		return models;
-	}
-
-	glm::mat4 getModelTranslate() const
-	{
-		return modelTranslate;
-	}
-
-	glm::mat4 getModelRotate() const
-	{
-		return modelRotate;
-	}
-
-	glm::mat4 getLightRotate() const
-	{
-		return lightRotate;
-	}
-
-	glm::vec4 getLightPos() const
-	{
-		return this->lightPos;
-	}
-
-	glm::vec3 getLightIntensity() const
-	{
-		return this->lightIntensity;
-	}
-
-	glm::mat4 getCameraMatrix() const
-	{
-		return glm::lookAt(cameraPos, cameraLook, cameraUp);;
-	}
-
-	void setShadingMode(int m)
-	{
-		this->shadingMode = m;
-	}
-
-	int getShadingMode() const
-	{
-		return this->shadingMode;
-	}
-
-	glm::vec4 getCameraPos() const
-	{
-		return glm::vec4(this->cameraPos, 1);
-	}
-
-	glm::vec4 getCameraLook() const
-	{
-		return glm::vec4(this->cameraLook, 1);
-	}
-	float getCameraAngle() const
-	{
-		return cameraAngle;
-	}
-
-	void step(bool forward) {
-		float xInterval = cos(cameraAngle) * TRANSLATION_SENSITIVITY;
-		float yInterval = sin(cameraAngle) * TRANSLATION_SENSITIVITY;
-
-		if (!forward) {
-			xInterval = -xInterval;
-			yInterval = -yInterval;
-		}
-
-		//printf("xCell: %i, yCell: %i\n", xCell, yCell);
-		//printf("xPos: %f, yPos: %f\n", xPos, yPos);
-		MazeGenerator * mg = MazeGenerator::instance();
-
-		if (xInterval > 0) {
-			if (!mg->getCell(xCell + 1, yCell).left || xPos < 0.5 - COLLISION_TOLERANCE){
-				xPos += xInterval;
-			}
-		}
-		if (xInterval < 0) {
-			if (!mg->getCell(xCell, yCell).left || xPos > COLLISION_TOLERANCE - 0.5) {
-				xPos += xInterval;
-			}
-		}
-
-		if (xPos <= -0.5) {
-			xPos = 0.5;
-			xCell--;
-			checkModel();
-		}
-		else
-			if (xPos >= 0.5) {
-			xPos = -0.5;
-			xCell++;
-			checkModel();
-			}
-		if (yInterval > 0 && (!mg->getCell(xCell, yCell + 1).up || yPos < 1 - COLLISION_TOLERANCE)) {
-			yPos += yInterval;
-		}
-		if (yInterval < 0 && (!mg->getCell(xCell, yCell).up || yPos > COLLISION_TOLERANCE)) {
-			yPos += yInterval;
-		}
-
-		if (yPos <= 0) {
-			yPos = 1;
-			yCell--;
-			checkModel();
-		}
-		else
-			if (yPos >= 1) {
-			yPos = -0;
-			yCell++;
-			checkModel();
-			}
-
-		//printf("xPos: %f, yPos: %f\n", getXPos(), getYPos());
-	}
-
-	void turnRight()
-	{
-		cameraAngle += ROTATION_SENSITIVITY;
-		if (cameraAngle > 2 * PI)
-			cameraAngle = 0;
-		//cameraRotate = -cameraIncrement * cameraRotate;
-	}
-
-	void turnLeft()
-	{
-		cameraAngle -= ROTATION_SENSITIVITY;
-		if (cameraAngle < 0)
-			cameraAngle = 2 * PI;
-		//cameraRotate = cameraIncrement * cameraRotate;
-	}
-
-	void checkModel()
-	{
-		for (unsigned i = 2; i < models.getRawModels().size(); i++) {
-			Model m = models.getRawModels().at(i);
-			if (m.getXcell() == xCell && m.getYcell() == yCell && !m.hasBeenFound()) {
-				foundModel(i);
-			}
-		}
+void WorldState::checkEndGame(){
+	if (modelCount == models.getNumObjects()) {
+		printf("You Win!");
 
 	}
+}
 
-	void foundModel(unsigned i)
-	{
+void WorldState::riseUp()
+{
+	cameraPos = glm::vec3(getXPos(), cameraPos[1] += TRANSLATION_SENSITIVITY, getYPos());
+	cameraLook[1] += TRANSLATION_SENSITIVITY;
+}
 
-		modelCount++;
-		lastModelFound = i;
-		models.getRawModels().at(i).find();
-		modelCapture = true;
-		checkEndGame();
-	}
+void WorldState::fallDown()
+{
+	cameraPos = glm::vec3(getXPos(), 0, getYPos());
+	cameraLook[1] = 0;
+}
 
-	void checkEndGame(){
-		if (modelCount == models.getNumObjects()) {
-			printf("You Win!");
+void WorldState::updateCameraAngle(){
+	//glm::mat3 rotation = glm::mat3(cos(cameraAngle), 0, sin(cameraAngle), 0, 1, 0, -sin(cameraAngle), 0, cos(cameraAngle));
+	//glm::vec3 baseVec = glm::vec3(1, 0, 0);
+	cameraLook = glm::vec3(cos(cameraAngle) * 2 * PI, 0, sin(cameraAngle) * 2 * PI);
+	//cameraLook = rotation * baseVec;
+	//glm::vec4 rot = cameraRotate * glm::vec4(1, 0, 0, 0);
+	//cameraLook = glm::vec3(rot[0], rot[1], rot[2]);
+}
 
-		}
-	}
+void WorldState::updateCamera() {
+	cameraPos = glm::vec3(getXPos(), cameraPos[1], getYPos());
+	cameraLook = glm::vec3(getXPos() + cos(cameraAngle), cameraLook[1], getYPos() + sin(cameraAngle));
+}
 
-	void riseUp()
-	{
-		cameraPos = glm::vec3(getXPos(), cameraPos[1] += TRANSLATION_SENSITIVITY, getYPos());
-		cameraLook[1] += TRANSLATION_SENSITIVITY;
-	}
+void WorldState::toggleModelRotate()
+{
+	modelRotating = !modelRotating;
+}
 
-	void fallDown()
-	{
-		cameraPos = glm::vec3(getXPos(), 0, getYPos());
-		cameraLook[1] = 0;
-	}
+void WorldState::toggleLightRotate()
+{
+	lightRotating = !lightRotating;
+}
 
-	void updateCameraAngle(){
-		//glm::mat3 rotation = glm::mat3(cos(cameraAngle), 0, sin(cameraAngle), 0, 1, 0, -sin(cameraAngle), 0, cos(cameraAngle));
-		//glm::vec3 baseVec = glm::vec3(1, 0, 0);
-		cameraLook = glm::vec3(cos(cameraAngle) * 2 * PI, 0, sin(cameraAngle) * 2 * PI);
-		//cameraLook = rotation * baseVec;
-		//glm::vec4 rot = cameraRotate * glm::vec4(1, 0, 0, 0);
-		//cameraLook = glm::vec3(rot[0], rot[1], rot[2]);
-	}
+void WorldState::setMovingForward(bool f)
+{
+	movingForward = f;
+}
 
-	void updateCamera() {
-		cameraPos = glm::vec3(getXPos(), cameraPos[1], getYPos());
-		cameraLook = glm::vec3(getXPos() + cos(cameraAngle), cameraLook[1], getYPos() + sin(cameraAngle));
-	}
+bool WorldState::isMovingForward() const
+{
+	return movingForward;
+}
 
-	void toggleModelRotate()
-	{
-		modelRotating = !modelRotating;
-	}
+void WorldState::setMovingBackward(bool b)
+{
+	movingBackward = b;
+}
 
-	void toggleLightRotate()
-	{
-		lightRotating = !lightRotating;
-	}
+bool WorldState::isMovingBackward() const
+{
+	return movingBackward;
+}
 
-	void setMovingForward(bool f)
-	{
-		movingForward = f;
-	}
+void WorldState::setRotatingLeft(bool l)
+{
+	rotatingLeft = l;
+}
 
-	bool isMovingForward() const
-	{
-		return movingForward;
-	}
+bool WorldState::isRotatingLeft() const
+{
+	return rotatingLeft;
+}
 
-	void setMovingBackward(bool b)
-	{
-		movingBackward = b;
-	}
+void WorldState::setRotatingRight(bool r)
+{
+	rotatingRight = r;
+}
 
-	bool isMovingBackward() const
-	{
-		return movingBackward;
-	}
+bool WorldState::isRotatingRight() const
+{
+	return rotatingRight;
+}
 
-	void setRotatingLeft(bool l)
-	{
-		rotatingLeft = l;
-	}
+void WorldState::setRise(bool r)
+{
+	rise = r;
+}
 
-	bool isRotatingLeft() const
-	{
-		return rotatingLeft;
-	}
+bool WorldState::isRising()
+{
+	return rise;
+}
 
-	void setRotatingRight(bool r)
-	{
-		rotatingRight = r;
-	}
+void WorldState::setFall(bool f)
+{
+	fall = f;
+}
 
-	bool isRotatingRight() const
-	{
-		return rotatingRight;
-	}
+bool WorldState::isFalling()
+{
+	return fall;
+}
 
-	void setRise(bool r)
-	{
-		rise = r;
-	}
+float WorldState::getXPos() {
+	return xCell + xPos;
+}
 
-	bool isRising() const
-	{
-		return rise;
-	}
+float WorldState::getYPos() {
+	return yCell + yPos;
+}
 
-	void setFall(bool f)
-	{
-		fall = f;
-	}
+int WorldState::getXCell() {
+	return xCell;
+}
 
-	bool isFalling() const
-	{
-		return fall;
-	}
+int WorldState::getYCell() {
+	return yCell;
+}
 
-	float getXPos() {
-		return xCell + xPos;
-	}
+float WorldState::getXPosComp(){
+	return xPos;
+}
 
-	float getYPos() {
-		return yCell + yPos;
-	}
+float WorldState::getYPosComp(){
+	return yPos;
+}
 
-	int getXCell() {
-		return xCell;
-	}
-
-	int getYCell() {
-		return yCell;
-	}
-
-	float getXPosComp(){
-		return xPos;
-	}
-
-	float getYPosComp(){
-		return yPos;
-	}
-
-	float getAnimationTime() {
-		return animationTime;
-	}
-};
-
-#endif
-*/
+float WorldState::getAnimationTime() {
+	return animationTime;
+}
