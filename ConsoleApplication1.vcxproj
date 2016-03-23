@@ -23,6 +23,7 @@
     <ClCompile Include="src\glew\glew.c" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\MazeGenerator.cpp" />
+    <ClCompile Include="src\Model.cpp" />
     <ClCompile Include="src\ModelManager.cpp" />
     <ClCompile Include="src\ShaderManager.cpp" />
     <ClCompile Include="src\WorldState.cpp" />
