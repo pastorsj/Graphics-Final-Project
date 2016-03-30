@@ -43,6 +43,8 @@ private:
 	void setupTextures(ModelManager & models);
 
 	void setupBuffers(ModelManager & models);
+
+	GLint setupBuffer(GLuint bufferIndex, vector<GLfloat> buffer, size_t totalSize, string name, GLint sizePer);
 };
 
 #endif

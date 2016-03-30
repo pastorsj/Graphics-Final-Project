@@ -336,6 +336,16 @@
 		checkGLError("texture");
 	}
 
+	GLint RenderEngine::setupBuffer(GLuint bufferIndex, vector<GLfloat> buffer, size_t totalSize, string name, GLint sizePer) {
+		glGenBuffers(1, &bufferIndex);
+		glBindBuffer(GL_ARRAY_BUFFER, bufferIndex);
+		glBufferData(GL_ARRAY_BUFFER, totalSize, &buffer[0], GL_STATIC_DRAW);
+		GLint slotToReturn = glGetAttribLocation(shaderProg[0], name.c_str());
+		glEnableVertexAttribArray(slotToReturn);
+		glVertexAttribPointer(slotToReturn, sizePer, GL_FLOAT, GL_FALSE, 0, 0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
+
 	void RenderEngine::setupBuffers(ModelManager & models)
 	{
 		glGenVertexArrays(1, &vertexArray);
@@ -348,24 +358,9 @@
 		GLint positionSlot;
 
 		//setup position buffer
-		glGenBuffers(1, &positionBuffer);
-		glBindBuffer(GL_ARRAY_BUFFER, positionBuffer);
-		vector<GLfloat> pos = models.getPosition();
-		glBufferData(GL_ARRAY_BUFFER, models.getPositionBytes(), &pos[0], GL_STATIC_DRAW);
-		positionSlot = glGetAttribLocation(shaderProg[0], "pos");
-		glEnableVertexAttribArray(positionSlot);
-		glVertexAttribPointer(positionSlot, 3, GL_FLOAT, GL_FALSE, 0, 0);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		positionSlot = this->setupBuffer(positionBuffer, models.getPosition(), models.getPositionBytes(), "pos", 3);
 
-		// Do the same thing for the color data
-		glGenBuffers(1, &texCoordBuffer);
-		glBindBuffer(GL_ARRAY_BUFFER, texCoordBuffer);
-		vector<GLfloat> coords = models.getTexCoord();
-		glBufferData(GL_ARRAY_BUFFER, models.getTexCoordBytes(), &coords[0], GL_STATIC_DRAW);
-		texCoordSlot = glGetAttribLocation(shaderProg[0], "texCoord");
-		glEnableVertexAttribArray(texCoordSlot);
-		glVertexAttribPointer(texCoordSlot, 2, GL_FLOAT, GL_FALSE, 0, 0);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		texCoordSlot = this->setupBuffer(texCoordBuffer, models.getTexCoord(), models.getTexCoordBytes(), "texCoord", 2);
 
 		// now the elements
 		glGenBuffers(1, &elementBuffer);
