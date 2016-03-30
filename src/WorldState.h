@@ -61,6 +61,8 @@ private:
 public:
 	WorldState();
 
+	void init();
+
 	void updateFrameTime(float timeAsSeconds);
 
 	void printFPS() const;
