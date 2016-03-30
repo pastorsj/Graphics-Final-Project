@@ -1,0 +1,172 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="loader">
+      <UniqueIdentifier>{00634f3b-bb03-4a3d-a151-f9cc80c8b7d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="helpers">
+      <UniqueIdentifier>{9e47cce3-7c70-4f3b-9a63-35b4882a8158}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MazeGenerator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderEngine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="objload\objLoader.h">
+      <Filter>loader</Filter>
+    </ClInclude>
+    <ClInclude Include="objload\string_extra.h">
+      <Filter>loader</Filter>
+    </ClInclude>
+    <ClInclude Include="objload\list.h">
+      <Filter>loader</Filter>
+    </ClInclude>
+    <ClInclude Include="objload\obj_parser.h">
+      <Filter>loader</Filter>
+    </ClInclude>
+    <ClInclude Include="GLHelper.h">
+      <Filter>helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="simplePNG.h">
+      <Filter>helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="gl3w\glcorearb.h">
+      <Filter>helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="gl3w\gl3w.h">
+      <Filter>helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="glew\glxew.h">
+      <Filter>helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="glew\wglew.h">
+      <Filter>helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="glew\glew.h">
+      <Filter>helpers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MazeGenerator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="objload\objLoader.cpp">
+      <Filter>loader</Filter>
+    </ClCompile>
+    <ClCompile Include="objload\string_extra.cpp">
+      <Filter>loader</Filter>
+    </ClCompile>
+    <ClCompile Include="objload\list.cpp">
+      <Filter>loader</Filter>
+    </ClCompile>
+    <ClCompile Include="objload\obj_parser.cpp">
+      <Filter>loader</Filter>
+    </ClCompile>
+    <ClCompile Include="gl3w\gl3w.c">
+      <Filter>helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="glew\glew.c">
+      <Filter>helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderEngine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\resources\dirt.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\resources\redpixel.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\resources\rose.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\resources\sunset.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\resources\transparentcorn.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\resources\yellowpixel.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\resources\corn.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\resources\lightPos.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\resources\lightPos.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\resources\simple.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\resources\simple.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\resources\texture.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\resources\texture.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+</Project>
