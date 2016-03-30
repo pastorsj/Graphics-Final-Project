@@ -290,7 +290,7 @@ void WorldState::foundModel(unsigned i)
 void WorldState::checkEndGame(){
 	if (modelCount == models.getNumObjects()) {
 		printf("You Win!");
-
+		this->setRunning(false);
 	}
 }
 

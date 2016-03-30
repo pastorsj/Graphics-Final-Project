@@ -39,50 +39,52 @@ class Program4
 public:
 	Program4()
 	{
-		getWindowContext();
+		while (1) {
+			getWindowContext();
 
-		WorldState state;
-		render.init(state);
-		render.buildRenderBuffers(RESOLUTION, RESOLUTION);
-		
-		previousPos = glm::vec2(0);
-		buttonDown[0]=false;
-		buttonDown[1]=false;
-		buttonDown[2]=false;
-		state.setMovingForward(false);
-		state.setMovingBackward(false);
-		state.setRotatingLeft(false);
-		state.setRotatingRight(false);
-		
-		sf::Clock c;
-		float lastFrame = c.restart().asSeconds();
-		float lastPrint = lastFrame;
-		float targetFrameTime = 1.0f/(float)TARGET_FPS;
-		
-		while (state.isRunning())
-		{			
-			App->setActive();
-			float currentTime = c.getElapsedTime().asSeconds();
-			float sinceLastFrame = currentTime - lastFrame;
-			float sleepTime = targetFrameTime - sinceLastFrame;
-			if(sleepTime > 0)
-				sf::sleep(sf::seconds(sleepTime));
-			
-			currentTime = c.getElapsedTime().asSeconds();
-			lastFrame = currentTime;
-			float sinceLastPrint = currentTime - lastPrint;
-            
-			handleEvents(state, render);
-			state.timeStep(currentTime);
-            
-			if(sinceLastPrint > PRINT_FPS_INTERVAL) {
-				lastPrint = currentTime;
-				//state.printFPS();
-				//state.printMotionState();
+			WorldState state;
+			render.init(state);
+			render.buildRenderBuffers(RESOLUTION, RESOLUTION);
+
+			previousPos = glm::vec2(0);
+			buttonDown[0] = false;
+			buttonDown[1] = false;
+			buttonDown[2] = false;
+			state.setMovingForward(false);
+			state.setMovingBackward(false);
+			state.setRotatingLeft(false);
+			state.setRotatingRight(false);
+
+			sf::Clock c;
+			float lastFrame = c.restart().asSeconds();
+			float lastPrint = lastFrame;
+			float targetFrameTime = 1.0f / (float)TARGET_FPS;
+
+			while (state.isRunning())
+			{
+				App->setActive();
+				float currentTime = c.getElapsedTime().asSeconds();
+				float sinceLastFrame = currentTime - lastFrame;
+				float sleepTime = targetFrameTime - sinceLastFrame;
+				if (sleepTime > 0)
+					sf::sleep(sf::seconds(sleepTime));
+
+				currentTime = c.getElapsedTime().asSeconds();
+				lastFrame = currentTime;
+				float sinceLastPrint = currentTime - lastPrint;
+
+				handleEvents(state, render);
+				state.timeStep(currentTime);
+
+				if (sinceLastPrint > PRINT_FPS_INTERVAL) {
+					lastPrint = currentTime;
+					//state.printFPS();
+					//state.printMotionState();
+				}
+
+				render.display(state);
+				App->display();
 			}
-            
-			render.display(state);
-			App->display();
 		}
 	}
 	
