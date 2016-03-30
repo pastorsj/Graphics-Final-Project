@@ -85,6 +85,7 @@ public:
 				render.display(state);
 				App->display();
 			}
+			App->close();
 		}
 	}
 	
