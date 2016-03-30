@@ -49,7 +49,7 @@
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -164,6 +164,7 @@ xcopy /Y $(SolutionDir)\resources $(OutDir)\resources\</Command>
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ControlState.h" />
     <ClInclude Include="gl3w\gl3w.h" />
     <ClInclude Include="gl3w\glcorearb.h" />
     <ClInclude Include="glew\glew.h" />
@@ -185,6 +186,7 @@ xcopy /Y $(SolutionDir)\resources $(OutDir)\resources\</Command>
     <ClInclude Include="WorldState.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ControlState.cpp" />
     <ClCompile Include="gl3w\gl3w.c" />
     <ClCompile Include="glew\glew.c" />
     <ClCompile Include="main.cpp" />

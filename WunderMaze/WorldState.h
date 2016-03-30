@@ -2,6 +2,7 @@
 #define __WORLDSTATE_H
 #pragma once
 #include "ModelManager.h"
+#include "ControlState.h"
 
 #define NUM_TRACKED_FRAMES 10
 #define COLLISION_TOLERANCE 0.2f
@@ -9,11 +10,12 @@
 class WorldState
 {
 private:
+	ControlState *moveState;
+
 	float frameTimes[NUM_TRACKED_FRAMES];
 	float currentTime;
-	float cameraAngle;
 	bool running;
-	ModelManager models;
+	ModelManager * models;
 	int shadingMode;
 
 	glm::vec3 cameraPos;
@@ -37,12 +39,6 @@ private:
 	bool lightRotating;
 	bool modelRotating;
 
-	bool movingForward;
-	bool movingBackward;
-	bool rotatingLeft;
-	bool rotatingRight;
-	bool rise;
-	bool fall;
 	bool modelCapture;
 	float animationTime;
 
@@ -50,18 +46,13 @@ private:
 	int modelCount;
 
 	GLfloat TRANSLATION_SENSITIVITY;
-	float ROTATION_SENSITIVITY;
-	// The cell within the maze that the player is currently in
-	int xCell;
-	int yCell;
-	// The x and y position of the player/camera within a cell. This assumes that 0,0 corresponds to the top left corner of a cell, while 1,1 is the bottom right
-	float xPos;
-	float yPos;
 
 public:
 	WorldState();
 
-	void init();
+	void init(ControlState * conState);
+
+	ControlState * getControlState();
 
 	void updateFrameTime(float timeAsSeconds);
 
@@ -99,14 +90,6 @@ public:
 
 	glm::vec4 getCameraLook() const;
 
-	float getCameraAngle();
-
-	void step(bool forward);
-
-	void turnRight();
-
-	void turnLeft();
-
 	void checkModel();
 
 	void foundModel(unsigned i);
@@ -124,42 +107,6 @@ public:
 	void toggleModelRotate();
 
 	void toggleLightRotate();
-
-	void setMovingForward(bool f);
-
-	bool isMovingForward() const;
-
-	void setMovingBackward(bool b);
-
-	bool isMovingBackward() const;
-
-	void setRotatingLeft(bool l);
-
-	bool isRotatingLeft() const;
-
-	void setRotatingRight(bool r);
-
-	bool isRotatingRight() const;
-
-	void setRise(bool r);
-
-	bool isRising();
-
-	void setFall(bool f);
-
-	bool isFalling();
-
-	float getXPos();
-
-	float getYPos();
-
-	int getXCell();
-
-	int getYCell();
-
-	float getXPosComp();
-
-	float getYPosComp();
 
 	float getAnimationTime();
 };

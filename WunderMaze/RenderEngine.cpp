@@ -68,7 +68,7 @@
 		glm::vec4 lightPos = state.getLightPos();
 		glm::vec4 camPos = state.getCameraPos();
 		glm::vec4 camLook = state.getCameraLook();
-		float camAngle = state.getCameraAngle();
+		float camAngle = state.getControlState()->getCameraAngle();
 		glm::mat4 L = state.getLightRotate();
 
 		//hacky light source size change
@@ -81,11 +81,11 @@
 		//printf("angle : %f\n", camAngle);
 		//printf("light %f %f %f\n", lightPos[0], lightPos[1], lightPos[2]);
 
-		float x = state.getXPos();
-		float y = state.getYPos();
+		float x = state.getControlState()->getXPos();
+		float y = state.getControlState()->getYPos();
 
-		float xPos = state.getXPosComp();
-		float yPos = state.getYPosComp();
+		float xPos = state.getControlState()->getXPosComp();
+		float yPos = state.getControlState()->getYPosComp();
 
 
 
@@ -344,6 +344,7 @@
 		glEnableVertexAttribArray(slotToReturn);
 		glVertexAttribPointer(slotToReturn, sizePer, GL_FLOAT, GL_FALSE, 0, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		return slotToReturn;
 	}
 
 	void RenderEngine::setupBuffers(ModelManager & models)

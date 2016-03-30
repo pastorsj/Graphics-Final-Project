@@ -31,6 +31,7 @@
 #include "ShaderManager.h"
 #include "GLHelper.h"
 #include "WorldState.h"
+#include "ControlState.h"
 #include "RenderEngine.h"
 
 
@@ -43,7 +44,8 @@ public:
 			getWindowContext();
 
 			WorldState state;
-			state.init();
+			ControlState * conState = new ControlState();
+			state.init(conState);
 			render.init(state);
 			render.buildRenderBuffers(RESOLUTION, RESOLUTION);
 
@@ -51,10 +53,10 @@ public:
 			buttonDown[0] = false;
 			buttonDown[1] = false;
 			buttonDown[2] = false;
-			state.setMovingForward(false);
-			state.setMovingBackward(false);
-			state.setRotatingLeft(false);
-			state.setRotatingRight(false);
+			state.getControlState()->setMovingForward(false);
+			state.getControlState()->setMovingBackward(false);
+			state.getControlState()->setRotatingLeft(false);
+			state.getControlState()->setRotatingRight(false);
 
 			sf::Clock c;
 			float lastFrame = c.restart().asSeconds();
@@ -130,31 +132,35 @@ private:
 				state.toggleLightRotate();
 
 			//Key events to move the player around
-			if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::W))
-				state.setMovingForward(true);
-			if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::S))
-				state.setMovingBackward(true);
-			if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::A))
-				state.setRotatingLeft(true);
-			if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::D))
-				state.setRotatingRight(true);
-			if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::R))
-				state.setRise(true);
-			if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::F))
-				state.setFall(true);
+			if ((event.type == sf::Event::KeyPressed)) {
+				if ((event.key.code == sf::Keyboard::W))
+					state.getControlState()->setMovingForward(true);
+				if ((event.key.code == sf::Keyboard::S))
+					state.getControlState()->setMovingBackward(true);
+				if ((event.key.code == sf::Keyboard::A))
+					state.getControlState()->setRotatingLeft(true);
+				if ((event.key.code == sf::Keyboard::D))
+					state.getControlState()->setRotatingRight(true);
+				if ((event.key.code == sf::Keyboard::R))
+					state.getControlState()->setRise(true);
+				if ((event.key.code == sf::Keyboard::F))
+					state.getControlState()->setFall(true);
+			}
 
-			if ((event.type == sf::Event::KeyReleased) && (event.key.code == sf::Keyboard::W))
-				state.setMovingForward(false);
-			if ((event.type == sf::Event::KeyReleased) && (event.key.code == sf::Keyboard::S))
-				state.setMovingBackward(false);
-			if ((event.type == sf::Event::KeyReleased) && (event.key.code == sf::Keyboard::A))
-				state.setRotatingLeft(false);
-			if ((event.type == sf::Event::KeyReleased) && (event.key.code == sf::Keyboard::D))
-				state.setRotatingRight(false);
-			if ((event.type == sf::Event::KeyReleased) && (event.key.code == sf::Keyboard::R))
-				state.setRise(false);
-			if ((event.type == sf::Event::KeyReleased) && (event.key.code == sf::Keyboard::F))
-				state.setFall(false);
+			if ((event.type == sf::Event::KeyReleased)){
+				if ((event.key.code == sf::Keyboard::W))
+					state.getControlState()->setMovingForward(false);
+				if ((event.key.code == sf::Keyboard::S))
+					state.getControlState()->setMovingBackward(false);
+				if ((event.key.code == sf::Keyboard::A))
+					state.getControlState()->setRotatingLeft(false);
+				if ((event.key.code == sf::Keyboard::D))
+					state.getControlState()->setRotatingRight(false);
+				if ((event.key.code == sf::Keyboard::R))
+					state.getControlState()->setRise(false);
+				if ((event.key.code == sf::Keyboard::F))
+					state.getControlState()->setFall(false);
+			}
 		}
 
 		/*lastUpdate = timer.getElapsedTime().asSeconds();
