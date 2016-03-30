@@ -53,7 +53,7 @@ public:
 
 	Model();
 
-	void init(string objName, int texNum, int xCell = 0, int yCell = 0, bool rotate = false, float yOffset = 0);
+	void init(MazeGenerator& mg, string objName, int texNum, int xCell = 0, int yCell = 0, bool rotate = false, float yOffset = 0);
 
 	void draw(GLuint shaderProg, glm::mat4 mR, size_t & prevElements, size_t & prevVertices, vector<GLuint> & textures);
 
@@ -122,6 +122,7 @@ private:
 	vector<size_t> switchMaterialAt;
 	glm::mat4 preTrans;
 	vector<glm::mat4> postTrans;
+	MazeGenerator mg;
 	size_t objectCount;
 	bool rotates;
 	glm::vec3 min;

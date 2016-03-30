@@ -1,16 +1,7 @@
 #include "MazeGenerator.h"
 
-MazeGenerator * MazeGenerator::mg;
-
 MazeGenerator::MazeGenerator() {
 
-}
-
-MazeGenerator * MazeGenerator::instance() {
-	if (mg == NULL) {
-		mg = new MazeGenerator;
-	}
-	return mg;
 }
 
 int MazeGenerator::getXSize() {

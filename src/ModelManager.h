@@ -43,6 +43,8 @@ public:
 
 	vector<Model> & getRawModels();
 
+	MazeGenerator& getMazeGenerator();
+
 private:
 
 	bool checkDuplicate(glm::vec2 toCheck);
@@ -50,5 +52,6 @@ private:
 	vector<Model> models;
 	vector<GLuint> textures;
 	vector<glm::vec2> modelLocations;
+	MazeGenerator mg;
 };
 #endif

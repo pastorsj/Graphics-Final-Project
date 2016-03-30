@@ -35,14 +35,13 @@ WorldState::WorldState()
 	cameraLook = glm::vec3(1, 0, 0);
 	cameraUp = glm::vec3(0, 1, 0);
 
-	MazeGenerator * mg = MazeGenerator::instance();
+	MazeGenerator mg = models.getMazeGenerator();
 
-	for (int i = 0; i < mg->getXSize(); i++) {
-		for (int j = 0; j < mg->getYSize(); j++) {
+	for (int i = 0; i < mg.getXSize(); i++) {
+		for (int j = 0; j < mg.getYSize(); j++) {
 			printf("x: %i, y: %i", i, j);
-			MazeGenerator * mg = MazeGenerator::instance();
-			printf(mg->getCell(i, j).up ? "up" : "no up");
-			printf(mg->getCell(i, j).left ? "left\n" : "no left\n");
+			printf(mg.getCell(i, j).up ? "up" : "no up");
+			printf(mg.getCell(i, j).left ? "left\n" : "no left\n");
 		}
 	}
 }
@@ -205,15 +204,15 @@ void WorldState::step(bool forward) {
 
 	//printf("xCell: %i, yCell: %i\n", xCell, yCell);
 	//printf("xPos: %f, yPos: %f\n", xPos, yPos);
-	MazeGenerator * mg = MazeGenerator::instance();
+	MazeGenerator mg = models.getMazeGenerator();
 
 	if (xInterval > 0) {
-		if (!mg->getCell(xCell + 1, yCell).left || xPos < 0.5 - COLLISION_TOLERANCE){
+		if (!mg.getCell(xCell + 1, yCell).left || xPos < 0.5 - COLLISION_TOLERANCE){
 			xPos += xInterval;
 		}
 	}
 	if (xInterval < 0) {
-		if (!mg->getCell(xCell, yCell).left || xPos > COLLISION_TOLERANCE - 0.5) {
+		if (!mg.getCell(xCell, yCell).left || xPos > COLLISION_TOLERANCE - 0.5) {
 			xPos += xInterval;
 		}
 	}
@@ -229,10 +228,10 @@ void WorldState::step(bool forward) {
 		xCell++;
 		checkModel();
 		}
-	if (yInterval > 0 && (!mg->getCell(xCell, yCell + 1).up || yPos < 1 - COLLISION_TOLERANCE)) {
+	if (yInterval > 0 && (!mg.getCell(xCell, yCell + 1).up || yPos < 1 - COLLISION_TOLERANCE)) {
 		yPos += yInterval;
 	}
-	if (yInterval < 0 && (!mg->getCell(xCell, yCell).up || yPos > COLLISION_TOLERANCE)) {
+	if (yInterval < 0 && (!mg.getCell(xCell, yCell).up || yPos > COLLISION_TOLERANCE)) {
 		yPos += yInterval;
 	}
 

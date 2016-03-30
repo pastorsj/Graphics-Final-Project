@@ -12,18 +12,17 @@ namespace MazeTests
 		
 		TEST_METHOD(TestInitialization)
 		{
-			MazeGenerator * mg = MazeGenerator::instance();
-			Assert::IsNotNull(mg);
+			MazeGenerator mg;
 		}
 
 		TEST_METHOD(TestMazeSizeGetters)
 		{
-			MazeGenerator * mg = MazeGenerator::instance();
+			MazeGenerator mg;
 			int expectedXSize = 20;
 			int expectedYSize = 20;
-			mg->makeMaze(expectedXSize, expectedYSize);
-			Assert::AreEqual(expectedXSize, mg->getXSize());
-			Assert::AreEqual(expectedYSize, mg->getYSize());
+			mg.makeMaze(expectedXSize, expectedYSize);
+			Assert::AreEqual(expectedXSize, mg.getXSize());
+			Assert::AreEqual(expectedYSize, mg.getYSize());
 		}
 
 	};

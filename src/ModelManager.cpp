@@ -9,24 +9,27 @@ void ModelManager::addTexture(GLuint newTextureId)
 	textures.push_back(newTextureId);
 }
 
+MazeGenerator& ModelManager::getMazeGenerator() {
+	return this->mg;
+}
+
 void ModelManager::init()
 {
-	MazeGenerator * mg = MazeGenerator::instance();
-	mg->makeMaze(DESIRED_X_SIZE, DESIRED_Y_SIZE);
+	mg.makeMaze(DESIRED_X_SIZE, DESIRED_Y_SIZE);
 	models.resize(8);
-	models[0].init(string("wall"), 0);
-	models[1].init(string("floor"), 1);
+	models[0].init(mg, string("wall"), 0);
+	models[1].init(mg, string("floor"), 1);
 	glm::vec2 modelCell = this->getRandomCell();
-	models[2].init(string("resources/teapot.obj"), 2, modelCell.x, modelCell.y, true, -0.25);
+	models[2].init(mg, string("resources/teapot.obj"), 2, modelCell.x, modelCell.y, true, -0.25);
 	modelCell = this->getRandomCell();
-	models[3].init(string("resources/gourd.obj"), 2, modelCell.x, modelCell.y, true);
+	models[3].init(mg, string("resources/gourd.obj"), 2, modelCell.x, modelCell.y, true);
 	modelCell = this->getRandomCell();
-	models[4].init(string("resources/sphere.obj"), 2, modelCell.x, modelCell.y, true);
+	models[4].init(mg, string("resources/sphere.obj"), 2, modelCell.x, modelCell.y, true);
 	modelCell = this->getRandomCell();
-	models[5].init(string("resources/teddy.obj"), 2, modelCell.x, modelCell.y, true);
+	models[5].init(mg, string("resources/teddy.obj"), 2, modelCell.x, modelCell.y, true);
 	modelCell = this->getRandomCell();
-	models[6].init(string("resources/cow.obj"), 2, modelCell.x, modelCell.y, false);
-	models[7].init(string("sky"), 4);
+	models[6].init(mg, string("resources/cow.obj"), 2, modelCell.x, modelCell.y, false);
+	models[7].init(mg, string("sky"), 4);
 }
 
 int ModelManager::getNumObjects() {

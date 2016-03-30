@@ -19,13 +19,9 @@ private:
 	std::vector<std::vector<cell>> maze;
 	int xsize, ysize;
 
-	static MazeGenerator * mg;
-
 public:
 
 	MazeGenerator();
-
-	static MazeGenerator * instance();
 
 	int getXSize();
 
