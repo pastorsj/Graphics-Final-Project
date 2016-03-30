@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
-#include "../src/MazeGenerator.h"
+#include "../WunderMaze/MazeGenerator.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
