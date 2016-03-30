@@ -113,7 +113,7 @@ private:
 		while (App->pollEvent(event))
 		{
 			if (event.type == sf::Event::Closed)
-				state.setRunning(false);
+				setIsProgramRunning(false);
 			if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Escape))
 				setIsProgramRunning(false);
 			
