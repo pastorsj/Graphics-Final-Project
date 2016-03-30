@@ -3,6 +3,11 @@
 
 WorldState::WorldState()
 {
+	
+}
+
+void WorldState::init()
+{
 	for (size_t i = 0; i < NUM_TRACKED_FRAMES; i++)
 		frameTimes[i] = 0.0f;
 

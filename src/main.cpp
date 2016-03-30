@@ -43,6 +43,7 @@ public:
 			getWindowContext();
 
 			WorldState state;
+			state.init();
 			render.init(state);
 			render.buildRenderBuffers(RESOLUTION, RESOLUTION);
 
