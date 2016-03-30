@@ -39,7 +39,7 @@ class Program4
 public:
 	Program4()
 	{
-		while (1) {
+		while (this->isProgramRunning) {
 			getWindowContext();
 
 			WorldState state;
@@ -60,7 +60,7 @@ public:
 			float lastPrint = lastFrame;
 			float targetFrameTime = 1.0f / (float)TARGET_FPS;
 
-			while (state.isRunning())
+			while (state.isRunning() && this->isProgramRunning)
 			{
 				App->setActive();
 				float currentTime = c.getElapsedTime().asSeconds();
@@ -99,6 +99,13 @@ private:
 	glm::ivec2 previousPos;
 	bool buttonDown[3];
 
+	bool isProgramRunning = true;
+
+	void setIsProgramRunning(bool running)
+	{
+		isProgramRunning = running;
+	}
+
 	void handleEvents(WorldState & state, RenderEngine & render)
 	{
 		sf::Event event;
@@ -108,7 +115,7 @@ private:
 			if (event.type == sf::Event::Closed)
 				state.setRunning(false);
 			if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Escape))
-				state.setRunning(false);
+				setIsProgramRunning(false);
 			
             if((event.type == sf::Event::TextEntered) && (event.text.unicode == 'q'))
                 state.setShadingMode(0);
