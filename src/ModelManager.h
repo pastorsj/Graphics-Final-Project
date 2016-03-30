@@ -13,8 +13,8 @@ class ModelManager
 {
 private:
 	// CHANGE THIS TO CHANGE MAZE SIZE
-	const int DESIRED_X_SIZE = 20;
-	const int DESIRED_Y_SIZE = 20;
+	const int DESIRED_X_SIZE = 7;
+	const int DESIRED_Y_SIZE = 7;
 
 public:
 	ModelManager();
@@ -25,7 +25,7 @@ public:
 
 	int getNumObjects();
 
-	int getRandomCell();
+	glm::vec2 getRandomCell();
 
 	vector<GLfloat> const getPosition() const;
 
@@ -44,7 +44,11 @@ public:
 	vector<Model> & getRawModels();
 
 private:
+
+	bool checkDuplicate(glm::vec2 toCheck);
+
 	vector<Model> models;
 	vector<GLuint> textures;
+	vector<glm::vec2> modelLocations;
 };
 #endif

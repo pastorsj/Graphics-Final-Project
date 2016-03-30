@@ -16,11 +16,16 @@ void ModelManager::init()
 	models.resize(8);
 	models[0].init(string("wall"), 0);
 	models[1].init(string("floor"), 1);
-	models[2].init(string("resources/teapot.obj"), 2, getRandomCell(), getRandomCell(), true, -0.25);
-	models[3].init(string("resources/gourd.obj"), 2, getRandomCell(), getRandomCell(), true);
-	models[4].init(string("resources/sphere.obj"), 2, getRandomCell(), getRandomCell(), true);
-	models[5].init(string("resources/teddy.obj"), 2, getRandomCell(), getRandomCell(), true);
-	models[6].init(string("resources/cow.obj"), 2, getRandomCell(), getRandomCell(), false);
+	glm::vec2 modelCell = this->getRandomCell();
+	models[2].init(string("resources/teapot.obj"), 2, modelCell.x, modelCell.y, true, -0.25);
+	modelCell = this->getRandomCell();
+	models[3].init(string("resources/gourd.obj"), 2, modelCell.x, modelCell.y, true);
+	modelCell = this->getRandomCell();
+	models[4].init(string("resources/sphere.obj"), 2, modelCell.x, modelCell.y, true);
+	modelCell = this->getRandomCell();
+	models[5].init(string("resources/teddy.obj"), 2, modelCell.x, modelCell.y, true);
+	modelCell = this->getRandomCell();
+	models[6].init(string("resources/cow.obj"), 2, modelCell.x, modelCell.y, false);
 	models[7].init(string("sky"), 4);
 }
 
@@ -28,8 +33,25 @@ int ModelManager::getNumObjects() {
 	return models.size() - 3;
 }
 
-int ModelManager::getRandomCell(){
-	return rand() % (DESIRED_X_SIZE - 4) + 2;
+glm::vec2 ModelManager::getRandomCell(){
+	glm::vec2 toCheck;
+	do {
+		toCheck.x = rand() % (DESIRED_X_SIZE - 4) + 2;
+		toCheck.y = rand() % (DESIRED_X_SIZE - 4) + 2;
+	} while (this->checkDuplicate(toCheck));
+	modelLocations.push_back(toCheck);
+	return toCheck;
+}
+
+bool ModelManager::checkDuplicate(glm::vec2 toCheck) {
+	bool found = false;
+	for (int i = 0; i < modelLocations.size(); ++i) {
+		if (modelLocations[i].x == toCheck.x && modelLocations[i].y == toCheck.y) {
+			found = true;
+			break;
+		}
+	}
+	return found;
 }
 
 vector<GLfloat> const ModelManager::getPosition() const

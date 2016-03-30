@@ -21,9 +21,9 @@ private:
 
 	static MazeGenerator * mg;
 
-	MazeGenerator();
-
 public:
+
+	MazeGenerator();
 
 	static MazeGenerator * instance();
 
