@@ -1,4 +1,7 @@
 #include "ModelManager.h"
+#include "Wall.h"
+#include "Floor.h"
+#include "Sky.h"
 
 ModelManager::ModelManager()
 {
@@ -17,19 +20,30 @@ void ModelManager::init()
 {
 	mg.makeMaze(DESIRED_X_SIZE, DESIRED_Y_SIZE);
 	models.resize(8);
-	models[0].init(mg, string("wall"), 0);
-	models[1].init(mg, string("floor"), 1);
+
+	models[0] = new Wall();
+	models[0]->init(mg, string("wall"), 0);
+
+	models[1] = new Floor();
+	models[1]->init(mg, string("floor"), 1);
+
+	for (int i = 2; i < 7; i++)
+		models[i] = new Model();
+
 	glm::vec2 modelCell = this->getRandomCell();
-	models[2].init(mg, string("resources/teapot.obj"), 2, modelCell.x, modelCell.y, true, -0.25);
+	models[2]->init(mg, string("resources/teapot.obj"), 2, modelCell.x, modelCell.y, true, -0.25);
+
 	modelCell = this->getRandomCell();
-	models[3].init(mg, string("resources/gourd.obj"), 2, modelCell.x, modelCell.y, true);
+	models[3]->init(mg, string("resources/gourd.obj"), 2, modelCell.x, modelCell.y, true);
 	modelCell = this->getRandomCell();
-	models[4].init(mg, string("resources/sphere.obj"), 2, modelCell.x, modelCell.y, true);
+	models[4]->init(mg, string("resources/sphere.obj"), 2, modelCell.x, modelCell.y, true);
 	modelCell = this->getRandomCell();
-	models[5].init(mg, string("resources/teddy.obj"), 2, modelCell.x, modelCell.y, true);
+	models[5]->init(mg, string("resources/teddy.obj"), 2, modelCell.x, modelCell.y, true);
 	modelCell = this->getRandomCell();
-	models[6].init(mg, string("resources/cow.obj"), 2, modelCell.x, modelCell.y, false);
-	models[7].init(mg, string("sky"), 4);
+	models[6]->init(mg, string("resources/cow.obj"), 2, modelCell.x, modelCell.y, false);
+
+	models[7] = new Sky();
+	models[7]->init(mg, string("sky"), 4);
 }
 
 int ModelManager::getNumObjects() {
@@ -63,7 +77,7 @@ vector<GLfloat> const ModelManager::getPosition() const
 	vector<glm::vec3> modelPos;
 	for (int i = 0; i < models.size(); ++i)
 	{
-		modelPos = models[i].getPosition();
+		modelPos = models[i]->getPosition();
 		for (int j = 0; j < modelPos.size(); ++j)
 		{
 			positions.push_back(modelPos[j][0]);
@@ -80,7 +94,7 @@ vector<GLuint> const ModelManager::getElement() const
 	vector<GLuint> modelEles;
 	for (int i = 0; i < models.size(); ++i)
 	{
-		modelEles = models[i].getElement();
+		modelEles = models[i]->getElement();
 		for (int j = 0; j < modelEles.size(); ++j)
 		{
 			elements.push_back(modelEles[j]);
@@ -95,7 +109,7 @@ vector<GLfloat> const ModelManager::getTexCoord() const
 	vector<glm::vec2> modelCoords;
 	for (int i = 0; i < models.size(); ++i)
 	{
-		modelCoords = models[i].getTexCoord();
+		modelCoords = models[i]->getTexCoord();
 		for (int j = 0; j < modelCoords.size(); ++j)
 		{
 			coords.push_back(modelCoords[j][0]);
@@ -110,7 +124,7 @@ size_t ModelManager::getPositionBytes() const
 	size_t runningTotal = 0;
 	for (int i = 0; i < models.size(); ++i)
 	{
-		runningTotal += models[i].getPositionBytes();
+		runningTotal += models[i]->getPositionBytes();
 	}
 	return runningTotal;
 }
@@ -120,7 +134,7 @@ size_t ModelManager::getElementBytes() const
 	size_t runningTotal = 0;
 	for (int i = 0; i < models.size(); ++i)
 	{
-		runningTotal += models[i].getElementBytes();
+		runningTotal += models[i]->getElementBytes();
 	}
 	return runningTotal;
 }
@@ -130,7 +144,7 @@ size_t ModelManager::getTexCoordBytes() const
 	size_t runningTotal = 0;
 	for (int i = 0; i < models.size(); ++i)
 	{
-		runningTotal += models[i].getTexCoordBytes();
+		runningTotal += models[i]->getTexCoordBytes();
 	}
 	return runningTotal;
 }
@@ -142,11 +156,11 @@ void ModelManager::draw(GLuint shaderProg, glm::mat4 mR)
 
 	for (int i = 0; i < models.size(); ++i)
 	{
-		models[i].draw(shaderProg, mR, prevElements, prevVertices, textures);
+		models[i]->draw(shaderProg, mR, prevElements, prevVertices, textures);
 	}
 }
 
-vector<Model> & ModelManager::getRawModels()
+vector<Model*> & ModelManager::getRawModels()
 {
 	return models;
 }

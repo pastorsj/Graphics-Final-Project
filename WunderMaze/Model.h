@@ -54,7 +54,7 @@ public:
 
 	Model();
 
-	void init(MazeGenerator& mg, string objName, int texNum, int xCell = 0, int yCell = 0, bool rotate = false, float yOffset = 0);
+	virtual void init(MazeGenerator& mg, string objName, int texNum, int xCell = 0, int yCell = 0, bool rotate = false, float yOffset = 0);
 
 	void draw(GLuint shaderProg, glm::mat4 mR, size_t & prevElements, size_t & prevVertices, vector<GLuint> & textures);
 
@@ -96,7 +96,7 @@ public:
 
 	void find();
 
-private:
+protected:
 
 	void makeDoubleSided();
 
@@ -107,12 +107,6 @@ private:
 	glm::vec3 computeMaxBound();
 
 	glm::vec3 computeDimension();
-
-	void initWall();
-
-	void initFloor();
-
-	void initSky();
 
 	vector<glm::vec3> positions;
 	vector<glm::vec3> normals;

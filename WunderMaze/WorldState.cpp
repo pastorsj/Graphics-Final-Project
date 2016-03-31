@@ -140,7 +140,7 @@ void WorldState::timeStep(float t)
 		if (animationTime > 60) {
 			modelCapture = false;
 			animationTime = -1;
-			models->getRawModels().at(lastModelFound).setTexNum(3);
+			models->getRawModels().at(lastModelFound)->setTexNum(3);
 		}
 	}
 
@@ -207,8 +207,8 @@ glm::vec4 WorldState::getCameraLook() const
 void WorldState::checkModel()
 {
 	for (unsigned i = 2; i < models->getRawModels().size(); i++) {
-		Model m = models->getRawModels().at(i);
-		if (m.getXcell() == getControlState()->getXCell() && m.getYcell() == getControlState()->getYCell() && !m.hasBeenFound()) {
+		Model* m = models->getRawModels().at(i);
+		if (m->getXcell() == getControlState()->getXCell() && m->getYcell() == getControlState()->getYCell() && !m->hasBeenFound()) {
 			foundModel(i);
 		}
 	}
@@ -220,7 +220,7 @@ void WorldState::foundModel(unsigned i)
 
 	modelCount++;
 	lastModelFound = i;
-	models->getRawModels().at(i).find();
+	models->getRawModels().at(i)->find();
 	modelCapture = true;
 	checkEndGame();
 }

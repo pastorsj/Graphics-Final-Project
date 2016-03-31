@@ -50,145 +50,130 @@ void Model::init(MazeGenerator& mazeGen, string objName, int texNum, int xCell, 
 	immune = 0;
 	preTrans = glm::mat4(1.0f);
 	this->texNum = texNum;
-	if (strcmp(objName.c_str(), "wall") == 0)
-	{
-		initWall();
-	}
-	else if (strcmp(objName.c_str(), "floor") == 0)
-	{
-		initFloor();
-	}
-	else if (strcmp(objName.c_str(), "sky") == 0)
-	{
-		initSky();
-		immune = 1;
-	}
-	else
-	{
-		objLoader loader;
-		loader.load(objName.c_str());
 
-		Material defaultMaterial;
-		materials.push_back(defaultMaterial);
+	objLoader loader;
+	loader.load(objName.c_str());
 
-		for (size_t i = 0; i < loader.materialCount; ++i)
+	Material defaultMaterial;
+	materials.push_back(defaultMaterial);
+
+	for (size_t i = 0; i < loader.materialCount; ++i)
+	{
+		Material m;
+		for (size_t c = 0; c < 3; ++c)
 		{
-			Material m;
-			for (size_t c = 0; c < 3; ++c)
-			{
-				m.Ka[c] = loader.materialList[i]->amb[c];
-				m.Kd[c] = loader.materialList[i]->diff[c];
-				m.Ks[c] = loader.materialList[i]->spec[c];
-				m.specAlpha = loader.materialList[i]->shiny;
-			}
-			materials.push_back(m);
+			m.Ka[c] = loader.materialList[i]->amb[c];
+			m.Kd[c] = loader.materialList[i]->diff[c];
+			m.Ks[c] = loader.materialList[i]->spec[c];
+			m.specAlpha = loader.materialList[i]->shiny;
+		}
+		materials.push_back(m);
+	}
+
+	positions.resize(loader.vertexCount);
+	texCoords.resize(loader.vertexCount);
+
+	switchMaterialAt.push_back(0);
+
+	for (size_t f = 0; f < loader.faceCount; ++f)
+	{
+		obj_face const * face = loader.faceList[f];
+
+		int faceMaterial = face->material_index + 1;
+		bool firstMaterial = activeMaterial.size() == 0;
+		bool materialChanged = !firstMaterial && activeMaterial[activeMaterial.size() - 1] != faceMaterial;
+		if (firstMaterial || materialChanged)
+		{
+			activeMaterial.push_back(faceMaterial);
 		}
 
-		positions.resize(loader.vertexCount);
-		texCoords.resize(loader.vertexCount);
-
-		switchMaterialAt.push_back(0);
-
-		for (size_t f = 0; f < loader.faceCount; ++f)
+		if (!firstMaterial && materialChanged)
 		{
-			obj_face const * face = loader.faceList[f];
+			switchMaterialAt.push_back(f);
+		}
 
-			int faceMaterial = face->material_index + 1;
-			bool firstMaterial = activeMaterial.size() == 0;
-			bool materialChanged = !firstMaterial && activeMaterial[activeMaterial.size() - 1] != faceMaterial;
-			if (firstMaterial || materialChanged)
+		bool isNotTriangle = face->vertex_count != MAX_FACE_SIZE;
+		if (isNotTriangle) {
+			cerr << "Skipping non-triangle face " << f << "." << endl;
+			continue;
+		}
+
+		bool indicesMatch = true;
+		for (size_t v = 0; v < face->vertex_count; ++v)
+		{
+			int pId = face->vertex_index[v];
+			int tId = face->texture_index[v];
+
+			indicesMatch = indicesMatch && (pId == tId);
+		}
+
+		if (!indicesMatch) {
+			//	cerr << "OBJ has non-matching pos/tex indices. Final model may be incorrect." << endl;
+		}
+
+		for (size_t v = 0; v < face->vertex_count; ++v)
+		{
+			elements.push_back(face->vertex_index[v]);
+		}
+
+		int pId[MAX_FACE_SIZE];
+		int tId[MAX_FACE_SIZE];
+
+		glm::vec3 p[POS_DIM];
+		glm::vec2 t[POS_DIM];
+
+		for (size_t v = 0; v < face->vertex_count; ++v)
+		{
+			pId[v] = face->vertex_index[v];
+			tId[v] = face->texture_index[v];
+		}
+
+		for (size_t v = 0; v < face->vertex_count; ++v)
+		{
+			for (size_t c = 0; c < POS_DIM; ++c)
 			{
-				activeMaterial.push_back(faceMaterial);
-			}
-
-			if (!firstMaterial && materialChanged)
-			{
-				switchMaterialAt.push_back(f);
-			}
-
-			bool isNotTriangle = face->vertex_count != MAX_FACE_SIZE;
-			if (isNotTriangle) {
-				cerr << "Skipping non-triangle face " << f << "." << endl;
-				continue;
-			}
-
-			bool indicesMatch = true;
-			for (size_t v = 0; v < face->vertex_count; ++v)
-			{
-				int pId = face->vertex_index[v];
-				int tId = face->texture_index[v];
-
-				indicesMatch = indicesMatch && (pId == tId);
-			}
-
-			if (!indicesMatch) {
-				//	cerr << "OBJ has non-matching pos/tex indices. Final model may be incorrect." << endl;
-			}
-
-			for (size_t v = 0; v < face->vertex_count; ++v)
-			{
-				elements.push_back(face->vertex_index[v]);
-			}
-
-			int pId[MAX_FACE_SIZE];
-			int tId[MAX_FACE_SIZE];
-
-			glm::vec3 p[POS_DIM];
-			glm::vec2 t[POS_DIM];
-
-			for (size_t v = 0; v < face->vertex_count; ++v)
-			{
-				pId[v] = face->vertex_index[v];
-				tId[v] = face->texture_index[v];
-			}
-
-			for (size_t v = 0; v < face->vertex_count; ++v)
-			{
-				for (size_t c = 0; c < POS_DIM; ++c)
-				{
-					p[v][c] = loader.vertexList[pId[v]]->e[c];
-				}
-			}
-
-			for (size_t v = 0; v < face->vertex_count; ++v)
-			{
-				bool validTexCoord = tId[v] >= 0;
-				if (validTexCoord)
-				{
-					for (size_t c = 0; c < TEX_DIM; ++c)
-					{
-						t[v][c] = loader.textureList[tId[v]]->e[c];
-					}
-				}
-			}
-
-			for (size_t v = 0; v < face->vertex_count; ++v)
-			{
-				positions[pId[v]] = p[v];
-				texCoords[pId[v]] = t[v];
+				p[v][c] = loader.vertexList[pId[v]]->e[c];
 			}
 		}
-		switchMaterialAt.push_back(loader.faceCount);
 
-		// custom stuff
-		min = computeMinBound();
-		max = computeMaxBound();
-		center = computeCentroid();
-		dim = computeDimension();
+		for (size_t v = 0; v < face->vertex_count; ++v)
+		{
+			bool validTexCoord = tId[v] >= 0;
+			if (validTexCoord)
+			{
+				for (size_t c = 0; c < TEX_DIM; ++c)
+				{
+					t[v][c] = loader.textureList[tId[v]]->e[c];
+				}
+			}
+		}
 
-		glm::mat4 moveCenter = glm::translate(glm::mat4(1.0f), -center);
-		int maxDim = dim[0] > dim[2] ? dim[0] : dim[2];
-		maxDim = maxDim > dim[1] ? maxDim : dim[1];
-		float scaler = 0.8f / maxDim;
-		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(scaler));
-		glm::mat4 moveCell = glm::translate(glm::mat4(1.0f), glm::vec3(xCell, yOffset, yCell + 0.5));
-		rotates = rotate;
-		preTrans = scale * moveCenter;
-		postTrans.push_back(moveCell);
-		cellx = xCell;
-		celly = yCell;
-		found = false;
+		for (size_t v = 0; v < face->vertex_count; ++v)
+		{
+			positions[pId[v]] = p[v];
+			texCoords[pId[v]] = t[v];
+		}
 	}
+	switchMaterialAt.push_back(loader.faceCount);
+
+	// custom stuff
+	min = computeMinBound();
+	max = computeMaxBound();
+	center = computeCentroid();
+	dim = computeDimension();
+
+	glm::mat4 moveCenter = glm::translate(glm::mat4(1.0f), -center);
+	int maxDim = dim[0] > dim[2] ? dim[0] : dim[2];
+	maxDim = maxDim > dim[1] ? maxDim : dim[1];
+	float scaler = 0.8f / maxDim;
+	glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(scaler));
+	glm::mat4 moveCell = glm::translate(glm::mat4(1.0f), glm::vec3(xCell, yOffset, yCell + 0.5));
+	rotates = rotate;
+	preTrans = scale * moveCenter;
+	postTrans.push_back(moveCell);
+	cellx = xCell;
+	celly = yCell;
+	found = false;
 }
 
 void Model::draw(GLuint shaderProg, glm::mat4 mR, size_t & prevElements, size_t & prevVertices, vector<GLuint> & textures)
@@ -395,130 +380,4 @@ glm::vec3 Model::computeDimension()
 	glm::vec3 min = getMinBound();
 	glm::vec3 dim = max - min;
 	return dim;
-}
-
-void Model::initWall()
-{
-	positions.push_back(glm::vec3(-0.5, -0.5, 0));
-	texCoords.push_back(glm::vec2(0, 1));
-
-	positions.push_back(glm::vec3(0.5, -0.5, 0));
-	texCoords.push_back(glm::vec2(1, 1));
-
-	positions.push_back(glm::vec3(0.5, 0.5, 0));
-	texCoords.push_back(glm::vec2(1, 0));
-
-	positions.push_back(glm::vec3(-0.5, 0.5, 0));
-	texCoords.push_back(glm::vec2(0, 0));
-
-	positions.push_back(glm::vec3(0, 0, 0));
-	texCoords.push_back(glm::vec2(0.5, 0.5));
-
-	elements.push_back(0);
-	elements.push_back(1);
-	elements.push_back(4);
-
-	elements.push_back(1);
-	elements.push_back(2);
-	elements.push_back(4);
-
-	elements.push_back(2);
-	elements.push_back(3);
-	elements.push_back(4);
-
-	elements.push_back(3);
-	elements.push_back(0);
-	elements.push_back(4);
-
-	makeDoubleSided();
-
-	glm::mat4 leftWall = glm::translate(glm::rotate(glm::mat4(1.0f), PI / 2, glm::vec3(0, 1, 0)), glm::vec3(-0.5, 0, -0.5));
-	for (int i = 1; i < mg.getXSize(); ++i)
-	{
-		for (int j = 1; j < mg.getYSize(); ++j)
-		{
-			glm::mat4 buildTrans = glm::translate(glm::mat4(1.0f), glm::vec3(i, 0, j));
-			if (mg.getCell(i, j).up)
-			{
-				postTrans.push_back(buildTrans);
-			}
-			if (mg.getCell(i, j).left)
-			{
-				postTrans.push_back(buildTrans * leftWall);
-			}
-		}
-	}
-}
-
-void Model::initFloor()
-{
-	positions.push_back(glm::vec3(-0.5, -0.5, -1));
-	texCoords.push_back(glm::vec2(0, 1));
-
-	positions.push_back(glm::vec3(0.5, -0.5, -1));
-	texCoords.push_back(glm::vec2(1, 1));
-
-	positions.push_back(glm::vec3(0.5, -0.5, 0));
-	texCoords.push_back(glm::vec2(1, 0));
-
-	positions.push_back(glm::vec3(-0.5, -0.5, 0));
-	texCoords.push_back(glm::vec2(0, 0));
-
-	positions.push_back(glm::vec3(0, -0.5, -0.5));
-	texCoords.push_back(glm::vec2(0.5, 0.5));
-
-	elements.push_back(4);
-	elements.push_back(1);
-	elements.push_back(0);
-
-	elements.push_back(4);
-	elements.push_back(2);
-	elements.push_back(1);
-
-	elements.push_back(4);
-	elements.push_back(3);
-	elements.push_back(2);
-
-	elements.push_back(4);
-	elements.push_back(0);
-	elements.push_back(3);
-
-	for (int i = 1; i < mg.getXSize(); ++i)
-	{
-		for (int j = 1; j < mg.getYSize(); ++j)
-		{
-			glm::mat4 buildTrans = glm::translate(glm::mat4(1.0f), glm::vec3(i, 0, j));
-			if (j > 1 && i < mg.getXSize() - 1)
-			{
-				postTrans.push_back(buildTrans);
-			}
-		}
-	}
-}
-
-void Model::initSky()
-{
-	positions.push_back(glm::vec3(mg.getXSize() / 2, 0, 0));
-	texCoords.push_back(glm::vec2(1, 0.8));
-	positions.push_back(glm::vec3(-mg.getXSize() / 2, 0, 0));
-	texCoords.push_back(glm::vec2(0, 0.8));
-	positions.push_back(glm::vec3(mg.getXSize() / 2, 40, 0));
-	texCoords.push_back(glm::vec2(1, 0));
-	positions.push_back(glm::vec3(-mg.getXSize() / 2, 40, 0));
-	texCoords.push_back(glm::vec2(0, 0));
-
-	elements.push_back(1);
-	elements.push_back(0);
-	elements.push_back(2);
-
-	elements.push_back(1);
-	elements.push_back(2);
-	elements.push_back(3);
-
-	preTrans = glm::mat4(1.0f);
-	glm::mat4 rot = glm::rotate(glm::mat4(1.0f), PI / 2, glm::vec3(0, 1, 0));
-	postTrans.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(mg.getXSize() / 2, 0, 0)));
-	postTrans.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, mg.getXSize() / 2)) * rot);
-	postTrans.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(mg.getXSize() / 2, 0, mg.getXSize())) * rot * rot);
-	postTrans.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(mg.getXSize(), 0, mg.getXSize() / 2)) * rot * rot * rot);
 }

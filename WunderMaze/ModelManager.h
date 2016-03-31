@@ -41,7 +41,7 @@ public:
 
 	void draw(GLuint shaderProg, glm::mat4 mR);
 
-	vector<Model> & getRawModels();
+	vector<Model*> & getRawModels();
 
 	MazeGenerator& getMazeGenerator();
 
@@ -49,7 +49,7 @@ private:
 
 	bool checkDuplicate(glm::vec2 toCheck);
 
-	vector<Model> models;
+	vector<Model*> models;
 	vector<GLuint> textures;
 	vector<glm::vec2> modelLocations;
 	MazeGenerator mg;

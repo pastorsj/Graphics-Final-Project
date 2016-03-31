@@ -64,7 +64,8 @@
 		glm::mat4 mR = state.getModelRotate();
 		glm::mat4 mC = state.getCameraMatrix();
 		glm::mat4 M = mC*mR*mT;
-		glm::mat4 N = glm::inverseTranspose(M);
+		//glm::mat4 N = glm::inverseTranspose(M);
+		glm::mat3 N = glm::inverseTranspose(glm::mat3(M));
 		glm::vec4 lightPos = state.getLightPos();
 		glm::vec4 camPos = state.getCameraPos();
 		glm::vec4 camLook = state.getCameraLook();
