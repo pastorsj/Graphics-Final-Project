@@ -7,7 +7,7 @@ uniform mat4 mR;
 uniform mat4 preTrans;
 uniform mat4 postTrans;
 uniform mat4 M;
-uniform mat4 N;
+uniform mat3 N;
 uniform mat4 L;
 uniform vec4 lightPos;
 uniform vec4 camPos; 
@@ -21,9 +21,15 @@ out vec2 texMapping;
 smooth out vec4 unTransPos;
 out vec3 camPosition;
 
+//smooth out vec3 smoothPos;
+//smooth out vec3 smoothNorm;
+
 void main()
 {    
 	vec4 pos = vec4(pos, 1);
+	//smoothPos = pos;
+	//smoothNorm = colorIn*2 - 1 + texCoord.x / 40;
+
 	camPosition = camPos.xyz;
 	unTransPos = postTrans*mR*preTrans*pos;
 
