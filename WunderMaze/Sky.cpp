@@ -18,14 +18,23 @@ void Sky::init(MazeGenerator& mazeGen, string objName, int texNum, int xCell, in
 	preTrans = glm::mat4(1.0f);
 	this->texNum = texNum;
 
+	immune = 1;
+
 	positions.push_back(glm::vec3(mg.getXSize() / 2, 0, 0));
 	texCoords.push_back(glm::vec2(1, 0.8));
+	normals.push_back(glm::vec3(.0, .0, 1.0));
+
 	positions.push_back(glm::vec3(-mg.getXSize() / 2, 0, 0));
 	texCoords.push_back(glm::vec2(0, 0.8));
+	normals.push_back(glm::vec3(.0, .0, 1.0));
+
 	positions.push_back(glm::vec3(mg.getXSize() / 2, 40, 0));
 	texCoords.push_back(glm::vec2(1, 0));
+	normals.push_back(glm::vec3(.0, .0, 1.0));
+
 	positions.push_back(glm::vec3(-mg.getXSize() / 2, 40, 0));
 	texCoords.push_back(glm::vec2(0, 0));
+	normals.push_back(glm::vec3(.0, .0, 1.0));
 
 	elements.push_back(1);
 	elements.push_back(0);

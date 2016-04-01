@@ -16,24 +16,35 @@ uniform int immune;
 
 in vec3 pos;
 in vec2 texCoord;
+in vec3 normal;
 
 out vec2 texMapping;
 smooth out vec4 unTransPos;
 out vec3 camPosition;
+smooth out vec3 smoothNorm;
+smooth out vec3 smoothPos;
 
 //smooth out vec3 smoothPos;
 //smooth out vec3 smoothNorm;
 
 void main()
 {    
-	vec4 pos = vec4(pos, 1);
+	//smoothPos = pos;
 	//smoothPos = pos;
 	//smoothNorm = colorIn*2 - 1 + texCoord.x / 40;
 
 	camPosition = camPos.xyz;
-	unTransPos = postTrans*mR*preTrans*pos;
-
+	//unTransPos = postTrans*mR*preTrans*vec4(pos, 1);
+	unTransPos = postTrans*mR*preTrans*vec4(pos, 1);
 	texMapping = texCoord;
+
+	/*camPosition = camPosition + normal;
+	camPosition = camPosition - normal;*/
+	smoothPos = vec3(P*C*unTransPos);
+	//smoothNorm = vec3(mR * vec4(normal, 1));
+	smoothNorm = normal;
+
 	gl_Position = P*C*unTransPos;
+	//gl_Position = P*C * mR * mT*vec4(pos, 1);
 
 }

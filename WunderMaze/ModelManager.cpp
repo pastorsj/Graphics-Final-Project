@@ -88,6 +88,23 @@ vector<GLfloat> const ModelManager::getPosition() const
 	return positions;
 }
 
+vector<GLfloat> const ModelManager::getNormal() const
+{
+	vector<GLfloat> normals;
+	vector<glm::vec3> modelNorms;
+	for (int i = 0; i < models.size(); ++i)
+	{
+		modelNorms = models[i]->getNormal();
+		for (int j = 0; j < modelNorms.size(); ++j)
+		{
+			normals.push_back(modelNorms[j][0]);
+			normals.push_back(modelNorms[j][1]);
+			normals.push_back(modelNorms[j][2]);
+		}
+	}
+	return normals;
+}
+
 vector<GLuint> const ModelManager::getElement() const
 {
 	vector<GLuint> elements;
@@ -145,6 +162,16 @@ size_t ModelManager::getTexCoordBytes() const
 	for (int i = 0; i < models.size(); ++i)
 	{
 		runningTotal += models[i]->getTexCoordBytes();
+	}
+	return runningTotal;
+}
+
+size_t ModelManager::getNormalBytes() const
+{
+	size_t runningTotal = 0;
+	for (int i = 0; i < models.size(); ++i)
+	{
+		runningTotal += models[i]->getNormalBytes();
 	}
 	return runningTotal;
 }

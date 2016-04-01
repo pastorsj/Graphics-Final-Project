@@ -29,6 +29,8 @@ public:
 
 	vector<GLfloat> const getPosition() const;
 
+	vector<GLfloat> const getNormal() const;
+
 	vector<GLuint> const getElement() const;
 
 	vector<GLfloat> const getTexCoord() const;
@@ -38,6 +40,8 @@ public:
 	size_t getElementBytes() const;
 
 	size_t getTexCoordBytes() const;
+
+	size_t getNormalBytes() const;
 
 	void draw(GLuint shaderProg, glm::mat4 mR);
 

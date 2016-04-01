@@ -19,6 +19,12 @@
     <Filter Include="helpers">
       <UniqueIdentifier>{9e47cce3-7c70-4f3b-9a63-35b4882a8158}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Special Models">
+      <UniqueIdentifier>{f4bd54a8-46e1-47e8-8f4a-5514e0b8b4f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Special Models">
+      <UniqueIdentifier>{37e98461-43f7-46a6-8d71-1db2501f7884}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -84,14 +90,14 @@
     <ClInclude Include="ControlState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Wall.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Floor.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Special Models</Filter>
     </ClInclude>
     <ClInclude Include="Sky.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Special Models</Filter>
+    </ClInclude>
+    <ClInclude Include="Wall.h">
+      <Filter>Header Files\Special Models</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -140,14 +146,14 @@
     <ClCompile Include="ControlState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Wall.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Floor.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Special Models</Filter>
+    </ClCompile>
+    <ClCompile Include="Wall.cpp">
+      <Filter>Source Files\Special Models</Filter>
     </ClCompile>
     <ClCompile Include="Sky.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Special Models</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

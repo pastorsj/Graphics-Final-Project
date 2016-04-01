@@ -72,8 +72,11 @@ void Model::init(MazeGenerator& mazeGen, string objName, int texNum, int xCell, 
 
 	positions.resize(loader.vertexCount);
 	texCoords.resize(loader.vertexCount);
+	normals.resize(loader.vertexCount);
 
 	switchMaterialAt.push_back(0);
+
+	printf("%s", objName.c_str());
 
 	for (size_t f = 0; f < loader.faceCount; ++f)
 	{
@@ -118,22 +121,25 @@ void Model::init(MazeGenerator& mazeGen, string objName, int texNum, int xCell, 
 
 		int pId[MAX_FACE_SIZE];
 		int tId[MAX_FACE_SIZE];
+		int normID[MAX_FACE_SIZE];
 
 		glm::vec3 p[POS_DIM];
 		glm::vec2 t[POS_DIM];
+		glm::vec3 norms[POS_DIM];
 
 		for (size_t v = 0; v < face->vertex_count; ++v)
 		{
 			pId[v] = face->vertex_index[v];
 			tId[v] = face->texture_index[v];
+			normID[v] = face->normal_index[v];
 		}
-
 		for (size_t v = 0; v < face->vertex_count; ++v)
 		{
 			for (size_t c = 0; c < POS_DIM; ++c)
 			{
 				p[v][c] = loader.vertexList[pId[v]]->e[c];
 			}
+			//printf("vertex %d", pId[v]);
 		}
 
 		for (size_t v = 0; v < face->vertex_count; ++v)
@@ -150,8 +156,18 @@ void Model::init(MazeGenerator& mazeGen, string objName, int texNum, int xCell, 
 
 		for (size_t v = 0; v < face->vertex_count; ++v)
 		{
+			for (size_t c = 0; c < POS_DIM; ++c)
+			{
+				norms[v][c] = loader.normalList[normID[v]]->e[c];
+			}
+			//printf("normal %d", normID[v]);
+		}
+
+		for (size_t v = 0; v < face->vertex_count; ++v)
+		{
 			positions[pId[v]] = p[v];
 			texCoords[pId[v]] = t[v];
+			normals[pId[v]] = norms[v];
 		}
 	}
 	switchMaterialAt.push_back(loader.faceCount);
@@ -220,6 +236,11 @@ vector<glm::vec3> const Model::getPosition() const
 	return positions;
 }
 
+vector<glm::vec3> const Model::getNormal() const
+{
+	return normals;
+}
+
 vector<glm::vec2> const Model::getTexCoord() const
 {
 	return texCoords;
@@ -248,6 +269,11 @@ size_t Model::getTexCoordBytes() const
 size_t Model::getElementBytes() const
 {
 	return elements.size()*sizeof(GLuint);
+}
+
+size_t Model::getNormalBytes() const
+{
+	return normals.size()* 3 * sizeof(GLfloat);
 }
 
 glm::vec3 Model::getMinBound()

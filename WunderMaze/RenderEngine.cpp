@@ -59,12 +59,12 @@
 		//clear the old frame
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		checkGLError("render begin");
 
 		glm::mat4 mT = state.getModelTranslate();
 		glm::mat4 mR = state.getModelRotate();
 		glm::mat4 mC = state.getCameraMatrix();
 		glm::mat4 M = mC*mR*mT;
-		//glm::mat4 N = glm::inverseTranspose(M);
 		glm::mat3 N = glm::inverseTranspose(glm::mat3(M));
 		glm::vec4 lightPos = state.getLightPos();
 		glm::vec4 camPos = state.getCameraPos();
@@ -99,20 +99,27 @@
 
 		//use shader
 		glUseProgram(shaderProg[0]);
+		checkGLError("render use prog");
 
 		glUniformMatrix4fv(glGetUniformLocation(shaderProg[0], "P"), 1, GL_FALSE, &P[0][0]);
+		checkGLError("model matrix first");
 		glUniformMatrix4fv(glGetUniformLocation(shaderProg[0], "C"), 1, GL_FALSE, &mC[0][0]);
-		glUniformMatrix4fv(glGetUniformLocation(shaderProg[0], "mR"), 1, GL_FALSE, &mR[0][0]);
+		//glUniformMatrix4fv(glGetUniformLocation(shaderProg[0], "mR"), 1, GL_FALSE, &mR[0][0]);
 		glUniformMatrix4fv(glGetUniformLocation(shaderProg[0], "mT"), 1, GL_FALSE, &mT[0][0]);
 		glUniformMatrix4fv(glGetUniformLocation(shaderProg[0], "M"), 1, GL_FALSE, &M[0][0]);
-		glUniformMatrix4fv(glGetUniformLocation(shaderProg[0], "N"), 1, GL_FALSE, &N[0][0]);
+		checkGLError("model matrix M");
+		glUniformMatrix3fv(glGetUniformLocation(shaderProg[0], "N"), 1, GL_FALSE, &N[0][0]);
+		checkGLError("model matrix N");
 		glUniformMatrix4fv(glGetUniformLocation(shaderProg[0], "L"), 1, GL_FALSE, &L[0][0]);
+		checkGLError("model matrix uniforms");
+
 		glUniform4fv(glGetUniformLocation(shaderProg[0], "lightPos"), 1, &lightPos[0]);
 		glUniform4fv(glGetUniformLocation(shaderProg[0], "camPos"), 1, &camPos[0]);
 		glUniform1i(glGetUniformLocation(shaderProg[0], "shadingMode"), state.getShadingMode());
+		checkGLError("render uniforms");
 
 		glBindVertexArray(vertexArray);
-
+		checkGLError("render upload");
 
 		// draw!
 		//glBindTexture(GL_TEXTURE_2D, textures[0]);
@@ -122,30 +129,32 @@
 		glActiveTexture(GL_TEXTURE0 + texUnitID);
 
 		glUniform1i(glGetUniformLocation(shaderProg[0], "texSampler"), texUnitID);
+		checkGLError("model uniform");
 
 		state.getModels().draw(shaderProg[0], mR);
+		checkGLError("model draw");
 		glBindVertexArray(0);
 		glUseProgram(0);
 		checkGLError("model");
 
 
-		glUseProgram(shaderProg[1]);
+		//glUseProgram(shaderProg[1]);
 
-		glUniformMatrix4fv(glGetUniformLocation(shaderProg[1], "P"), 1, GL_FALSE, &P[0][0]);
-		glUniformMatrix4fv(glGetUniformLocation(shaderProg[1], "C"), 1, GL_FALSE, &mC[0][0]);
-		glUniformMatrix4fv(glGetUniformLocation(shaderProg[1], "mR"), 1, GL_FALSE, &mR[0][0]);
-		glUniformMatrix4fv(glGetUniformLocation(shaderProg[1], "mT"), 1, GL_FALSE, &mT[0][0]);
-		glUniformMatrix4fv(glGetUniformLocation(shaderProg[1], "M"), 1, GL_FALSE, &M[0][0]);
-		glUniformMatrix4fv(glGetUniformLocation(shaderProg[1], "N"), 1, GL_FALSE, &N[0][0]);
-		glUniformMatrix4fv(glGetUniformLocation(shaderProg[1], "L"), 1, GL_FALSE, &L[0][0]);
-		glUniform4fv(glGetUniformLocation(shaderProg[1], "lightPos"), 1, &lightPos[0]);
-		glUniform4fv(glGetUniformLocation(shaderProg[1], "camPos"), 1, &camPos[0]);
-		glUniform1i(glGetUniformLocation(shaderProg[1], "shadingMode"), state.getShadingMode());
+		//glUniformMatrix4fv(glGetUniformLocation(shaderProg[1], "P"), 1, GL_FALSE, &P[0][0]);
+		//glUniformMatrix4fv(glGetUniformLocation(shaderProg[1], "C"), 1, GL_FALSE, &mC[0][0]);
+		//glUniformMatrix4fv(glGetUniformLocation(shaderProg[1], "mR"), 1, GL_FALSE, &mR[0][0]);
+		//glUniformMatrix4fv(glGetUniformLocation(shaderProg[1], "mT"), 1, GL_FALSE, &mT[0][0]);
+		//glUniformMatrix4fv(glGetUniformLocation(shaderProg[1], "M"), 1, GL_FALSE, &M[0][0]);
+		//glUniformMatrix3fv(glGetUniformLocation(shaderProg[1], "N"), 1, GL_FALSE, &N[0][0]);
+		//glUniformMatrix4fv(glGetUniformLocation(shaderProg[1], "L"), 1, GL_FALSE, &L[0][0]);
+		//glUniform4fv(glGetUniformLocation(shaderProg[1], "lightPos"), 1, &lightPos[0]);
+		//glUniform4fv(glGetUniformLocation(shaderProg[1], "camPos"), 1, &camPos[0]);
+		//glUniform1i(glGetUniformLocation(shaderProg[1], "shadingMode"), state.getShadingMode());
 
-		glBindVertexArray(lightArray);
-		glDrawElements(GL_POINTS, 1, GL_UNSIGNED_INT, 0);
-		glBindVertexArray(0);
-		glUseProgram(0);
+		//glBindVertexArray(lightArray);
+		//glDrawElements(GL_POINTS, 1, GL_UNSIGNED_INT, 0);
+		//glBindVertexArray(0);
+		//glUseProgram(0);
 		checkGLError("light");
 
 		// default framebuffer
@@ -339,12 +348,20 @@
 
 	GLint RenderEngine::setupBuffer(GLuint bufferIndex, vector<GLfloat> buffer, size_t totalSize, string name, GLint sizePer) {
 		glGenBuffers(1, &bufferIndex);
+		checkGLError("here");
 		glBindBuffer(GL_ARRAY_BUFFER, bufferIndex);
+		checkGLError("here1");
 		glBufferData(GL_ARRAY_BUFFER, totalSize, &buffer[0], GL_STATIC_DRAW);
+		checkGLError("here2");
 		GLint slotToReturn = glGetAttribLocation(shaderProg[0], name.c_str());
+		checkGLError("here3");
 		glEnableVertexAttribArray(slotToReturn);
+		checkGLError("here4");
+		printf("%d", slotToReturn);
 		glVertexAttribPointer(slotToReturn, sizePer, GL_FLOAT, GL_FALSE, 0, 0);
+		checkGLError("here5");
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		checkGLError("here6");
 		return slotToReturn;
 	}
 
@@ -353,16 +370,28 @@
 		glGenVertexArrays(1, &vertexArray);
 		glBindVertexArray(vertexArray);
 
-		GLuint positionBuffer;
-		GLuint texCoordBuffer;
-		GLuint elementBuffer;
+		GLuint positionBuffer = 0;
+		GLuint texCoordBuffer = 0;
+		GLuint normalBuffer = 0;
+		GLuint elementBuffer = 0;
 		GLint texCoordSlot;
 		GLint positionSlot;
 
 		//setup position buffer
 		positionSlot = this->setupBuffer(positionBuffer, models.getPosition(), models.getPositionBytes(), "pos", 3);
+		checkGLError("setup pos buffer error");
 
+		//setup normal buffer
+		texCoordSlot = this->setupBuffer(normalBuffer, models.getNormal(), models.getNormalBytes(), "normal", 3);
+		checkGLError("setup normal buffer error");
+
+		//setup tex coord buffer
 		texCoordSlot = this->setupBuffer(texCoordBuffer, models.getTexCoord(), models.getTexCoordBytes(), "texCoord", 2);
+		checkGLError("setup texCoord buffer error");
+
+		int max_attribs;
+		glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &max_attribs);
+		printf("%d", max_attribs);
 
 		// now the elements
 		glGenBuffers(1, &elementBuffer);

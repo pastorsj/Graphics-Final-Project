@@ -35,7 +35,7 @@ void WorldState::init(ControlState * conState)
 	
 
 	//cameraPos = glm::vec3(center[0],camDistance*std::max(xsize,ysize),center[2]);
-	cameraPos = glm::vec3(1, 0, 1);
+	cameraPos = glm::vec3(0, 0, 0);
 	//cameraPos = glm::vec3(4, 10, 4);
 	cameraLook = glm::vec3(1, 0, 0);
 	cameraUp = glm::vec3(0, 1, 0);
@@ -110,7 +110,7 @@ void WorldState::timeStep(float t)
 	lightRotate = lightIncrement * lightRotate;
 
 	//spin model
-	modelRotate = modelIncrement * modelRotate;
+	//modelRotate = modelIncrement * modelRotate;
 
 	//move camera
 	if (getControlState()->isMovingForward() && !modelCapture) {

@@ -62,6 +62,8 @@ public:
 
 	vector<glm::vec3> const getPosition() const;
 
+	vector<glm::vec3> const getNormal() const;
+
 	vector<glm::vec2> const getTexCoord() const;
 
 	vector<GLuint> const getElement() const;
@@ -73,6 +75,8 @@ public:
 	size_t getTexCoordBytes() const;
 
 	size_t getElementBytes() const;
+	
+	size_t getNormalBytes() const;
 
 	glm::vec3 getMinBound();
 
