@@ -104,7 +104,7 @@
 		glUniformMatrix4fv(glGetUniformLocation(shaderProg[0], "P"), 1, GL_FALSE, &P[0][0]);
 		checkGLError("model matrix first");
 		glUniformMatrix4fv(glGetUniformLocation(shaderProg[0], "C"), 1, GL_FALSE, &mC[0][0]);
-		//glUniformMatrix4fv(glGetUniformLocation(shaderProg[0], "mR"), 1, GL_FALSE, &mR[0][0]);
+		glUniformMatrix4fv(glGetUniformLocation(shaderProg[0], "mR"), 1, GL_FALSE, &mR[0][0]);
 		glUniformMatrix4fv(glGetUniformLocation(shaderProg[0], "mT"), 1, GL_FALSE, &mT[0][0]);
 		glUniformMatrix4fv(glGetUniformLocation(shaderProg[0], "M"), 1, GL_FALSE, &M[0][0]);
 		checkGLError("model matrix M");

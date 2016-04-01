@@ -110,7 +110,7 @@ void WorldState::timeStep(float t)
 	lightRotate = lightIncrement * lightRotate;
 
 	//spin model
-	//modelRotate = modelIncrement * modelRotate;
+	modelRotate = modelIncrement * modelRotate;
 
 	//move camera
 	if (getControlState()->isMovingForward() && !modelCapture) {

@@ -37,10 +37,7 @@ void main()
 	}
 	else
 	{
-    //fragColor = scale * texture(texSampler, texMapping);
-	//fragColor = (texture(texSampler, texMapping) + defaultShade(smoothPos, smoothNorm)) * 0.0001 + vec4(smoothNorm, 1);
 	fragColor = ((texture(texSampler, texMapping) + defaultShade(unTransPos.xyz, smoothNorm, scale) * scale)) * scale * 2;
-	//fragColor = fragColor * 0.001 +  smoothNorm;
 	}
 }
 
@@ -62,8 +59,10 @@ vec4 defaultShade(in vec3 pos, in vec3 norm, float scale)
 
 
 	//lp = C*L*lp;
-	p = M*p;
-	n = vec4(N*n.xyz,0);
+	//p = M*p;
+	p = C * mT * p;
+	//n = vec4(N*n.xyz,0);
+	n = C * mR *  mT * n;
 
 	// diffuse coefficent
 	vec4 l = normalize(lp - p);
