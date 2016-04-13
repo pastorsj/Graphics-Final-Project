@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MazeTests", "MazeTests\MazeTests.vcxproj", "{096464F7-C65E-48BB-A9CF-113B3A4A8404}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9407F659-C586-4B0A-A0D9-E6A5ADAB1FAA} = {9407F659-C586-4B0A-A0D9-E6A5ADAB1FAA}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WunderMaze", "WunderMaze\WunderMaze.vcxproj", "{9407F659-C586-4B0A-A0D9-E6A5ADAB1FAA}"
 EndProject
