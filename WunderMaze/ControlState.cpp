@@ -38,21 +38,17 @@ void ControlState::step(bool forward) {
 			xPos += xInterval;
 		}
 	}
-	//printf("Are we cool yet");
 	if (xInterval < 0) {
 		if (!mg.getCell(xCell, yCell).left || xPos > COLLISION_TOLERANCE - 0.5) {
 			xPos += xInterval;
 		}
 	}
-	//printf("Now?");
 	if (xPos <= -0.5) {
-		//printf("Is this where code came to die?");
 		xPos = 0.5;
 		xCell--;
 	}
 	else
 		if (xPos >= 0.5) {
-		//printf("or here");
 		xPos = -0.5;
 		xCell++;
 		}
@@ -64,13 +60,11 @@ void ControlState::step(bool forward) {
 	}
 
 	if (yPos <= 0) {
-		//printf("Or here???");
 		yPos = 1;
 		yCell--;
 	}
 	else
 		if (yPos >= 1) {
-		//printf("PLEASE???");
 		yPos = -0;
 		yCell++;
 		}
