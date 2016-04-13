@@ -38,7 +38,7 @@
 class Program4
 {
 public:
-	Program4()
+	void runGameLoop()
 	{
 		while (this->isProgramRunning) {
 			getWindowContext();
@@ -209,6 +209,7 @@ int main()
 {
 	printusers();
 	Program4 prog;
+	prog.runGameLoop();
 
 	return EXIT_SUCCESS;
 }
