@@ -196,7 +196,7 @@ private:
 #else
 		sf::ContextSettings settings(32, 0, 0, 3, 3, sf::ContextSettings::Core);
 #endif
-		App = new sf::Window(mode, "SFML application", sf::Style::Default, settings);
+		App = new sf::Window(mode, "WunderMaize", sf::Style::Default, settings);
 
 #ifdef __APPLE__
 		dup2(oldFD, 2); // Redirect back
