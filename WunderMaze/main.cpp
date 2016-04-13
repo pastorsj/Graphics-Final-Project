@@ -45,19 +45,7 @@ public:
 
 			WorldState state;
 			ControlState * conState = new ControlState();
-			state.init(conState);
-			render.init(state);
-			render.buildRenderBuffers(RESOLUTION, RESOLUTION);
-
-			previousPos = glm::vec2(0);
-			buttonDown[0] = false;
-			buttonDown[1] = false;
-			buttonDown[2] = false;
-			state.getControlState()->setMovingForward(false);
-			state.getControlState()->setMovingBackward(false);
-			state.getControlState()->setRotatingLeft(false);
-			state.getControlState()->setRotatingRight(false);
-
+			initializeStates(state, conState);
 			sf::Clock c;
 			float lastFrame = c.restart().asSeconds();
 			float lastPrint = lastFrame;
@@ -103,6 +91,21 @@ private:
 	bool buttonDown[3];
 
 	bool isProgramRunning = true;
+
+	void initializeStates(WorldState & state, ControlState * conState) {
+		state.init(conState);
+		render.init(state);
+		render.buildRenderBuffers(RESOLUTION, RESOLUTION);
+
+		previousPos = glm::vec2(0);
+		buttonDown[0] = false;
+		buttonDown[1] = false;
+		buttonDown[2] = false;
+		state.getControlState()->setMovingForward(false);
+		state.getControlState()->setMovingBackward(false);
+		state.getControlState()->setRotatingLeft(false);
+		state.getControlState()->setRotatingRight(false);
+	}
 
 	void setIsProgramRunning(bool running)
 	{
