@@ -74,6 +74,7 @@ public:
 				}
 
 				render.display(state);
+				
 				App->display();
 			}
 			App->close();
@@ -87,7 +88,6 @@ private:
 	sf::Clock timer;
 	float lastUpdate;
 	float motionTime;
-	glm::ivec2 previousPos;
 	bool buttonDown[3];
 
 	bool isProgramRunning = true;
@@ -97,7 +97,6 @@ private:
 		render.init(state);
 		render.buildRenderBuffers(RESOLUTION, RESOLUTION);
 
-		previousPos = glm::vec2(0);
 		buttonDown[0] = false;
 		buttonDown[1] = false;
 		buttonDown[2] = false;
