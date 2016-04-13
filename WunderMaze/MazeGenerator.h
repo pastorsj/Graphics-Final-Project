@@ -31,7 +31,6 @@ public:
 
 	int makeMaze(int xsizetemp, int ysizetemp);
 
-
 	void initialize(int xsizetemp, int ysizetemp);
 
 	void generate();
