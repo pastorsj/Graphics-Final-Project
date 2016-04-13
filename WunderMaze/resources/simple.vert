@@ -29,18 +29,12 @@ smooth out vec3 smoothPos;
 
 void main()
 {    
-	//vec4 pos = vec4(pos, 1);
-	//smoothPos = pos;
-	//smoothNorm = colorIn*2 - 1 + texCoord.x / 40;
 
 	camPosition = camPos.xyz;
 	unTransPos = postTrans*mR*preTrans*vec4(pos, 1);
-
 	texMapping = texCoord;
 
-	/*camPosition = camPosition + normal;
-	camPosition = camPosition - normal;*/
-	smoothPos = pos;
+	smoothPos = vec3(P*C*unTransPos);
 	smoothNorm = normal;
 
 	gl_Position = P*C*unTransPos;

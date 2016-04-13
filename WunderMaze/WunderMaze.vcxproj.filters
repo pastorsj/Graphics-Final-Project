@@ -157,45 +157,22 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\resources\dirt.jpg">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\resources\redpixel.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\resources\rose.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\resources\sunset.jpg">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\resources\transparentcorn.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\resources\yellowpixel.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\resources\corn.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\resources\lightPos.frag">
+    <None Include="resources\lightPos.frag">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\resources\lightPos.vert">
+    <None Include="resources\lightPos.vert">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\resources\simple.frag">
+    <None Include="resources\simple.frag">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\resources\simple.vert">
+    <None Include="resources\simple.vert">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\resources\texture.frag">
+    <None Include="resources\texture.frag">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\resources\texture.vert">
+    <None Include="resources\texture.vert">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
