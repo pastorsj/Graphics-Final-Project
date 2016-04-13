@@ -112,8 +112,8 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;$(SolutionDir)\WunderMaze\x64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ShaderManager.obj;MazeGenerator.obj;ModelManager.obj;WorldState.obj;Model.obj;string_extra.obj;objLoader.obj;obj_parser.obj;gl3w.obj;glew.obj;list.obj;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;$(SolutionDir)WunderMaze\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Floor.obj;Wall.obj;Sky.obj;ShaderManager.obj;MazeGenerator.obj;ModelManager.obj;WorldState.obj;Model.obj;ControlState.obj;string_extra.obj;objLoader.obj;obj_parser.obj;gl3w.obj;glew.obj;list.obj;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -151,7 +151,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;$(SolutionDir)\WunderMaze\x64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;$(SolutionDir)WunderMaze\x64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>Floor.obj;Wall.obj;Sky.obj;ShaderManager.obj;MazeGenerator.obj;ModelManager.obj;WorldState.obj;Model.obj;ControlState.obj;string_extra.obj;objLoader.obj;obj_parser.obj;gl3w.obj;glew.obj;list.obj;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

@@ -117,9 +117,9 @@
       <AdditionalLibraryDirectories>$(SolutionDir)\SFML\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <CustomBuildStep>
-      <Command>mkdir $(OutDir)\resources
-xcopy /Y $(SolutionDir)\resources $(OutDir)\resources\</Command>
-      <Outputs>$(OutDir)\resources\*.frag;$(OutDir)\resources\*.vert;%(Outputs)</Outputs>
+      <Command>mkdir $(OutDir)resources
+xcopy /Y $(ProjectDir)resources $(OutDir)resources\</Command>
+      <Outputs>$(OutDir)resources\*.frag;$(OutDir)resources\*.vert;%(Outputs)</Outputs>
       <Message>Copying resources</Message>
     </CustomBuildStep>
   </ItemDefinitionGroup>
@@ -163,10 +163,10 @@ xcopy /Y $(SolutionDir)\resources $(OutDir)\resources\</Command>
       <AdditionalLibraryDirectories>$(SolutionDir)\SFML\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <CustomBuildStep>
-      <Command>mkdir $(OutDir)\resources
-xcopy /Y $(SolutionDir)\resources $(OutDir)\resources\</Command>
+      <Command>mkdir $(OutDir)resources
+xcopy /Y $(ProjectDir)resources $(OutDir)resources\</Command>
       <Message>Copying resources</Message>
-      <Outputs>$(OutDir)\resources\*.frag;$(OutDir)\resources\*.vert;%(Outputs)</Outputs>
+      <Outputs>$(OutDir)resources\*.frag;$(OutDir)resources\*.vert;%(Outputs)</Outputs>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -218,21 +218,12 @@ xcopy /Y $(SolutionDir)\resources $(OutDir)\resources\</Command>
     <ClCompile Include="WorldState.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\resources\corn.png" />
-    <Image Include="..\resources\dirt.jpg" />
-    <Image Include="..\resources\redpixel.png" />
-    <Image Include="..\resources\rose.png" />
-    <Image Include="..\resources\sunset.jpg" />
-    <Image Include="..\resources\transparentcorn.png" />
-    <Image Include="..\resources\yellowpixel.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\resources\lightPos.frag" />
-    <None Include="..\resources\lightPos.vert" />
-    <None Include="..\resources\simple.frag" />
-    <None Include="..\resources\simple.vert" />
-    <None Include="..\resources\texture.frag" />
-    <None Include="..\resources\texture.vert" />
+    <None Include="resources\lightPos.frag" />
+    <None Include="resources\lightPos.vert" />
+    <None Include="resources\simple.frag" />
+    <None Include="resources\simple.vert" />
+    <None Include="resources\texture.frag" />
+    <None Include="resources\texture.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

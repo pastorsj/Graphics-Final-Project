@@ -215,6 +215,12 @@ void Model::draw(GLuint shaderProg, glm::mat4 mR, size_t & prevElements, size_t 
 		glUniformMatrix4fv(glGetUniformLocation(shaderProg, "mR"), 1, GL_FALSE, &ident[0][0]);
 	}
 
+	//TODO Add support for multiple materials.
+	//glUniform4fv(glGetUniformLocation(shaderProg, "Ka"), 1, &this->materials[0].Ka[0]);
+	//glUniform4fv(glGetUniformLocation(shaderProg, "Kd"), 1, &this->materials[0].Kd[0]);
+	//glUniform4fv(glGetUniformLocation(shaderProg, "Ks"), 1, &this->materials[0].Ks[0]);
+	//glUniform1f(glGetUniformLocation(shaderProg, "specAlpha"), this->materials[0].specAlpha);
+
 	for (int j = 0; j < postTransList.size(); ++j)
 	{
 		postTrans = postTransList[j];

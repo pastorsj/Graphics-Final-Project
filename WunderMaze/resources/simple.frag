@@ -14,6 +14,11 @@ uniform int immune;
 uniform mat4 M;
 uniform mat3 N;
 
+uniform vec4 Ka;
+uniform vec4 Kd;
+uniform vec4 Ks;
+uniform float specAlpha;
+
 in vec2 texMapping;
 smooth in vec4 unTransPos;
 in vec3 camPosition;
@@ -23,7 +28,7 @@ smooth in vec3 smoothNorm;
 
 out vec4 fragColor;
 
-vec4 defaultShade(in vec3 pos, in vec3 norm);
+vec4 defaultShade(in vec3 pos, in vec3 norm, float scale);
 
 void main()
 {
@@ -32,43 +37,41 @@ void main()
 	float scale = clamp(pow(inversesqrt(dot(dis, dis)), 2), 0.05, 1);
 	if(immune == 1)
 	{
-		scale = 1.0f;
+		//scale = 1.0f;
+		fragColor = texture(texSampler, texMapping);
 	}
-    //fragColor = scale * texture(texSampler, texMapping);
-	fragColor = texture(texSampler, texMapping) + defaultShade(smoothPos, smoothNorm) * vec4(0.1, 0.1, 0.1, 0.1) + vec4(smoothNorm, 1);
-	//fragColor = fragColor * 0.001 +  smoothNorm;
+	else
+	{
+	fragColor = ((texture(texSampler, texMapping) + defaultShade(unTransPos.xyz, smoothNorm, scale) * scale)) * scale * 2;
+	}
 }
 
-vec4 defaultShade(in vec3 pos, in vec3 norm)
+vec4 defaultShade(in vec3 pos, in vec3 norm, float scale)
 {
-	//TODO PASS THIS IN AS UNIFORM
-	//float alpha = specAlpha;
-	float alpha = 0.1;
-	vec4 p = vec4(pos, 1);
-	//vec4 p = vec4(camPosition, 1);
-	vec4 lp = lightPos;
-	vec4 n = normalize(vec4(norm,0));
+	float alpha = 1;
+	vec4 p = unTransPos;//vec4(pos, 1);
+	//vec4 lp = lightPos;
+	vec4 lp = vec4(camPosition, 0);
+	vec4 n = vec4(1, -1, 1, 0) * normalize(vec4(norm,0));
 	vec4 c = vec4(0);
 	vec4 Li = vec4(1);
 	vec4 ka = vec4(0.05);
-	vec4 kd = vec4(0.2, 0.2, 0.8, 1);
+	vec4 kd = vec4(0.2, 0.2, 0.8, 0);
 	vec4 ks = vec4(1);
 	//vec4 ka = Ka;//vec4(1);
 	//vec4 kd = Kd;
 	//vec4 ks = Ks;
-	//TODO PASS THESE IN ABOUT UNIFORMS
 
-	lp = C*L*lp;
 
-	//TODO pass in M as a uniform maybe?
-	// M = C * mR * mT
-	//mat4 M = C * mR * mT;
-	p = M*p;
-	n = vec4(N*n.xyz, 0);
+	//lp = C*L*lp;
+	//p = M*p;
+	p = C * mT * p;
+	//n = vec4(N*n.xyz,0);
+	n = C * mR *  mT * n;
 
 	// diffuse coefficent
 	vec4 l = normalize(lp - p);
-	float d = clamp(dot(l,n), 0, 1);
+	float d = clamp(dot(n,l), 0, 1);
 	//d = toon_refl(d);
 
 	// specular coefficient
@@ -82,8 +85,6 @@ vec4 defaultShade(in vec3 pos, in vec3 norm)
 	float t = dot(n, v);
 	//if(t < outline_edge)
 		//return vec4(0);
-	//return vec4(smoothNorm, 0);
+	
 	return ka*Li + kd*d*Li + ks*s*Li;
-	//vec4 temp = vec4(1,1,1,1);
-	//return temp;
 }
