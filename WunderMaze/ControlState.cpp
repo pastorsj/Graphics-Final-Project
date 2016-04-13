@@ -43,18 +43,20 @@ void ControlState::step(bool forward) {
 			xPos += xInterval;
 		}
 	}
+
 	if (xPos <= -0.5) {
 		xPos = 0.5;
 		xCell--;
 	}
-	else
-		if (xPos >= 0.5) {
+	else if (xPos >= 0.5) {
 		xPos = -0.5;
 		xCell++;
-		}
+	}
+
 	if (yInterval > 0 && (!mg.getCell(xCell, yCell + 1).up || yPos < 1 - COLLISION_TOLERANCE)) {
 		yPos += yInterval;
 	}
+
 	if (yInterval < 0 && (!mg.getCell(xCell, yCell).up || yPos > COLLISION_TOLERANCE)) {
 		yPos += yInterval;
 	}
@@ -63,11 +65,10 @@ void ControlState::step(bool forward) {
 		yPos = 1;
 		yCell--;
 	}
-	else
-		if (yPos >= 1) {
+	else if (yPos >= 1) {
 		yPos = -0;
 		yCell++;
-		}
+	}
 
 	//printf("xPos: %f, yPos: %f\n", getXPos(), getYPos());
 }
