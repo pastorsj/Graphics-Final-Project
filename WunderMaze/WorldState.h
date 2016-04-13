@@ -50,7 +50,7 @@ private:
 public:
 	WorldState();
 
-	void init(ControlState * conState);
+	void init(ModelManager * mods, ControlState * conState);
 
 	ControlState * getControlState();
 

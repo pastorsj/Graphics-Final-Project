@@ -93,7 +93,7 @@ private:
 	bool isProgramRunning = true;
 
 	void initializeStates(WorldState & state, ControlState * conState) {
-		state.init(conState);
+		state.init(new ModelManager(), conState);
 		render.init(state);
 		render.buildRenderBuffers(RESOLUTION, RESOLUTION);
 

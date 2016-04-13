@@ -6,11 +6,10 @@ WorldState::WorldState()
 
 }
 
-void WorldState::init(ControlState * conState)
+void WorldState::init(ModelManager * mods, ControlState * conState)
 {
 	for (size_t i = 0; i < NUM_TRACKED_FRAMES; i++)
 		frameTimes[i] = 0.0f;
-	ModelManager * mods = new ModelManager();
 	models = mods;
 	models->init();
 
