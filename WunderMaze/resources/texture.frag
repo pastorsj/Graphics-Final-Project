@@ -3,6 +3,7 @@
 uniform vec2 resolution;          //view resolution in pixels
 uniform float animationTime;
 uniform sampler2D texId;
+uniform sampler2D texOverlayId;
 //uniform sampler2DRect texId;
 
 smooth in vec4 smoothColor;
@@ -13,6 +14,14 @@ layout(location = 0) out vec4 fragColor;
 vec2 res = vec2(resolution);
 vec2 fragCoord = gl_FragCoord.xy;
 vec2 texCoord = fragCoord/res;
+
+vec4 getProperTexture(vec2 desiredCoord) {
+	if(texture(texOverlayId, desiredCoord).x != 0) {
+		return texture(texOverlayId, desiredCoord);
+	} else {
+		return texture(texId, desiredCoord);
+	}
+}
 
 vec4 edgeDetect()
 {
@@ -34,13 +43,14 @@ vec4 swirl()
 	vec2 toFrag = fragCoord - centerPos;
 	float dis = length(toFrag);
 	if(dis>range * modifier)
-		return texture(texId, texCoord);
+		return getProperTexture(texCoord);
 	float scale = ( pow(1-dis/(range*modifier),3))*5;
 
 	mat2 rotZ = mat2(cos(scale), sin(scale), -sin(scale), cos(scale));
 	vec2 swlCoord = rotZ * toFrag;
-	return texture(texId, (centerPos+swlCoord)/res);
+	return getProperTexture((centerPos+swlCoord)/res);
 }
+
 
 void main()
 {
@@ -51,9 +61,10 @@ void main()
 
 	if(animationTime > 0) {
 		fragColor = swirl();
+		//fragColor = edgeDetect();
 	}
 	else {
-		fragColor = texture(texId, texCoord);
+		fragColor = getProperTexture(texCoord);
 	}
 //	fragColor = swirl();
 	

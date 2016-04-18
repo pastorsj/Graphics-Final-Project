@@ -127,7 +127,6 @@
 
 		GLint texUnitID = 0;
 		glActiveTexture(GL_TEXTURE0 + texUnitID);
-
 		glUniform1i(glGetUniformLocation(shaderProg[0], "texSampler"), texUnitID);
 		checkGLError("model uniform");
 
@@ -170,6 +169,9 @@
 		glActiveTexture(GL_TEXTURE0 + 0); // this 0 should match 0 in 2 lines
 		glBindTexture(GL_TEXTURE_2D, renderTexture);
 		glUniform1i(glGetUniformLocation(shaderProg[2], "texId"), 0);
+		glActiveTexture(GL_TEXTURE0 + 1);
+		glBindTexture(GL_TEXTURE_2D, renderTextureOverlay);
+		glUniform1i(glGetUniformLocation(shaderProg[2], "texOverlayId"), 1);
 
 		glBindVertexArray(quadVertexArray);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -342,8 +344,20 @@
 
 			glBindTexture(GL_TEXTURE_2D, 0);
 		}
+		checkGLError("obj textures");
 
-		checkGLError("texture");
+		glGenTextures(1, &renderTextureOverlay);
+		if (!image.loadFromFile("resources/buttonOverlay.png")) {
+			cerr << "Could not load: " << "resources/buttonOverlay.png" << endl;
+			exit(2);
+		}
+		glBindTexture(GL_TEXTURE_2D, renderTextureOverlay);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1000, 1000, 0, GL_RGBA, GL_UNSIGNED_BYTE, (unsigned char*)image.getPixelsPtr());
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		checkGLError("bg texture");
 	}
 
 	GLint RenderEngine::setupBuffer(GLuint bufferIndex, vector<GLfloat> buffer, size_t totalSize, string name, GLint sizePer) {

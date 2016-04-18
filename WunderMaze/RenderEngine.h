@@ -30,6 +30,7 @@ private:
 	GLuint frameBuffer;
 	GLuint renderTexture;
 	GLuint renderBuffer;
+	GLuint renderTextureOverlay;
 
 	glm::mat4 P;
 	glm::mat4 C;
