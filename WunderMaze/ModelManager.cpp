@@ -16,9 +16,14 @@ MazeGenerator& ModelManager::getMazeGenerator() {
 	return this->mg;
 }
 
+void ModelManager::setSeed(int seed)
+{
+	this->seed = seed;
+}
+
 void ModelManager::init()
 {
-	mg.makeMaze(DESIRED_X_SIZE, DESIRED_Y_SIZE, -1);
+	mg.makeMaze(DESIRED_X_SIZE, DESIRED_Y_SIZE, seed);
 	models.resize(8);
 
 	models[0] = new Wall();
