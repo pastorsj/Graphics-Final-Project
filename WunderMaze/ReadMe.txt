@@ -29,16 +29,20 @@ main.cpp
     This is the main application source file.
 
 MazeGenerator.cpp
-    This is the main application source file.
+    This contains the implementation that randomly generates a maze of an appropriate size
+	to be used in the maze.
 
 Model.cpp
-    This is the main application source file.
+    This contains the implementation that is responsible for managing the data associated
+	with a single model.
 
 ModelManager.cpp
-    This is the main application source file.
+    This contains the implementation that is responsible for acting as a container for
+	models and textures used in the game.
 
 RenderEngine.cpp
-    This is the main application source file.
+	This contians the implementation of the code responsible for using OpenGL to
+	display everything in the game properly.
 
 ShaderManager.cpp
     This contains the code responsible for loading, compiling, and setting up
