@@ -165,6 +165,7 @@
 		glUseProgram(shaderProg[2]);
 		checkGLError("render tex2");
 		glUniform2f(glGetUniformLocation(shaderProg[2], "resolution"), RESOLUTION, RESOLUTION);
+		glUniform1i(glGetUniformLocation(shaderProg[2], "overlayId"), state.getOverlayId());
 		glUniform1f(glGetUniformLocation(shaderProg[2], "animationTime"), state.getAnimationTime());
 		glActiveTexture(GL_TEXTURE0 + 0); // this 0 should match 0 in 2 lines
 		glBindTexture(GL_TEXTURE_2D, renderTexture);
@@ -172,6 +173,9 @@
 		glActiveTexture(GL_TEXTURE0 + 1);
 		glBindTexture(GL_TEXTURE_2D, renderTextureOverlay);
 		glUniform1i(glGetUniformLocation(shaderProg[2], "texOverlayId"), 1);
+		glActiveTexture(GL_TEXTURE0 + 2);
+		glBindTexture(GL_TEXTURE_2D, renderTextureVictoryOverlay);
+		glUniform1i(glGetUniformLocation(shaderProg[2], "texVictoryOverlayId"), 2);
 
 		glBindVertexArray(quadVertexArray);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -352,6 +356,17 @@
 			exit(2);
 		}
 		glBindTexture(GL_TEXTURE_2D, renderTextureOverlay);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1000, 1000, 0, GL_RGBA, GL_UNSIGNED_BYTE, (unsigned char*)image.getPixelsPtr());
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glGenTextures(1, &renderTextureVictoryOverlay);
+		if (!image.loadFromFile("resources/victoryOverlay.png")) {
+			cerr << "Could not load: " << "resources/victoryOverlay.png" << endl;
+			exit(2);
+		}
+		glBindTexture(GL_TEXTURE_2D, renderTextureVictoryOverlay);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1000, 1000, 0, GL_RGBA, GL_UNSIGNED_BYTE, (unsigned char*)image.getPixelsPtr());
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);

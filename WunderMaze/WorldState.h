@@ -45,6 +45,8 @@ private:
 	int lastModelFound;
 	int modelCount;
 
+	int overlayId;
+
 	GLfloat TRANSLATION_SENSITIVITY;
 
 public:
@@ -109,6 +111,12 @@ public:
 	void toggleLightRotate();
 
 	float getAnimationTime();
+
+	int getOverlayId();
+
+	void setOverlayId(int nextId);
+
+	void handleButtonPress();
 };
 
 #endif

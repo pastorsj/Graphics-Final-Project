@@ -133,35 +133,56 @@ private:
 			if ((event.type == sf::Event::TextEntered) && (event.text.unicode == 't'))
 				state.toggleLightRotate();
 
-			//Key events to move the player around
-			if ((event.type == sf::Event::KeyPressed)) {
-				if ((event.key.code == sf::Keyboard::W))
-					state.getControlState()->setMovingForward(true);
-				if ((event.key.code == sf::Keyboard::S))
-					state.getControlState()->setMovingBackward(true);
-				if ((event.key.code == sf::Keyboard::A))
-					state.getControlState()->setRotatingLeft(true);
-				if ((event.key.code == sf::Keyboard::D))
-					state.getControlState()->setRotatingRight(true);
-				if ((event.key.code == sf::Keyboard::R))
-					state.getControlState()->setRise(true);
-				if ((event.key.code == sf::Keyboard::F))
-					state.getControlState()->setFall(true);
+			if ((event.type == sf::Event::MouseButtonPressed)) {
+				cout << "Mouse pressed!!" << endl;
+				int xpos = event.mouseButton.x;
+				int ypos = event.mouseButton.y;
+				cout << "Mouse position: " << xpos << ", " << ypos << endl;
+				if (state.getOverlayId() == 1) {
+					if (xpos > 350 && xpos < 650 && ypos > 550 && ypos < 650) {
+						cout << "Mouse press in bounds!" << endl;
+						state.handleButtonPress();
+					}
+				}
+				else if (state.getOverlayId() == 2) {
+					if (xpos > 350 && xpos < 650 && ypos > 650 && ypos < 750) {
+						cout << "Mouse press in bounds!" << endl;
+						state.handleButtonPress();
+					}
+				}
 			}
 
-			if ((event.type == sf::Event::KeyReleased)){
-				if ((event.key.code == sf::Keyboard::W))
-					state.getControlState()->setMovingForward(false);
-				if ((event.key.code == sf::Keyboard::S))
-					state.getControlState()->setMovingBackward(false);
-				if ((event.key.code == sf::Keyboard::A))
-					state.getControlState()->setRotatingLeft(false);
-				if ((event.key.code == sf::Keyboard::D))
-					state.getControlState()->setRotatingRight(false);
-				if ((event.key.code == sf::Keyboard::R))
-					state.getControlState()->setRise(false);
-				if ((event.key.code == sf::Keyboard::F))
-					state.getControlState()->setFall(false);
+			//Key events to move the player around
+			if (state.getOverlayId() == 0) {
+				if ((event.type == sf::Event::KeyPressed)) {
+					if ((event.key.code == sf::Keyboard::W))
+						state.getControlState()->setMovingForward(true);
+					if ((event.key.code == sf::Keyboard::S))
+						state.getControlState()->setMovingBackward(true);
+					if ((event.key.code == sf::Keyboard::A))
+						state.getControlState()->setRotatingLeft(true);
+					if ((event.key.code == sf::Keyboard::D))
+						state.getControlState()->setRotatingRight(true);
+					if ((event.key.code == sf::Keyboard::R))
+						state.getControlState()->setRise(true);
+					if ((event.key.code == sf::Keyboard::F))
+						state.getControlState()->setFall(true);
+				}
+
+				if ((event.type == sf::Event::KeyReleased)) {
+					if ((event.key.code == sf::Keyboard::W))
+						state.getControlState()->setMovingForward(false);
+					if ((event.key.code == sf::Keyboard::S))
+						state.getControlState()->setMovingBackward(false);
+					if ((event.key.code == sf::Keyboard::A))
+						state.getControlState()->setRotatingLeft(false);
+					if ((event.key.code == sf::Keyboard::D))
+						state.getControlState()->setRotatingRight(false);
+					if ((event.key.code == sf::Keyboard::R))
+						state.getControlState()->setRise(false);
+					if ((event.key.code == sf::Keyboard::F))
+						state.getControlState()->setFall(false);
+				}
 			}
 		}
 

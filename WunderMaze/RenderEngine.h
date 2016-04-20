@@ -31,6 +31,7 @@ private:
 	GLuint renderTexture;
 	GLuint renderBuffer;
 	GLuint renderTextureOverlay;
+	GLuint renderTextureVictoryOverlay;
 
 	glm::mat4 P;
 	glm::mat4 C;

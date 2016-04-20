@@ -21,6 +21,7 @@ void WorldState::init(ModelManager * mods, ControlState * conState)
 	moveState->setRise(false);;
 	moveState->setFall(false);
 	animationTime = -1;
+	this->overlayId = 1;
 
 	modelCount = 0;
 
@@ -227,7 +228,13 @@ void WorldState::foundModel(unsigned i)
 void WorldState::checkEndGame() {
 	if (modelCount == models->getNumObjects()) {
 		printf("You Win!");
-		this->setRunning(false);
+		moveState->setMovingForward(false);
+		moveState->setMovingBackward(false);
+		moveState->setRotatingLeft(false);
+		moveState->setRotatingRight(false);
+		moveState->setRise(false);
+		moveState->setFall(false);
+		this->setOverlayId(2);
 	}
 }
 
@@ -269,4 +276,21 @@ void WorldState::toggleLightRotate()
 
 float WorldState::getAnimationTime() {
 	return animationTime;
+}
+
+int WorldState::getOverlayId() {
+	return this->overlayId;
+}
+
+void WorldState::setOverlayId(int nextId) {
+	this->overlayId = nextId;
+}
+
+void WorldState::handleButtonPress() {
+	if (this->overlayId == 1) {
+		this->overlayId = 0;
+	}
+	else if (this->overlayId == 2) {
+		this->setRunning(false);
+	}
 }

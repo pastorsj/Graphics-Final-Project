@@ -3,7 +3,9 @@
 uniform vec2 resolution;          //view resolution in pixels
 uniform float animationTime;
 uniform sampler2D texId;
+uniform int overlayId;
 uniform sampler2D texOverlayId;
+uniform sampler2D texVictoryOverlayId;
 //uniform sampler2DRect texId;
 
 smooth in vec4 smoothColor;
@@ -16,8 +18,18 @@ vec2 fragCoord = gl_FragCoord.xy;
 vec2 texCoord = fragCoord/res;
 
 vec4 getProperTexture(vec2 desiredCoord) {
-	if(texture(texOverlayId, desiredCoord).x != 0) {
-		return texture(texOverlayId, desiredCoord);
+	if(overlayId == 1) {
+		if(texture(texOverlayId, desiredCoord).x != 0) {
+			return texture(texOverlayId, desiredCoord);
+		} else {
+			return texture(texId, desiredCoord);
+		}
+	} else if(overlayId == 2) {
+		if(texture(texVictoryOverlayId, desiredCoord).x != 0) {
+			return texture(texVictoryOverlayId, desiredCoord);
+		} else {
+			return texture(texId, desiredCoord);
+		}
 	} else {
 		return texture(texId, desiredCoord);
 	}
