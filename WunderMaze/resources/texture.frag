@@ -72,8 +72,11 @@ void main()
 //	fragColor = vec4(texCoord, 1, 1);
 
 	if(animationTime > 0) {
-		fragColor = swirl();
-		//fragColor = edgeDetect();
+		if(overlayId != 2) {
+			fragColor = swirl();
+		} else {
+			fragColor = edgeDetect();
+		}
 	}
 	else {
 		fragColor = getProperTexture(texCoord);
