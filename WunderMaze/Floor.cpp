@@ -2,8 +2,10 @@
 
 
 
-Floor::Floor()
+Floor::Floor(int xSize, int ySize)
 {
+	this->xSize = xSize;
+	this->ySize = ySize;
 }
 
 
@@ -11,9 +13,8 @@ Floor::~Floor()
 {
 }
 
-void Floor::init(MazeGenerator& mazeGen, string objName, int texNum, int xCell, int yCell, bool rotate, float yOffset)
+void Floor::init(string objName, int texNum, int xCell, int yCell, bool rotate, float yOffset)
 {
-	mg = mazeGen;
 	immune = 0;
 	preTrans = glm::mat4(1.0f);
 	this->texNum = texNum;
@@ -55,12 +56,12 @@ void Floor::init(MazeGenerator& mazeGen, string objName, int texNum, int xCell, 
 	elements.push_back(0);
 	elements.push_back(3);
 
-	for (int i = 1; i < mg.getXSize(); ++i)
+	for (int i = 1; i < this->xSize; ++i)
 	{
-		for (int j = 1; j < mg.getYSize(); ++j)
+		for (int j = 1; j < this->ySize; ++j)
 		{
 			glm::mat4 buildTrans = glm::translate(glm::mat4(1.0f), glm::vec3(i, 0, j));
-			if (j > 1 && i < mg.getXSize() - 1)
+			if (j > 1 && i < this->xSize - 1)
 			{
 				postTrans.push_back(buildTrans);
 			}
