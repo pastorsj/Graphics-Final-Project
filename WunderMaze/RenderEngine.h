@@ -37,6 +37,7 @@ private:
 	glm::mat4 C;
 	glm::mat4 M;
 
+	GLuint loadTexture(char const * imagePath);
 
 	float initLoader();
 

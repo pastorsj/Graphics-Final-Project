@@ -309,68 +309,54 @@
 		checkGLError("shader");
 	}
 
+	GLuint RenderEngine::loadTexture(char const * imagePath) {
+		GLuint destination;
+		glGenTextures(1, &destination);
+		sf::Image image;
+		if (!image.loadFromFile(imagePath)) {
+			cerr << "Could not load: " << imagePath << endl;
+			exit(2);
+		}
+		int texSizeX = image.getSize().x;
+		int texSizeY = image.getSize().y;
+		unsigned char * texData = (unsigned char*)image.getPixelsPtr();
+
+		glBindTexture(GL_TEXTURE_2D, destination);
+
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texSizeX, texSizeY, 0, GL_RGBA, GL_UNSIGNED_BYTE, texData);
+
+		bool mipmapEnabled = true;
+		if (mipmapEnabled)
+		{
+			glGenerateMipmap(GL_TEXTURE_2D);
+		}
+
+		glBindTexture(GL_TEXTURE_2D, 0);
+		return destination;
+	}
+
 	void RenderEngine::setupTextures(ModelManager & models)
 	{
-		const int numTextures = 5;
+		const int numTexturePaths = 5;
+		char const * imagePaths[numTexturePaths] = { "resources/transparentcorn.png", "resources/dirt.jpg", "resources/redpixel.png", "resources/yellowpixel.png", "resources/sunset.jpg" };
 
-		GLuint tempTextures[numTextures];
-		glGenTextures(numTextures, tempTextures);
-		sf::Image image;
-
-
-		char const * imagePaths[numTextures] = { "resources/transparentcorn.png", "resources/dirt.jpg", "resources/redpixel.png", "resources/yellowpixel.png", "resources/sunset.jpg" };
-
-		for (int i = 0; i < numTextures; ++i)
+		for (int i = 0; i < numTexturePaths; ++i)
 		{
-			models.addTexture(tempTextures[i]);
-			if (!image.loadFromFile(imagePaths[i])) {
-				cerr << "Could not load: " << imagePaths[i] << endl;
-				exit(2);
-			}
-			int texSizeX = image.getSize().x;
-			int texSizeY = image.getSize().y;
-			unsigned char * texData = (unsigned char*)image.getPixelsPtr();
-
-			glBindTexture(GL_TEXTURE_2D, tempTextures[i]);
-
-			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texSizeX, texSizeY, 0, GL_RGBA, GL_UNSIGNED_BYTE, texData);
-			bool mipmapEnabled = true;
-			if (mipmapEnabled)
-			{
-				glGenerateMipmap(GL_TEXTURE_2D);
-			}
-
-			glBindTexture(GL_TEXTURE_2D, 0);
+			models.addTexture(this->loadTexture(imagePaths[i]));
 		}
 		checkGLError("obj textures");
 
-		glGenTextures(1, &renderTextureOverlay);
-		if (!image.loadFromFile("resources/buttonOverlay.png")) {
-			cerr << "Could not load: " << "resources/buttonOverlay.png" << endl;
-			exit(2);
-		}
-		glBindTexture(GL_TEXTURE_2D, renderTextureOverlay);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1000, 1000, 0, GL_RGBA, GL_UNSIGNED_BYTE, (unsigned char*)image.getPixelsPtr());
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glBindTexture(GL_TEXTURE_2D, 0);
+		char const * mainOverlay = "resources/buttonOverlay.png";
+		this->renderTextureOverlay = this->loadTexture(mainOverlay);
 
-		glGenTextures(1, &renderTextureVictoryOverlay);
-		if (!image.loadFromFile("resources/victoryOverlay.png")) {
-			cerr << "Could not load: " << "resources/victoryOverlay.png" << endl;
-			exit(2);
-		}
-		glBindTexture(GL_TEXTURE_2D, renderTextureVictoryOverlay);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1000, 1000, 0, GL_RGBA, GL_UNSIGNED_BYTE, (unsigned char*)image.getPixelsPtr());
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glBindTexture(GL_TEXTURE_2D, 0);
+		char const * restartOverlay = "resources/victoryOverlay.png";
+		this->renderTextureVictoryOverlay = this->loadTexture(restartOverlay);
 
 		checkGLError("bg texture");
 	}
