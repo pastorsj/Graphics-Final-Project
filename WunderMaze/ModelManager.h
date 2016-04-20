@@ -15,6 +15,7 @@ private:
 	// CHANGE THIS TO CHANGE MAZE SIZE
 	const int DESIRED_X_SIZE = 7;
 	const int DESIRED_Y_SIZE = 7;
+	int seed = -1;
 
 public:
 	ModelManager();
@@ -48,6 +49,8 @@ public:
 	vector<Model*> & getRawModels();
 
 	MazeGenerator& getMazeGenerator();
+
+	void setSeed(int seed);
 
 private:
 
