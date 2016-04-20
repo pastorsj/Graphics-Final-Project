@@ -26,7 +26,15 @@ namespace controlTests
 
 			state.step(true);
 
-			Assert::AreEqual(1.7f, state.getXPos());
+			Assert::AreEqual(1.07f, state.getXPos());
+			Assert::AreEqual(1.5f, state.getYPos());
+
+			//state.turnRight(); //Angle is by positive rotation_sensitivity
+
+			//state.step(false);
+
+			//Assert::AreEqual(1.07f - cos(0.07f) * 0.07f, state.getXPos());
+			//Assert::AreEqual(1.5f - sin(0.07f) * 0.07f, state.getYPos());
 		}
 	};
 }

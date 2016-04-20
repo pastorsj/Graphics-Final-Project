@@ -16,8 +16,13 @@ cell MazeGenerator::getCell(int xCoord, int yCoord) {
 	return maze[xCoord][yCoord];
 }
 
-int MazeGenerator::makeMaze(int xsizetemp, int ysizetemp) {
-	srand((unsigned int)time(NULL)); //seed random number generator with system time
+int MazeGenerator::makeMaze(int xsizetemp, int ysizetemp, int seedOverride) {
+	if (seedOverride == -1) {
+		srand((unsigned int)time(NULL)); //seed random number generator with system time
+	}
+	else {
+		srand(seedOverride);
+	}
 	initialize(xsizetemp, ysizetemp);      //initialize the maze
 	generate();        //generate the maze
 	return 0;

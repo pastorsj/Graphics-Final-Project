@@ -18,7 +18,7 @@ MazeGenerator& ModelManager::getMazeGenerator() {
 
 void ModelManager::init()
 {
-	mg.makeMaze(DESIRED_X_SIZE, DESIRED_Y_SIZE);
+	mg.makeMaze(DESIRED_X_SIZE, DESIRED_Y_SIZE, -1);
 	models.resize(8);
 
 	models[0] = new Wall();

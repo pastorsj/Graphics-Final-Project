@@ -20,7 +20,7 @@ namespace MazeTests
 			MazeGenerator mg;
 			int expectedXSize = 20;
 			int expectedYSize = 20;
-			mg.makeMaze(expectedXSize, expectedYSize);
+			mg.makeMaze(expectedXSize, expectedYSize, -1);
 			Assert::AreEqual(expectedXSize, mg.getXSize());
 			Assert::AreEqual(expectedYSize, mg.getYSize());
 		}
@@ -29,7 +29,7 @@ namespace MazeTests
 			MazeGenerator mg;
 			int expectedXSize = 20;
 			int expectedYSize = 20;
-			mg.makeMaze(expectedXSize, expectedYSize);
+			mg.makeMaze(expectedXSize, expectedYSize, -1);
 			// Confirm left walls
 			for (int i = 1; i < expectedYSize - 1; ++i) {
 				Assert::AreEqual(true, mg.getCell(expectedXSize - 1, i).left);

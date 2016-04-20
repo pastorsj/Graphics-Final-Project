@@ -29,7 +29,7 @@ public:
 
 	cell getCell(int xCoord, int yCoord);
 
-	int makeMaze(int xsizetemp, int ysizetemp);
+	int makeMaze(int xsizetemp, int ysizetemp, int seedOverride);
 
 	void initialize(int xsizetemp, int ysizetemp);
 
