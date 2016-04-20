@@ -4,8 +4,10 @@ class Wall :
 	public Model
 {
 public:
-	Wall();
+	Wall(MazeGenerator& mg);
 	~Wall();
-	void init(MazeGenerator& mazeGen, string objName, int texNum, int xCell, int yCell, bool rotate, float yOffset) override;
-};
+	void init(string objName, int texNum, int xCell, int yCell, bool rotate, float yOffset) override;
 
+private:
+	MazeGenerator* mazeGen;
+};

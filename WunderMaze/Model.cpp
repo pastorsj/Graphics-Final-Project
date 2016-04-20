@@ -44,9 +44,8 @@ Model::Model()
 	rotates = false;
 }
 
-void Model::init(MazeGenerator& mazeGen, string objName, int texNum, int xCell, int yCell, bool rotate, float yOffset)
+void Model::init(string objName, int texNum, int xCell, int yCell, bool rotate, float yOffset)
 {
-	mg = mazeGen;
 	immune = 0;
 	preTrans = glm::mat4(1.0f);
 	this->texNum = texNum;
