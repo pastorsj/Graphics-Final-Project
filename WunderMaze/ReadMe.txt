@@ -21,8 +21,32 @@ WunderMaze.vcxproj.filters
     similar extensions under a specific node (for e.g. ".cpp" files are associated with the
     "Source Files" filter).
 
-WunderMaze.cpp
+ControlState.cpp
+    This contains the implementation that is responsible for allowing the player to
+	control their movement through the maze.
+
+main.cpp
     This is the main application source file.
+
+MazeGenerator.cpp
+    This is the main application source file.
+
+Model.cpp
+    This is the main application source file.
+
+ModelManager.cpp
+    This is the main application source file.
+
+RenderEngine.cpp
+    This is the main application source file.
+
+ShaderManager.cpp
+    This contains the code responsible for loading, compiling, and setting up
+	the shaders used throughout the code.
+
+WorldState.cpp
+    This contains the implementation that is responsible for storing the proper
+	vectors and variables for the game.
 
 /////////////////////////////////////////////////////////////////////////////
 Other standard files:
