@@ -6,15 +6,15 @@ WorldState::WorldState()
 
 }
 
-void WorldState::init(ModelManager * mods, ControlState * conState)
+void WorldState::init()
 {
 	for (size_t i = 0; i < NUM_TRACKED_FRAMES; i++)
 		frameTimes[i] = 0.0f;
-	models = mods;
+	models = new ModelManager();
 	models->init();
 
-	moveState = conState;
-	conState->init(models);
+	moveState = new ControlState();
+	moveState->init(models);
 
 	TRANSLATION_SENSITIVITY = 0.07f;
 	modelCapture = false;

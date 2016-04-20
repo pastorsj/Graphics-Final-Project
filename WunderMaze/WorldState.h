@@ -52,7 +52,7 @@ private:
 public:
 	WorldState();
 
-	void init(ModelManager * mods, ControlState * conState);
+	void init();
 
 	ControlState * getControlState();
 
