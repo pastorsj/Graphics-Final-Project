@@ -131,18 +131,12 @@ void Model::init(string objName, int texNum, int xCell, int yCell, bool rotate, 
 			pId[v] = face->vertex_index[v];
 			tId[v] = face->texture_index[v];
 			normID[v] = face->normal_index[v];
-		}
-		for (size_t v = 0; v < face->vertex_count; ++v)
-		{
+
 			for (size_t c = 0; c < POS_DIM; ++c)
 			{
 				p[v][c] = loader.vertexList[pId[v]]->e[c];
 			}
-			//printf("vertex %d", pId[v]);
-		}
 
-		for (size_t v = 0; v < face->vertex_count; ++v)
-		{
 			bool validTexCoord = tId[v] >= 0;
 			if (validTexCoord)
 			{
@@ -151,19 +145,12 @@ void Model::init(string objName, int texNum, int xCell, int yCell, bool rotate, 
 					t[v][c] = loader.textureList[tId[v]]->e[c];
 				}
 			}
-		}
 
-		for (size_t v = 0; v < face->vertex_count; ++v)
-		{
 			for (size_t c = 0; c < POS_DIM; ++c)
 			{
 				norms[v][c] = loader.normalList[normID[v]]->e[c];
 			}
-			//printf("normal %d", normID[v]);
-		}
 
-		for (size_t v = 0; v < face->vertex_count; ++v)
-		{
 			positions[pId[v]] = p[v];
 			texCoords[pId[v]] = t[v];
 			normals[pId[v]] = norms[v];
