@@ -10,6 +10,7 @@ class ControlState {
 
 private:
 	ModelManager * models;
+	MazeGenerator mg;
 
 	bool movingForward;
 	bool movingBackward;
