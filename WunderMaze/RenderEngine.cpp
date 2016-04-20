@@ -292,11 +292,20 @@
 
 	void RenderEngine::setupShader()
 	{
-		char const * vertPaths[] = { "resources/simple.vert", "resources/lightPos.vert", "resources/texture.vert" };
-		char const * fragPaths[] = { "resources/simple.frag", "resources/lightPos.frag", "resources/texture.frag" };
-		for (int i = 0; i < 3; ++i) {
-			shaderProg[i] = ShaderManager::shaderFromFile(&vertPaths[0], &fragPaths[0], 1, 1);
-		}
+		char const * vertPath = "resources/simple.vert";
+		char const * fragPath = "resources/simple.frag";
+		shaderProg[0] = ShaderManager::shaderFromFile(&vertPath, &fragPath, 1, 1);
+
+
+		char const * lightVPath = "resources/lightPos.vert";
+		char const * lightFPath = "resources/lightPos.frag";
+		shaderProg[1] = ShaderManager::shaderFromFile(&lightVPath, &lightFPath, 1, 1);
+
+		char const * texVPath = "resources/texture.vert";
+		char const * texFPath = "resources/texture.frag";
+		shaderProg[2] = ShaderManager::shaderFromFile(&texVPath, &texFPath, 1, 1);
+
+
 		checkGLError("shader");
 	}
 
