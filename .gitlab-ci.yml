@@ -4,7 +4,7 @@ stages:
 Testing:
   stage: build
   script:
-    - msbuild SFMLApp.sln /t:build /p:Configuration=Release
+    - msbuild SFMLApp.sln /t:build /p:Configuration=Release /p:Platform=x64
     - vstest.console x64/Release/MazeTests.dll
   tags:
     - msbuild
