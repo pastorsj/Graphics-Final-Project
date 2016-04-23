@@ -295,7 +295,7 @@
 		char const * vertPaths[] = { "resources/simple.vert", "resources/lightPos.vert", "resources/texture.vert" };
 		char const * fragPaths[] = { "resources/simple.frag", "resources/lightPos.frag", "resources/texture.frag" };
 		for (int i = 0; i < 3; ++i) {
-			shaderProg[i] = ShaderManager::shaderFromFile(&vertPaths[0], &fragPaths[0], 1, 1);
+			shaderProg[i] = ShaderManager::shaderFromFile(&vertPaths[i], &fragPaths[i], 1, 1);
 		}
 		checkGLError("shader");
 	}

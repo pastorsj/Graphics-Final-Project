@@ -44,8 +44,7 @@ public:
 			getWindowContext();
 
 			WorldState state;
-			ControlState * conState = new ControlState();
-			initializeStates(state, conState);
+			initializeStates(state);
 			sf::Clock c;
 			float lastFrame = c.restart().asSeconds();
 			float lastPrint = lastFrame;
@@ -92,8 +91,8 @@ private:
 
 	bool isProgramRunning = true;
 
-	void initializeStates(WorldState & state, ControlState * conState) {
-		state.init(new ModelManager(), conState);
+	void initializeStates(WorldState & state) {
+		state.init();
 		render.init(state);
 		render.buildRenderBuffers(RESOLUTION, RESOLUTION);
 
