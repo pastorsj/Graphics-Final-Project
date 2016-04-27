@@ -94,66 +94,24 @@ void Model::init(string objName, int texNum, int xCell, int yCell, bool rotate, 
 			switchMaterialAt.push_back(f);
 		}
 
-		bool isNotTriangle = face->vertex_count != MAX_FACE_SIZE;
-		if (isNotTriangle) {
+		//If the face isn't a triangle, skip it.
+		if (face->vertex_count != MAX_FACE_SIZE) {
 			cerr << "Skipping non-triangle face " << f << "." << endl;
 			continue;
-		}
-
-		bool indicesMatch = true;
-		for (size_t v = 0; v < face->vertex_count; ++v)
-		{
-			int pId = face->vertex_index[v];
-			int tId = face->texture_index[v];
-
-			indicesMatch = indicesMatch && (pId == tId);
-		}
-
-		if (!indicesMatch) {
-			//	cerr << "OBJ has non-matching pos/tex indices. Final model may be incorrect." << endl;
 		}
 
 		for (size_t v = 0; v < face->vertex_count; ++v)
 		{
 			elements.push_back(face->vertex_index[v]);
-		}
 
-		int pId[MAX_FACE_SIZE];
-		int tId[MAX_FACE_SIZE];
-		int normID[MAX_FACE_SIZE];
+			int pId = face->vertex_index[v];
+			int tId = face->texture_index[v];
+			int normID = face->normal_index[v];
 
-		glm::vec3 p[POS_DIM];
-		glm::vec2 t[POS_DIM];
-		glm::vec3 norms[POS_DIM];
-
-		for (size_t v = 0; v < face->vertex_count; ++v)
-		{
-			pId[v] = face->vertex_index[v];
-			tId[v] = face->texture_index[v];
-			normID[v] = face->normal_index[v];
-
-			for (size_t c = 0; c < POS_DIM; ++c)
-			{
-				p[v][c] = loader.vertexList[pId[v]]->e[c];
-			}
-
-			bool validTexCoord = tId[v] >= 0;
-			if (validTexCoord)
-			{
-				for (size_t c = 0; c < TEX_DIM; ++c)
-				{
-					t[v][c] = loader.textureList[tId[v]]->e[c];
-				}
-			}
-
-			for (size_t c = 0; c < POS_DIM; ++c)
-			{
-				norms[v][c] = loader.normalList[normID[v]]->e[c];
-			}
-
-			positions[pId[v]] = p[v];
-			texCoords[pId[v]] = t[v];
-			normals[pId[v]] = norms[v];
+			positions[pId] = glm::vec3(loader.vertexList[pId]->e[0], loader.vertexList[pId]->e[1], loader.vertexList[pId]->e[2]);
+			if (tId >= 0)
+				texCoords[pId] = glm::vec2(loader.textureList[tId]->e[0], loader.textureList[tId]->e[1]);
+			normals[pId] = glm::vec3(loader.normalList[normID]->e[0], loader.normalList[normID]->e[1], loader.normalList[normID]->e[2]);
 		}
 	}
 	switchMaterialAt.push_back(loader.faceCount);
