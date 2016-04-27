@@ -102,6 +102,7 @@ public:
 
 protected:
 
+	void addFace(obj_face*, size_t, objLoader&);
 
 	void makeDoubleSided();
 
