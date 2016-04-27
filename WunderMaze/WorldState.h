@@ -52,6 +52,8 @@ private:
 public:
 	WorldState();
 
+	~WorldState();
+
 	void init();
 
 	ControlState * getControlState();

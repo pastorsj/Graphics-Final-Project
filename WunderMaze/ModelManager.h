@@ -19,6 +19,7 @@ private:
 
 public:
 	ModelManager();
+	~ModelManager();
 
 	void addTexture(GLuint newTextureId);
 

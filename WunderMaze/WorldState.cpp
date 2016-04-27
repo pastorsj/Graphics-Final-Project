@@ -6,6 +6,17 @@ WorldState::WorldState()
 
 }
 
+WorldState::~WorldState() {
+	if (models != NULL) {
+		delete models;
+		models = NULL;
+	}
+	if (moveState != NULL) {
+		delete moveState;
+		moveState = NULL;
+	}
+}
+
 void WorldState::init()
 {
 	for (size_t i = 0; i < NUM_TRACKED_FRAMES; i++)

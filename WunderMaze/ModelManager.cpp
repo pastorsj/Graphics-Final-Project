@@ -7,6 +7,12 @@ ModelManager::ModelManager()
 {
 }
 
+ModelManager::~ModelManager() {
+	for (int i = 0; i < models.size(); ++i) {
+		delete models[i];
+	}
+}
+
 void ModelManager::addTexture(GLuint newTextureId)
 {
 	textures.push_back(newTextureId);
