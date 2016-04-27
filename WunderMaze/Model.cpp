@@ -79,40 +79,7 @@ void Model::init(string objName, int texNum, int xCell, int yCell, bool rotate, 
 
 	for (size_t f = 0; f < loader.faceCount; ++f)
 	{
-		obj_face const * face = loader.faceList[f];
-
-		int faceMaterial = face->material_index + 1;
-		bool firstMaterial = activeMaterial.size() == 0;
-		bool materialChanged = !firstMaterial && activeMaterial[activeMaterial.size() - 1] != faceMaterial;
-		if (firstMaterial || materialChanged)
-		{
-			activeMaterial.push_back(faceMaterial);
-		}
-
-		if (!firstMaterial && materialChanged)
-		{
-			switchMaterialAt.push_back(f);
-		}
-
-		//If the face isn't a triangle, skip it.
-		if (face->vertex_count != MAX_FACE_SIZE) {
-			cerr << "Skipping non-triangle face " << f << "." << endl;
-			continue;
-		}
-
-		for (size_t v = 0; v < face->vertex_count; ++v)
-		{
-			elements.push_back(face->vertex_index[v]);
-
-			int pId = face->vertex_index[v];
-			int tId = face->texture_index[v];
-			int normID = face->normal_index[v];
-
-			positions[pId] = glm::vec3(loader.vertexList[pId]->e[0], loader.vertexList[pId]->e[1], loader.vertexList[pId]->e[2]);
-			if (tId >= 0)
-				texCoords[pId] = glm::vec2(loader.textureList[tId]->e[0], loader.textureList[tId]->e[1]);
-			normals[pId] = glm::vec3(loader.normalList[normID]->e[0], loader.normalList[normID]->e[1], loader.normalList[normID]->e[2]);
-		}
+		this->addFace(loader.faceList[f], f, loader);
 	}
 	switchMaterialAt.push_back(loader.faceCount);
 
@@ -134,6 +101,42 @@ void Model::init(string objName, int texNum, int xCell, int yCell, bool rotate, 
 	cellx = xCell;
 	celly = yCell;
 	found = false;
+}
+
+void Model::addFace(obj_face* face, size_t faceNum, objLoader& loader)
+{
+	int faceMaterial = face->material_index + 1;
+	bool firstMaterial = activeMaterial.size() == 0;
+	bool materialChanged = !firstMaterial && activeMaterial[activeMaterial.size() - 1] != faceMaterial;
+	if (firstMaterial || materialChanged)
+	{
+		activeMaterial.push_back(faceMaterial);
+	}
+
+	if (!firstMaterial && materialChanged)
+	{
+		switchMaterialAt.push_back(faceNum);
+	}
+
+	//If the face isn't a triangle, skip it.
+	if (face->vertex_count != MAX_FACE_SIZE) {
+		cerr << "Skipping non-triangle face " << faceNum << "." << endl;
+		return;
+	}
+
+	for (size_t v = 0; v < face->vertex_count; ++v)
+	{
+		elements.push_back(face->vertex_index[v]);
+
+		int pId = face->vertex_index[v];
+		int tId = face->texture_index[v];
+		int normID = face->normal_index[v];
+
+		positions[pId] = glm::vec3(loader.vertexList[pId]->e[0], loader.vertexList[pId]->e[1], loader.vertexList[pId]->e[2]);
+		if (tId >= 0)
+			texCoords[pId] = glm::vec2(loader.textureList[tId]->e[0], loader.textureList[tId]->e[1]);
+		normals[pId] = glm::vec3(loader.normalList[normID]->e[0], loader.normalList[normID]->e[1], loader.normalList[normID]->e[2]);
+	}
 }
 
 void Model::draw(GLuint shaderProg, glm::mat4 mR, size_t & prevElements, size_t & prevVertices, vector<GLuint> & textures)

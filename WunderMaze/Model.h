@@ -102,6 +102,7 @@ public:
 
 protected:
 
+
 	void makeDoubleSided();
 
 	glm::vec3 computeCentroid();
