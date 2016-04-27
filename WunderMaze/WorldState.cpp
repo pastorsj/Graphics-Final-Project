@@ -32,11 +32,8 @@ void WorldState::init()
 
 	shadingMode = 0;
 	running = true;
-	
 
-	//cameraPos = glm::vec3(center[0],camDistance*std::max(xsize,ysize),center[2]);
 	cameraPos = glm::vec3(0, 0, 0);
-	//cameraPos = glm::vec3(4, 10, 4);
 	cameraLook = glm::vec3(1, 0, 0);
 	cameraUp = glm::vec3(0, 1, 0);
 
@@ -80,10 +77,7 @@ void WorldState::printFPS() const
 
 void WorldState::printMotionState() const
 {
-	//printf(movingForward ? "W" : "w");
-	//printf(movingBackward ? "S" : "s");
-	//printf(rotatingLeft ? "A" : "a");
-	//printf(rotatingRight ? "D" : "d");
+	
 }
 
 void WorldState::setRunning(bool r)
@@ -251,12 +245,7 @@ void WorldState::fallDown()
 }
 
 void WorldState::updateCameraAngle() {
-	//glm::mat3 rotation = glm::mat3(cos(cameraAngle), 0, sin(cameraAngle), 0, 1, 0, -sin(cameraAngle), 0, cos(cameraAngle));
-	//glm::vec3 baseVec = glm::vec3(1, 0, 0);
 	cameraLook = glm::vec3(cos(getControlState()->getCameraAngle()) * 2 * PI, 0, sin(getControlState()->getCameraAngle()) * 2 * PI);
-	//cameraLook = rotation * baseVec;
-	//glm::vec4 rot = cameraRotate * glm::vec4(1, 0, 0, 0);
-	//cameraLook = glm::vec3(rot[0], rot[1], rot[2]);
 }
 
 void WorldState::updateCamera() {
