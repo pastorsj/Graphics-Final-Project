@@ -4,7 +4,6 @@ void ControlState::init(ModelManager * mods)
 {
 	models = mods;
 	mg = models->getMazeGenerator();
-	//models->init();
 	TRANSLATION_SENSITIVITY = 0.07f;
 	ROTATION_SENSITIVITY = 0.07f;
 	cameraAngle = 0;
@@ -29,9 +28,6 @@ void ControlState::step(bool forward) {
 		xInterval = -xInterval;
 		yInterval = -yInterval;
 	}
-
-	//printf("xCell: %i, yCell: %i\n", xCell, yCell);
-	//printf("xPos: %f, yPos: %f\n", xPos, yPos)
 	
 	if (xInterval > 0) {
 		if (!mg.getCell(xCell + 1, yCell).left || xPos < 0.5 - COLLISION_TOLERANCE) {
@@ -69,8 +65,6 @@ void ControlState::step(bool forward) {
 		yPos = -0;
 		yCell++;
 	}
-
-	//printf("xPos: %f, yPos: %f\n", getXPos(), getYPos());
 }
 
 void ControlState::turnRight()
@@ -78,7 +72,6 @@ void ControlState::turnRight()
 	cameraAngle += ROTATION_SENSITIVITY;
 	if (cameraAngle > 2 * PI)
 		cameraAngle = 0;
-	//cameraRotate = -cameraIncrement * cameraRotate;
 }
 
 void ControlState::turnLeft()
@@ -86,7 +79,6 @@ void ControlState::turnLeft()
 	cameraAngle -= ROTATION_SENSITIVITY;
 	if (cameraAngle < 0)
 		cameraAngle = 2 * PI;
-	//cameraRotate = cameraIncrement * cameraRotate;
 }
 
 void ControlState::setMovingForward(bool f)
