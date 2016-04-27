@@ -36,7 +36,7 @@ void ModelManager::init()
 		models[i] = new Model();
 
 	glm::vec2 modelCell = this->getRandomCell();
-	models[2]->init(string("resources/teapot.obj"), 2, modelCell.x, modelCell.y, true, -0.25);
+	models[2]->init(string("resources/teapot.obj"), 2, modelCell.x, modelCell.y, true, -0.25f);
 
 	modelCell = this->getRandomCell();
 	models[3]->init(string("resources/gourd.obj"), 2, modelCell.x, modelCell.y, true);

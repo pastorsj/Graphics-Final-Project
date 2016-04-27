@@ -22,9 +22,6 @@
 	{
 		if (initialized)
 		{
-			// Clean up the buffers
-			//glDeleteBuffers(1, &positionBuffer);
-			//glDeleteBuffers(1, &colorBuffer);
 		}
 	}
 
@@ -72,30 +69,11 @@
 		float camAngle = state.getControlState()->getCameraAngle();
 		glm::mat4 L = state.getLightRotate();
 
-		//hacky light source size change
-		//        GLfloat maxDis = state.getModel().getDimension()[2] * 3;
-		//        GLfloat distScale = 1.0f / (glm::length(L*lightPos - camPos) / maxDis);
-		//       glPointSize(glm::mix(1.0f, 10.0f, distScale));
-
-		//printf("cam %f %f %f\n", camPos[0], camPos[1], camPos[2]);
-		//printf("look %f %f %f\n", camLook[0], camLook[1], camLook[2]);
-		//printf("angle : %f\n", camAngle);
-		//printf("light %f %f %f\n", lightPos[0], lightPos[1], lightPos[2]);
-
 		float x = state.getControlState()->getXPos();
 		float y = state.getControlState()->getYPos();
 
 		float xPos = state.getControlState()->getXPosComp();
 		float yPos = state.getControlState()->getYPosComp();
-
-
-
-		//printf("x pos: %f, y pos: %f\n", x, y);
-		//printf("x pos: %f, y pos: %f\n", xPos, yPos);
-		//printf("x cell: %i, y cell: %i\n", state.getXCell(), state.getYCell());
-		//printf(MAZE[state.getXCell()][state.getYCell()].left ? "left wall\n" : "no left wall\n");
-		//printf(MAZE[state.getXCell()][state.getYCell()].up ? "up wall\n" : "no up wall\n");
-
 
 		//use shader
 		glUseProgram(shaderProg[0]);
@@ -121,10 +99,6 @@
 		glBindVertexArray(vertexArray);
 		checkGLError("render upload");
 
-		// draw!
-		//glBindTexture(GL_TEXTURE_2D, textures[0]);
-		//glBindTexture(GL_TEXTURE_2D, textures[1]);
-
 		GLint texUnitID = 0;
 		glActiveTexture(GL_TEXTURE0 + texUnitID);
 		glUniform1i(glGetUniformLocation(shaderProg[0], "texSampler"), texUnitID);
@@ -135,26 +109,6 @@
 		glBindVertexArray(0);
 		glUseProgram(0);
 		checkGLError("model");
-
-
-		//glUseProgram(shaderProg[1]);
-
-		//glUniformMatrix4fv(glGetUniformLocation(shaderProg[1], "P"), 1, GL_FALSE, &P[0][0]);
-		//glUniformMatrix4fv(glGetUniformLocation(shaderProg[1], "C"), 1, GL_FALSE, &mC[0][0]);
-		//glUniformMatrix4fv(glGetUniformLocation(shaderProg[1], "mR"), 1, GL_FALSE, &mR[0][0]);
-		//glUniformMatrix4fv(glGetUniformLocation(shaderProg[1], "mT"), 1, GL_FALSE, &mT[0][0]);
-		//glUniformMatrix4fv(glGetUniformLocation(shaderProg[1], "M"), 1, GL_FALSE, &M[0][0]);
-		//glUniformMatrix3fv(glGetUniformLocation(shaderProg[1], "N"), 1, GL_FALSE, &N[0][0]);
-		//glUniformMatrix4fv(glGetUniformLocation(shaderProg[1], "L"), 1, GL_FALSE, &L[0][0]);
-		//glUniform4fv(glGetUniformLocation(shaderProg[1], "lightPos"), 1, &lightPos[0]);
-		//glUniform4fv(glGetUniformLocation(shaderProg[1], "camPos"), 1, &camPos[0]);
-		//glUniform1i(glGetUniformLocation(shaderProg[1], "shadingMode"), state.getShadingMode());
-
-		//glBindVertexArray(lightArray);
-		//glDrawElements(GL_POINTS, 1, GL_UNSIGNED_INT, 0);
-		//glBindVertexArray(0);
-		//glUseProgram(0);
-		checkGLError("light");
 
 		// default framebuffer
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
