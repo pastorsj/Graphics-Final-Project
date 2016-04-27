@@ -77,6 +77,7 @@ public:
 				App->display();
 			}
 			App->close();
+			delete App;
 		}
 	}
 
