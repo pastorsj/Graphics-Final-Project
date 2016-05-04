@@ -4,6 +4,7 @@
 #pragma once
 #include "MazeGenerator.h"
 #include "Model.h"
+#include "ConfigFileLoader.h"
 //#include "glm/glm.hpp"
 #include <vector>
 #include <iostream>
@@ -13,8 +14,8 @@ class ModelManager
 {
 private:
 	// CHANGE THIS TO CHANGE MAZE SIZE
-	const int DESIRED_X_SIZE = 7;
-	const int DESIRED_Y_SIZE = 7;
+	int DESIRED_X_SIZE = 7;
+	int DESIRED_Y_SIZE = 7;
 	int seed = -1;
 
 public:

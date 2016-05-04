@@ -29,6 +29,13 @@ void ModelManager::setSeed(int seed)
 
 void ModelManager::init()
 {
+	ConfigFileLoader loader;
+	loader.loadConfig();
+	if (loader.getX() != NULL){
+		DESIRED_X_SIZE = loader.getX();
+		DESIRED_Y_SIZE = loader.getX();
+	}
+
 	mg.makeMaze(DESIRED_X_SIZE, DESIRED_Y_SIZE, seed);
 	models.resize(8);
 

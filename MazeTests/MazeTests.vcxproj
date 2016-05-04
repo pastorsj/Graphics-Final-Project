@@ -50,7 +50,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>false</UseOfMfc>
@@ -152,7 +152,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;$(SolutionDir)WunderMaze\x64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Floor.obj;Wall.obj;Sky.obj;ShaderManager.obj;MazeGenerator.obj;ModelManager.obj;WorldState.obj;Model.obj;ControlState.obj;string_extra.obj;objLoader.obj;obj_parser.obj;gl3w.obj;glew.obj;list.obj;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Floor.obj;Wall.obj;Sky.obj;ShaderManager.obj;MazeGenerator.obj;ModelManager.obj;WorldState.obj;Model.obj;ControlState.obj;ConfigFileLoader.obj;string_extra.obj;objLoader.obj;obj_parser.obj;gl3w.obj;glew.obj;list.obj;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
