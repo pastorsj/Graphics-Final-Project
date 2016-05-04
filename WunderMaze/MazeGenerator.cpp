@@ -23,6 +23,9 @@ int MazeGenerator::makeMaze(int xsizetemp, int ysizetemp, int seedOverride) {
 	else {
 		srand(seedOverride);
 	}
+	if (xsizetemp < 5 || ysizetemp < 5) {
+		return 1;
+	}
 	initialize(xsizetemp, ysizetemp);      //initialize the maze
 	generate();        //generate the maze
 	return 0;
