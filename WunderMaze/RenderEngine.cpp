@@ -308,20 +308,12 @@
 
 	GLint RenderEngine::setupBuffer(GLuint bufferIndex, vector<GLfloat> buffer, size_t totalSize, string name, GLint sizePer) {
 		glGenBuffers(1, &bufferIndex);
-		checkGLError("here");
 		glBindBuffer(GL_ARRAY_BUFFER, bufferIndex);
-		checkGLError("here1");
 		glBufferData(GL_ARRAY_BUFFER, totalSize, &buffer[0], GL_STATIC_DRAW);
-		checkGLError("here2");
 		GLint slotToReturn = glGetAttribLocation(shaderProg[0], name.c_str());
-		checkGLError("here3");
 		glEnableVertexAttribArray(slotToReturn);
-		checkGLError("here4");
-		printf("%d", slotToReturn);
 		glVertexAttribPointer(slotToReturn, sizePer, GL_FLOAT, GL_FALSE, 0, 0);
-		checkGLError("here5");
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		checkGLError("here6");
 		return slotToReturn;
 	}
 
