@@ -8,10 +8,10 @@ uniform sampler2D texOverlayId;
 uniform sampler2D texVictoryOverlayId;
 //uniform sampler2DRect texId;
 
-smooth in vec4 smoothColor;
+//smooth in vec4 smoothColor;
 
 //out vec4 fragColor;
-layout(location = 0) out vec4 fragColor;
+out vec4 fragColor;
 
 vec2 res = vec2(resolution);
 vec2 fragCoord = gl_FragCoord.xy;
@@ -48,7 +48,7 @@ vec4 edgeDetect()
 
 vec4 swirl()
 {
-	float range = res / 2;
+	float range = res.x / 2;
 	vec2 centerPos = res / 2;
 	float modifier = 1 - (abs(30 - animationTime) / 30);
 
@@ -67,7 +67,7 @@ vec4 swirl()
 void main()
 {
 	texCoord = fragCoord/res;
-	fragColor = smoothColor;
+//	fragColor = smoothColor;
 	fragColor = vec4(0, 0, 0, 1);
 //	fragColor = vec4(texCoord, 1, 1);
 
