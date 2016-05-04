@@ -49,14 +49,6 @@ void WorldState::init()
 	cameraUp = glm::vec3(0, 1, 0);
 
 	MazeGenerator mg = models->getMazeGenerator();
-
-	for (int i = 0; i < mg.getXSize(); i++) {
-		for (int j = 0; j < mg.getYSize(); j++) {
-			printf("x: %i, y: %i", i, j);
-			printf(mg.getCell(i, j).up ? "up" : "no up");
-			printf(mg.getCell(i, j).left ? "left\n" : "no left\n");
-		}
-	}
 }
 
 ControlState * WorldState::getControlState()

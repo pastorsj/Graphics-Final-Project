@@ -134,19 +134,15 @@ private:
 				state.toggleLightRotate();
 
 			if ((event.type == sf::Event::MouseButtonPressed)) {
-				cout << "Mouse pressed!!" << endl;
 				int xpos = event.mouseButton.x;
 				int ypos = event.mouseButton.y;
-				cout << "Mouse position: " << xpos << ", " << ypos << endl;
 				if (state.getOverlayId() == 1) {
 					if (xpos > 350 && xpos < 650 && ypos > 550 && ypos < 650) {
-						cout << "Mouse press in bounds!" << endl;
 						state.handleButtonPress();
 					}
 				}
 				else if (state.getOverlayId() == 2) {
 					if (xpos > 350 && xpos < 650 && ypos > 650 && ypos < 750) {
-						cout << "Mouse press in bounds!" << endl;
 						state.handleButtonPress();
 					}
 				}
