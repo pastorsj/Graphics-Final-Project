@@ -99,6 +99,9 @@
     <ClInclude Include="Wall.h">
       <Filter>Header Files\Special Models</Filter>
     </ClInclude>
+    <ClInclude Include="ConfigFileLoader.h">
+      <Filter>helpers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -154,6 +157,9 @@
     </ClCompile>
     <ClCompile Include="Sky.cpp">
       <Filter>Source Files\Special Models</Filter>
+    </ClCompile>
+    <ClCompile Include="ConfigFileLoader.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

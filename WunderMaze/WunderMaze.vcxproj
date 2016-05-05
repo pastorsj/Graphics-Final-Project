@@ -173,6 +173,7 @@ xcopy /Y $(ProjectDir)resources $(OutDir)resources\</Command>
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ConfigFileLoader.h" />
     <ClInclude Include="ControlState.h" />
     <ClInclude Include="Floor.h" />
     <ClInclude Include="gl3w\gl3w.h" />
@@ -198,6 +199,7 @@ xcopy /Y $(ProjectDir)resources $(OutDir)resources\</Command>
     <ClInclude Include="WorldState.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ConfigFileLoader.cpp" />
     <ClCompile Include="ControlState.cpp" />
     <ClCompile Include="Floor.cpp" />
     <ClCompile Include="gl3w\gl3w.c" />
