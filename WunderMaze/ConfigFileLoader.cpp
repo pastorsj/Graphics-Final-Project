@@ -7,7 +7,7 @@ void ConfigFileLoader::loadConfig() {
 	{
 		while (getline(myfile, line))
 		{
-			if (line.find("size")) {
+			if (line.find("size") == 0) {
 				X = atoi(line.substr(5).c_str());
 			}
 		}
