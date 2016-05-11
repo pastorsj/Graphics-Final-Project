@@ -2,7 +2,7 @@
 
 void ControlState::init(ModelManager * mods)
 {
-	models = mods;
+	models = mods; //TODO: It doesn't appear that models is ever used outside of this context, do we need to store it?
 	mg = models->getMazeGenerator();
 	TRANSLATION_SENSITIVITY = 0.07f;
 	ROTATION_SENSITIVITY = 0.07f;
