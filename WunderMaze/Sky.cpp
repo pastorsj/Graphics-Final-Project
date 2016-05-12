@@ -21,19 +21,21 @@ void Sky::init(string objName, int texNum, int xCell, int yCell, bool rotate, fl
 
 	immune = 1;
 
-	positions.push_back(glm::vec3(this->xSize / 2, 0, 0));
+	int wallSize = (this->xSize >= this->ySize) ? this->xSize : this->ySize;
+
+	positions.push_back(glm::vec3(wallSize / 2, 0, 0));
 	texCoords.push_back(glm::vec2(1, 0.8));
 	normals.push_back(glm::vec3(.0, .0, 1.0));
 
-	positions.push_back(glm::vec3(-this->xSize / 2, 0, 0));
+	positions.push_back(glm::vec3(-wallSize / 2, 0, 0));
 	texCoords.push_back(glm::vec2(0, 0.8));
 	normals.push_back(glm::vec3(.0, .0, 1.0));
 
-	positions.push_back(glm::vec3(this->xSize / 2, 40, 0));
+	positions.push_back(glm::vec3(wallSize / 2, 40, 0));
 	texCoords.push_back(glm::vec2(1, 0));
 	normals.push_back(glm::vec3(.0, .0, 1.0));
 
-	positions.push_back(glm::vec3(-this->xSize / 2, 40, 0));
+	positions.push_back(glm::vec3(-wallSize / 2, 40, 0));
 	texCoords.push_back(glm::vec2(0, 0));
 	normals.push_back(glm::vec3(.0, .0, 1.0));
 
