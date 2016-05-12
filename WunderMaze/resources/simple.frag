@@ -42,20 +42,21 @@ void main()
 	}
 	else
 	{
-	fragColor = ((texture(texSampler, texMapping) + defaultShade(unTransPos.xyz, smoothNorm, scale) * scale)) * scale * 2;
+		fragColor = ((texture(texSampler, texMapping) + defaultShade(unTransPos.xyz, smoothNorm, scale) * scale)) * scale * 2;
 	}
 }
 
 vec4 defaultShade(in vec3 pos, in vec3 norm, float scale)
 {
 	float alpha = 1;
-	vec4 p = unTransPos;//vec4(pos, 1);
+	vec4 p = vec4(pos, 1);
 	//vec4 lp = lightPos;
 	vec4 lp = vec4(camPosition, 0);
-	vec4 n = vec4(1, -1, 1, 0) * normalize(vec4(norm,0));
+	//vec4 n = vec4(1, 1, 1, 0) * normalize(vec4(norm,0));
+	vec4 n = vec4(norm, 0);
 	vec4 c = vec4(0);
 	vec4 Li = vec4(1);
-	vec4 ka = vec4(0.05);
+	vec4 ka = vec4(0.005);
 	vec4 kd = vec4(0.2, 0.2, 0.8, 0);
 	vec4 ks = vec4(1);
 	//vec4 ka = Ka;//vec4(1);

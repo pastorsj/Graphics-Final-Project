@@ -42,6 +42,7 @@ Material::~Material() {
 Model::Model()
 {
 	rotates = false;
+	this->eleNum = 0;
 }
 
 void Model::init(string objName, int texNum, int xCell, int yCell, bool rotate, float yOffset)
@@ -69,9 +70,9 @@ void Model::init(string objName, int texNum, int xCell, int yCell, bool rotate, 
 		materials.push_back(m);
 	}
 
-	positions.resize(loader.vertexCount);
-	texCoords.resize(loader.vertexCount);
-	normals.resize(loader.vertexCount);
+	positions.resize(loader.faceCount * 3);
+	texCoords.resize(loader.faceCount * 3);
+	normals.resize(loader.faceCount * 3);
 
 	switchMaterialAt.push_back(0);
 
@@ -126,16 +127,18 @@ void Model::addFace(obj_face* face, size_t faceNum, objLoader& loader)
 
 	for (size_t v = 0; v < face->vertex_count; ++v)
 	{
-		elements.push_back(face->vertex_index[v]);
+		elements.push_back(eleNum);
+		//elements.push_back(face->vertex_index[v]);
 
 		int pId = face->vertex_index[v];
 		int tId = face->texture_index[v];
 		int normID = face->normal_index[v];
 
-		positions[pId] = glm::vec3(loader.vertexList[pId]->e[0], loader.vertexList[pId]->e[1], loader.vertexList[pId]->e[2]);
+		positions[eleNum] = glm::vec3(loader.vertexList[pId]->e[0], loader.vertexList[pId]->e[1], loader.vertexList[pId]->e[2]);
 		if (tId >= 0)
-			texCoords[pId] = glm::vec2(loader.textureList[tId]->e[0], loader.textureList[tId]->e[1]);
-		normals[pId] = glm::vec3(loader.normalList[normID]->e[0], loader.normalList[normID]->e[1], loader.normalList[normID]->e[2]);
+			texCoords[eleNum] = glm::vec2(loader.textureList[tId]->e[0], loader.textureList[tId]->e[1]);
+		normals[eleNum] = glm::vec3(loader.normalList[normID]->e[0], loader.normalList[normID]->e[1], loader.normalList[normID]->e[2]);
+		eleNum++;
 	}
 }
 

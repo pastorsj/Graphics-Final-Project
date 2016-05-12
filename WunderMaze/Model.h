@@ -134,6 +134,7 @@ protected:
 	int texNum;
 	bool found;
 	int immune;
+	int eleNum;
 };
 
 #endif

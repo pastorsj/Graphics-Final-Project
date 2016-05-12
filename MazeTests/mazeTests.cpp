@@ -10,7 +10,7 @@ namespace MazeTests
 	{
 	public:
 		
-		TEST_METHOD(TestInitialization)
+		TEST_METHOD(TestMazeInitialization)
 		{
 			MazeGenerator mg;
 		}

@@ -58,7 +58,8 @@ void ModelManager::init()
 	modelCell = this->getRandomCell();
 	models[5]->init(string("resources/teddy.obj"), 2, modelCell.x, modelCell.y, true);
 	modelCell = this->getRandomCell();
-	models[6]->init(string("resources/cow.obj"), 2, modelCell.x, modelCell.y, false);
+	/*models[6]->init(string("resources/cow.obj"), 2, modelCell.x, modelCell.y, false);*/
+	models[6]->init(string("resources/testBox.obj"), 2, modelCell.x, modelCell.y, false);
 
 	models[7] = new Sky(mg.getXSize(), mg.getYSize());
 	models[7]->init(string("sky"), 4);
